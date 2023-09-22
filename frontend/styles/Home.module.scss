@@ -6,19 +6,68 @@ $altura-minima-snellen: 70vh;
 
 $altura-margin-top-switch: calc(100vh - ($altura-minima-switch + $altura-minima-snellen));
 
+$border: 5px;
+$font-size: 20px;
 
 .switch{
-  min-height: $altura-minima-switch;
-  width: $altura-minima-switch;
-  margin: 0 auto;
-  background-color: $cor-de-fundo-bege;
-  margin-top: $altura-margin-top-switch;
-  border-radius: 100% 100% 0% 0%;
+  display: flex;
+  flex-direction: row;  
+  justify-content: center;
+
+  .chart, .personalize{
+    min-height: $altura-minima-switch;
+    width: $altura-minima-switch;  
+    background-color: white;
+    margin-top: $altura-margin-top-switch;
+    display: flex;
+    align-items: center;
+    padding-top: 5vh;
+    font-size: $font-size;
+    border-bottom: $border/2 solid black;
+    transition: transform 0.3s ease;
+    &:hover{
+      transform: scale(1.25);
+      cursor: pointer;
+    }
+  }
+
+  .chart{
+    border-radius: 100% 0 0 0;    
+    justify-content: end;
+    padding-right: 1vw;
+    border-right: $border/2 solid black;
+  }
+
+  .personalize{
+    border-radius: 0 100% 0 0;
+    justify-content: start;
+    padding-left: 1vw;
+    border-left: $border/2 solid black;    
+  }  
 }
 
 .snellen {
-  min-height: $altura-minima-snellen;
+  position: relative;
+  height: $altura-minima-snellen;
   width: 90%;
   margin: 0 auto;
-  background-color: $cor-de-fundo-azure;
+  background-color: white;
+  border: $border solid black;
+
+  .row_to_read{
+    width: 100%;
+    height: 30%;
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .all_letters{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;
+  }
 }
