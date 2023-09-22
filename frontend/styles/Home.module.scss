@@ -1,0 +1,24 @@
+$cor-de-fundo-bege: beige;
+$cor-de-fundo-azure: azure;
+
+$altura-minima-switch: 20vh;
+$altura-minima-snellen: 70vh;
+
+$altura-margin-top-switch: calc(100vh - ($altura-minima-switch + $altura-minima-snellen));
+
+
+.switch{
+  min-height: $altura-minima-switch;
+  width: $altura-minima-switch;
+  margin: 0 auto;
+  background-color: $cor-de-fundo-bege;
+  margin-top: $altura-margin-top-switch;
+  border-radius: 100% 100% 0% 0%;
+}
+
+.snellen {
+  min-height: $altura-minima-snellen;
+  width: 90%;
+  margin: 0 auto;
+  background-color: $cor-de-fundo-azure;
+}
