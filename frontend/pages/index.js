@@ -49,7 +49,9 @@ export default function Home() {
       </div>
       <div className={styles.snellen}>
         <div className={styles.row_to_read} style={{fontSize:`${snellen_letters[activeRow].size}px`}}>
-          {snellen_letters[activeRow].letters}
+          <span>
+            {snellen_letters[activeRow].letters}
+          </span>
         </div>
         <div className={styles.all_letters}>
           {
