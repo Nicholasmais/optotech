@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useAuth  } from '../contexts/AuthContext';
 import styles from '../styles/Login.module.scss';
 const api = require('../services/api'); 
 
 function LoginForm() {
+  const { setAuthData } = useAuth(); 
   const [isLogin, setIsLogin] = useState(true);
   const [user, setUser] = useState('');
   const [email, setEmail] = useState('');
@@ -15,7 +16,8 @@ function LoginForm() {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isConfirmedPasswordValid, setIsConfirmedPasswordValid] = useState(true); 
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [showAuthMessage, setShowAuthMessage] = useState(false); // Novo estado para mostrar a mensagem de autenticação
+
   const toastConfig = {
     position: "top-left", // Position of the toast
     autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
@@ -25,6 +27,7 @@ function LoginForm() {
     draggable: true,        // Allow the toast to be dragged
     closeButton: false
   };
+
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setUser('');
@@ -35,7 +38,7 @@ function LoginForm() {
     setIsEmailValid(true);
     setIsPasswordValid(true);
     setIsConfirmedPasswordValid(true);
-    setIsRegistered(false); 
+    setShowAuthMessage(false); // Limpa a mensagem de autenticação ao alternar o formulário
   };
 
   const validateUser = (user) => {
@@ -52,7 +55,7 @@ function LoginForm() {
     return password.length >= 6;
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     const isUserValid = validateUser(user);
@@ -64,32 +67,45 @@ function LoginForm() {
     setIsPasswordValid(isPasswordValid);
 
     if (isLogin) {
-      // Se for login, verifique apenas o email e senha
       if (isEmailValid && isPasswordValid) {
         const body = {
-          email:email,
-          password:password
-        }
-        api.checkLogin(body).then((res) => {
-          setIsRegistered(true);
+          email: email,
+          password: password
+        };        
+        try {
+          const res = await api.login(body);
+          setShowAuthMessage(true);
           toast.success('Usuário logado com sucesso!', toastConfig);
-        }).catch(erro => {
+          setAuthData({
+            isAuth: res.isAuth,
+            user: res.user         
+          });
+        } catch (error) {
           toast.error('Credenciais inválidas!', toastConfig);
-          console.log(erro);
-          setIsRegistered(false);
-        })
-      } else {
-        setIsRegistered(false);
+          console.error(error);
+        }             
       }
     } else {
       const passwordsMatch = password === confirmPassword;
+
       setIsConfirmedPasswordValid(passwordsMatch);
 
       if (isEmailValid && isPasswordValid && passwordsMatch) {
-        setIsRegistered(true);
-      } else {
-        setIsRegistered(false);
-      }
+        const body = {
+          user: user,
+          email: email,
+          password: password
+        };
+        try {
+          // Chame a função de registro da API aqui
+          // ...
+          setShowAuthMessage(true); // Mostrar a mensagem de autenticação
+          toast.success('Registro realizado com sucesso!', toastConfig);
+        } catch (error) {
+          toast.error('Erro ao realizar o registro!', toastConfig);
+          console.error(error);
+        }
+      } 
     }
   };
 
@@ -98,21 +114,21 @@ function LoginForm() {
       <ToastContainer />
       <h2>{isLogin ? 'Login' : 'Cadastro'}</h2>
       <form onSubmit={handleFormSubmit}>
-        <div>
-          {isLogin ? null : (
-             <div>
-              <label>Usuário:</label>             
-              <input
-                type="user"
-                value={user}
-                onChange={(e) => setUser(e.target.value)}
-                className={!isUserValid ? 'invalid' : ''}
-              />
-              {!isUserValid && (
-                <div className={styles.error}>Usuário deve ter pelo menos 6 caracteres</div>
-              )}
-             </div>
+        {isLogin ? null : (
+          <div>
+            <label>Usuário:</label>
+            <input
+              type="text"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              className={!isUserValid ? 'invalid' : ''}
+            />
+            {!isUserValid && (
+              <div className={styles.error}>Usuário deve ter pelo menos 6 caracteres</div>
             )}
+          </div>
+        )}
+        <div>
           <label>Email:</label>
           <input
             type="email"
@@ -159,15 +175,13 @@ function LoginForm() {
         {isLogin ? 'Criar Conta' : 'Já tem uma conta? Login'}
       </button>
 
-      {isRegistered && (
-        <>
-          <p className={styles.success}>
-            {isLogin ? 'Logado com sucesso!' : 'Registro criado com sucesso!'}
-          </p>
-          <button onClick={() => {api.checkedLogged()}}>Teste</button>
-        </>
+      {showAuthMessage && (
+        <div className={styles.authMessage}>
+          {isLogin ? 'Autenticado com sucesso!' : 'Registro realizado com sucesso!'}
+        </div>
       )}
     </div>
-  );}
+  );
+}
 
 export default LoginForm;

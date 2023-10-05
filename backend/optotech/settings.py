@@ -55,6 +55,7 @@ MIDDLEWARE = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de banco de dados por padrão
 SESSION_COOKIE_HTTPONLY = False
+SESSION_COOKIE_AGE = 5 * 60
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
