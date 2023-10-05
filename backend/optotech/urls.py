@@ -23,9 +23,11 @@ from .views.login_view import LoginViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'login', LoginViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),    
+    path('login/', LoginViewSet.as_view({'post': 'login'}), name='login'),
+    path('logout/', LoginViewSet.as_view({'post': 'logout'}), name='logout'),
+    path('isAuth/', LoginViewSet.as_view({'get': 'is_authenticated'}), name='is-authenticated'),
     path('', include(router.urls)),
 ]

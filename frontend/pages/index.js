@@ -1,13 +1,20 @@
 import styles from '../styles/Home.module.scss';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
 import user from '../assets/user.png';
 import LoginForm from '../components/LoginForm.js';
-const api = require('../services/api'); 
+import UserLoggedInForm from '../components/UserLoggedInForm';
+import { useAuth } from '../contexts/AuthContext';
+const api = require('../services/api');
 
 export default function Home() {
-  const [isLoginForm, setIsLoginForm] = useState(false);  
+  const { authData, setAuthData } = useAuth();
   const [activeRow, setActiveRow] = useState(0);
+  const [hasLoggedIn, setHasLoggedIn] = useState(false);
+
+  const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
+  const [isLoggedFormOpen, setIsLoggedFormOpen] = useState(false);
+
   const eLetterSize = 100;
   const snellen_letters = [
     {
@@ -16,37 +23,52 @@ export default function Home() {
     },
     {
       letters: ["F", "P"],
-      size: eLetterSize*0.8
+      size: eLetterSize * 0.8
     },
     {
       letters: ["T", "O", "Z"],
-      size: eLetterSize*0.6
+      size: eLetterSize * 0.6
     },
     {
       letters: ["L", "P", "E", "D"],
-      size: eLetterSize*0.4
+      size: eLetterSize * 0.4
     },
     {
       letters: ["P", "E", "C", "F", "D"],
-      size: eLetterSize*0.2
+      size: eLetterSize * 0.2
     }
-  ];  
+  ];
 
-  api.getUsers().then((res) => {console.log(res)});
+  const toggleLoginForm = () => {
+    if (hasLoggedIn){
+      setIsLoggedFormOpen(!isLoggedFormOpen);
+    }
+    else{
+      setIsLoginFormOpen(!isLoginFormOpen);
+    }    
+  };
 
   const changeActiveRow = (increment) => {
     (increment < 0 && activeRow === 0) || (increment > 0 && activeRow === snellen_letters.length - 1) ?
-      null :  setActiveRow(activeRow + increment);
+      null : setActiveRow(activeRow + increment);
   }
+
+  useEffect(() => {    
+    const isLoggedIn = api.checkSessionCookie();
+    setHasLoggedIn(isLoggedIn);
+    setIsLoginFormOpen(!isLoggedIn);
+    api.isAuth().then((res) => {
+      setAuthData(res);      
+    })
+  }, [authData]);
 
   return (
     <>
-      {isLoginForm && <LoginForm />}
       <nav className={styles.navbar}>
         <div className={styles.logoContainer}>
           <img src={logo.src} alt="Logo" className={styles.logo} />
         </div>
-        <div className={styles.user} onClick={() => setIsLoginForm(!isLoginForm)}>
+        <div className={styles.user} onClick={toggleLoginForm}>
           <img src={user.src} alt="User" className={styles.user} />
         </div>
       </nav>
@@ -63,7 +85,7 @@ export default function Home() {
         </div>
       </div>
       <div className={styles.snellen}>
-        <div className={styles.row_to_read} style={{fontSize:`${snellen_letters[activeRow].size}px`}}>
+        <div className={styles.row_to_read} style={{ fontSize: `${snellen_letters[activeRow].size}px` }}>
           <span>
             {snellen_letters[activeRow].letters}
           </span>
@@ -71,25 +93,32 @@ export default function Home() {
         <div className={styles.preview}>
           <div className={styles.change_active_row}>
             <div onClick={() => {
-                changeActiveRow(-1);            
-              }}>
+              changeActiveRow(-1);
+            }}>
             </div>
             <div onClick={() => {
-                changeActiveRow(1);
-              }}>
+              changeActiveRow(1);
+            }}>
             </div>
           </div>
           <div className={styles.all_letters}>
             {
               snellen_letters.map((row, index) => (
-                <div key={index} style={{fontSize:`${40}px`}}>
+                <div key={index} style={{ fontSize: `${40}px` }}>
                   {row.letters}
                 </div>
               )
-            )}  
+              )}
           </div>
         </div>
       </div>
+      {isLoginFormOpen ? (
+        <LoginForm/>
+      ) : null}
+      {hasLoggedIn ? ( isLoggedFormOpen ? ( 
+        <UserLoggedInForm/>
+        ) : null
+      ) : null}
     </>
   );
 }
