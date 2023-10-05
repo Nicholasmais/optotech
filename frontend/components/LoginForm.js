@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import styles from '../styles/Login.module.scss';
 const api = require('../services/api'); 
 
@@ -13,7 +16,15 @@ function LoginForm() {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isConfirmedPasswordValid, setIsConfirmedPasswordValid] = useState(true); 
   const [isRegistered, setIsRegistered] = useState(false);
-
+  const toastConfig = {
+    position: "top-left", // Position of the toast
+    autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
+    hideProgressBar: false, // Show/hide the progress bar
+    closeOnClick: true,     // Close the toast when clicked
+    pauseOnHover: true,     // Pause auto close on hover
+    draggable: true,        // Allow the toast to be dragged
+    closeButton: false
+  };
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setUser('');
@@ -55,12 +66,18 @@ function LoginForm() {
     if (isLogin) {
       // Se for login, verifique apenas o email e senha
       if (isEmailValid && isPasswordValid) {
-        setIsRegistered(true);
         const body = {
           email:email,
           password:password
         }
-        api.checkLogin(body).then((res) => {console.log(res)})
+        api.checkLogin(body).then((res) => {
+          setIsRegistered(true);
+          toast.success('Usuário logado com sucesso!', toastConfig);
+        }).catch(erro => {
+          toast.error('Credenciais inválidas!', toastConfig);
+          console.log(erro);
+          setIsRegistered(false);
+        })
       } else {
         setIsRegistered(false);
       }
@@ -78,6 +95,7 @@ function LoginForm() {
 
   return (
     <div className={styles.formContainer}>
+      <ToastContainer />
       <h2>{isLogin ? 'Login' : 'Cadastro'}</h2>
       <form onSubmit={handleFormSubmit}>
         <div>
@@ -142,9 +160,12 @@ function LoginForm() {
       </button>
 
       {isRegistered && (
-        <p className={styles.success}>
-          {isLogin ? 'Logado com sucesso!' : 'Registro criado com sucesso!'}
-        </p>
+        <>
+          <p className={styles.success}>
+            {isLogin ? 'Logado com sucesso!' : 'Registro criado com sucesso!'}
+          </p>
+          <button onClick={() => {api.checkedLogged()}}>Teste</button>
+        </>
       )}
     </div>
   );}

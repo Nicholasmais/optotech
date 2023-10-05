@@ -32,7 +32,9 @@ export default function Home() {
     }
   ];  
 
-  api.getUsers().then((res) => {console.log(res)});
+  api.getUsers().then((res) => {
+    console.log(res)
+  });
 
   const changeActiveRow = (increment) => {
     (increment < 0 && activeRow === 0) || (increment > 0 && activeRow === snellen_letters.length - 1) ?

@@ -3,22 +3,34 @@ const axios = require('axios'); // Ou use uma forma apropriada de importação s
 
 const baseApiUrl = 'http://localhost:8000';
 
-function getUsers() {
-  return axios.get(`${baseApiUrl}/users/`)
-    .then(function (response) {
+const getUsers = async() => {
+  return await axios.get(`${baseApiUrl}/users/`)
+    .then((response) => {
       return response.data; 
     })
-    .catch(function (error) {
+    .catch((error) => {
       throw error;
     });
 }
 
-function checkLogin(body) {
-  return axios.post(`${baseApiUrl}/login/`, body)
-    .then(function (response) {
+const checkLogin = async (body) => {
+  try {
+    const response = await axios.post(`${baseApiUrl}/login/`, body, {
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const checkedLogged = async() => {
+  return await axios.get(`${baseApiUrl}/isLogged/`)
+    .then((response) => {
       return response.data; 
     })
-    .catch(function (error) {
+    .catch((error) => {
       throw error; 
     });
 }
@@ -26,5 +38,6 @@ function checkLogin(body) {
 
 module.exports = {
   getUsers: getUsers,
-  checkLogin: checkLogin
+  checkLogin: checkLogin,
+  checkedLogged: checkedLogged
 };

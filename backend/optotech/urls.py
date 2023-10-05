@@ -24,6 +24,7 @@ from .views.login_view import LoginViewSet
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'login', LoginViewSet)
+router.register(r'isLogged', LoginViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
