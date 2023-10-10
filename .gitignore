@@ -61,3 +61,4 @@ out/
 
 # Arquivos de ambiente locais
 .env.local
+.env

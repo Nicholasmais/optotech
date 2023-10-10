@@ -56,7 +56,7 @@ MIDDLEWARE = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de banco de dados por padrão
 SESSION_COOKIE_HTTPONLY = False
-SESSION_COOKIE_AGE = 5 * 60
+SESSION_COOKIE_AGE = 1 * 60 * 60
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -87,10 +87,22 @@ WSGI_APPLICATION = 'optotech.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+dotenv_path = join(dirname(__file__) + r"\utils", '.env')
+load_dotenv(dotenv_path)
+print(os.environ.get("DB_HOST"))
+print(dotenv_path)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': "django.db.backends.postgresql",
+        'HOST': os.environ.get("DB_HOST"),
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'PORT': os.environ.get("DB_PORT"),
     }
 }
 

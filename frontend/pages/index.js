@@ -7,6 +7,7 @@ import UserLoggedInForm from '../components/UserLoggedInForm';
 import { useAuth } from '../contexts/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NavBar from '../components/NavBar';
 const api = require('../services/api');
 
 export default function Home() {
@@ -88,15 +89,7 @@ export default function Home() {
 
   return (
     <>
-      <nav className={styles.navbar}>
-        <ToastContainer />
-        <div className={styles.logoContainer}>
-          <img src={logo.src} alt="Logo" className={styles.logo} />
-        </div>
-        <div className={styles.user} onClick={toggleLoginForm}>
-          <img src={user.src} alt="User" className={styles.user} />
-        </div>
-      </nav>
+    <NavBar toggleLoginForm={toggleLoginForm}></NavBar>
       <div className={styles.switch}>
         <div className={styles.chart}>
           <span>
