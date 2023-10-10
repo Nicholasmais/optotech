@@ -1,6 +1,6 @@
 const axios = require('axios'); 
 
-const baseApiUrl = 'http://localhost:8000';
+const baseApiUrl = process.env.BASE_API || 'http://localhost:8000';
 
 const getUsers = async() => {
   return await axios.get(`${baseApiUrl}/users/`)
