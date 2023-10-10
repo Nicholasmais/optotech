@@ -25,9 +25,6 @@ SECRET_KEY = 'django-insecure-ur6#nuk=)2yk57%bh3xbp5^e_76722f%670&=i6m!c=azmrplr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -93,8 +90,9 @@ from dotenv import load_dotenv
 
 dotenv_path = join(dirname(__file__) + r"\utils", '.env')
 load_dotenv(dotenv_path)
-print(os.environ.get("DB_HOST"))
-print(dotenv_path)
+
+ALLOWED_HOSTS = [os.environ.get("BASE_API")]
+
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql",
