@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useRouter } from 'next/router';
 import styles from '../styles/Login.module.scss';
 const api = require('../services/api');
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function UserLoggedInForm() {
+function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn}) {
   const [isEditing, setIsEditing] = useState(false);
   const { authData, setAuthData } = useAuth();
 
@@ -12,7 +15,17 @@ function UserLoggedInForm() {
 
   const [updatedUser, setUpdatedUser] = useState(user);
   const [updatedEmail, setUpdatedEmail] = useState(email);
-
+  
+  const toastConfig = {
+    position: "top-left", // Position of the toast
+    autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
+    hideProgressBar: false, // Show/hide the progress bar
+    closeOnClick: true,     // Close the toast when clicked
+    pauseOnHover: true,     // Pause auto close on hover
+    draggable: true,        // Allow the toast to be dragged
+    closeButton: false
+  };
+  
   const handleUpdateClick = () => {
     setIsEditing(true);
   };
@@ -33,12 +46,18 @@ function UserLoggedInForm() {
           expirationDate: '',
         },
       });
-      api.clearCookie();
+      api.clearCookie();      
+      setIsLoginFormOpen(false);
+      setHasLoggedIn(false);
+      setIsLoggedFormOpen(false);
+      setHasTriedToLogIn(false);
+      location.reload();
     })
   }
 
   return (
     <div className={styles.formContainer}>
+      <ToastContainer />
       <h2>Bem-vindo, {user}!</h2>
       <p>Email: {email}</p>
       {isEditing ? (

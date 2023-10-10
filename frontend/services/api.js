@@ -24,6 +24,17 @@ const login = async (body) => {
   }
 };
 
+const signup = async (body) => {
+  try {
+    const response = await axios.post(`${baseApiUrl}/signup/`, body, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const logout = async (body) => {
   try {
     const response = await axios.post(`${baseApiUrl}/logout/`, body, {
@@ -72,6 +83,7 @@ module.exports = {
   getUsers: getUsers,
   login: login,
   logout: logout,
+  signup: signup,
   isAuth: isAuth,
   checkSessionCookie: checkSessionCookie,
   clearCookie: clearCookie

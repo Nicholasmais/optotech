@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de banco de dados por padrão
 SESSION_COOKIE_HTTPONLY = False
 SESSION_COOKIE_AGE = 5 * 60
