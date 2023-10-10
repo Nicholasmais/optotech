@@ -91,7 +91,7 @@ from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__) + r"\utils", '.env')
 load_dotenv(dotenv_path)
 
-ALLOWED_HOSTS = [os.environ.get("BASE_API")]
+ALLOWED_HOSTS = ["vercel.app"]
 
 DATABASES = {
     'default': {
