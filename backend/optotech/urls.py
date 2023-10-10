@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),    
     path('login/', LoginViewSet.as_view({'post': 'login'}), name='login'),
     path('logout/', LoginViewSet.as_view({'post': 'logout'}), name='logout'),
+    path('signup/', UserViewSet.as_view({'post': 'signup'}), name='signup'),
     path('isAuth/', LoginViewSet.as_view({'get': 'is_authenticated'}), name='is-authenticated'),
     path('', include(router.urls)),
 ]

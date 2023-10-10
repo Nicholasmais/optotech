@@ -5,12 +5,15 @@ import user from '../assets/user.png';
 import LoginForm from '../components/LoginForm.js';
 import UserLoggedInForm from '../components/UserLoggedInForm';
 import { useAuth } from '../contexts/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const api = require('../services/api');
 
 export default function Home() {
   const { authData, setAuthData } = useAuth();
   const [activeRow, setActiveRow] = useState(0);
   const [hasLoggedIn, setHasLoggedIn] = useState(false);
+  const [hasTriedToLogIn, setHasTriedToLogIn] = useState(false);
 
   const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
   const [isLoggedFormOpen, setIsLoggedFormOpen] = useState(false);
@@ -39,6 +42,16 @@ export default function Home() {
     }
   ];
 
+  const toastConfig = {
+    position: "top-left", // Position of the toast
+    autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
+    hideProgressBar: false, // Show/hide the progress bar
+    closeOnClick: true,     // Close the toast when clicked
+    pauseOnHover: true,     // Pause auto close on hover
+    draggable: true,        // Allow the toast to be dragged
+    closeButton: false
+  };
+
   const toggleLoginForm = () => {
     if (hasLoggedIn){
       setIsLoggedFormOpen(!isLoggedFormOpen);
@@ -53,18 +66,30 @@ export default function Home() {
       null : setActiveRow(activeRow + increment);
   }
 
+  useEffect(() => {
+    (hasLoggedIn && hasTriedToLogIn) ?
+      toast.success('Usuário logado com sucesso!', toastConfig) 
+      :
+      hasTriedToLogIn ? 
+        toast.error('Credenciais inválidas!', toastConfig)
+        :
+        null;    
+  }, [hasLoggedIn]);
+
   useEffect(() => {    
     const isLoggedIn = api.checkSessionCookie();
     setHasLoggedIn(isLoggedIn);
-    setIsLoginFormOpen(!isLoggedIn);
+  
     api.isAuth().then((res) => {
       setAuthData(res);      
     })
-  }, [authData]);
+  }, []);
+  
 
   return (
     <>
       <nav className={styles.navbar}>
+        <ToastContainer />
         <div className={styles.logoContainer}>
           <img src={logo.src} alt="Logo" className={styles.logo} />
         </div>
@@ -113,10 +138,20 @@ export default function Home() {
         </div>
       </div>
       {isLoginFormOpen ? (
-        <LoginForm/>
+        <LoginForm 
+        setIsLoginFormOpen = {setIsLoginFormOpen}
+        setHasLoggedIn = {setHasLoggedIn}
+        setIsLoggedFormOpen = {setIsLoggedFormOpen}
+        setHasTriedToLogIn = {setHasTriedToLogIn}
+        />
       ) : null}
       {hasLoggedIn ? ( isLoggedFormOpen ? ( 
-        <UserLoggedInForm/>
+        <UserLoggedInForm 
+        setIsLoginFormOpen = {setIsLoginFormOpen}
+        setHasLoggedIn = {setHasLoggedIn}
+        setIsLoggedFormOpen = {setIsLoggedFormOpen}
+        setHasTriedToLogIn = {setHasTriedToLogIn}
+        />
         ) : null
       ) : null}
     </>

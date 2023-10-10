@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useAuth  } from '../contexts/AuthContext';
 import styles from '../styles/Login.module.scss';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const api = require('../services/api'); 
 
-function LoginForm() {
+function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn}) {
   const { setAuthData } = useAuth(); 
   const [isLogin, setIsLogin] = useState(true);
   const [user, setUser] = useState('');
@@ -17,7 +17,7 @@ function LoginForm() {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isConfirmedPasswordValid, setIsConfirmedPasswordValid] = useState(true); 
   const [showAuthMessage, setShowAuthMessage] = useState(false); // Novo estado para mostrar a mensagem de autenticação
-
+ 
   const toastConfig = {
     position: "top-left", // Position of the toast
     autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
@@ -27,7 +27,7 @@ function LoginForm() {
     draggable: true,        // Allow the toast to be dragged
     closeButton: false
   };
-
+ 
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setUser('');
@@ -42,7 +42,7 @@ function LoginForm() {
   };
 
   const validateUser = (user) => {
-    const regex = /^(?![\s\S]*\s)[A-Z]{6,}$/;
+    const regex = /^(?!\s*$).+/;
     return regex.test(user);
   }
   
@@ -71,19 +71,23 @@ function LoginForm() {
         const body = {
           email: email,
           password: password
-        };        
+        };   
         try {
           const res = await api.login(body);
           setShowAuthMessage(true);
-          toast.success('Usuário logado com sucesso!', toastConfig);
           setAuthData({
             isAuth: res.isAuth,
             user: res.user         
           });
+
+          setIsLoginFormOpen(false);
+          setHasLoggedIn(true);
+          setIsLoggedFormOpen(true);
+          
         } catch (error) {
-          toast.error('Credenciais inválidas!', toastConfig);
           console.error(error);
-        }             
+        }
+        setHasTriedToLogIn(true);            
       }
     } else {
       const passwordsMatch = password === confirmPassword;
@@ -96,18 +100,21 @@ function LoginForm() {
           email: email,
           password: password
         };
-        try {
-          // Chame a função de registro da API aqui
-          // ...
-          setShowAuthMessage(true); // Mostrar a mensagem de autenticação
-          toast.success('Registro realizado com sucesso!', toastConfig);
-        } catch (error) {
-          toast.error('Erro ao realizar o registro!', toastConfig);
-          console.error(error);
-        }
-      } 
+        api.signup(body).then((res) => {
+          setShowAuthMessage(true);
+          setIsLoginFormOpen(true);
+          setHasLoggedIn(false);
+          setIsLoggedFormOpen(false);
+          toggleForm();
+          setIsLogin(true);
+          toast.success("Registro realizado com sucesso.", toastConfig);  
+        }).catch((error) => {
+          console.error(error);  
+          toast.error(error.response.data.detail, toastConfig);  
+        });
+      }
     }
-  };
+  }
 
   return (
     <div className={styles.formContainer}>
@@ -116,7 +123,7 @@ function LoginForm() {
       <form onSubmit={handleFormSubmit}>
         {isLogin ? null : (
           <div>
-            <label>Usuário:</label>
+            <label>Nome:</label>
             <input
               type="text"
               value={user}
@@ -124,7 +131,7 @@ function LoginForm() {
               className={!isUserValid ? 'invalid' : ''}
             />
             {!isUserValid && (
-              <div className={styles.error}>Usuário deve ter pelo menos 6 caracteres</div>
+              <div className={styles.error}>Nome deve ter pelo menos 1 caractere</div>
             )}
           </div>
         )}

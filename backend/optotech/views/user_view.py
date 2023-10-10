@@ -3,15 +3,24 @@ from ..models.user import User
 from ..serializers.user_serializer import UserSerializer
 from rest_framework.response import Response
 import bcrypt
+from ..utils.custom_exception_handler import CustomAPIException
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def create(self, request):
+    def signup(self, request):
+        body = request.data
+
+        if User.objects.filter(email=body.get("email")):
+          raise CustomAPIException("Email já cadastrado.", 409)
+      
+        if User.objects.filter(user=body.get("user")):
+          raise CustomAPIException("Usuário já cadastrado.", 409)
+      
         serializer = self.serializer_class(data = request.data)
+        
         if serializer.is_valid():
-            body = request.data
 
             salt = bcrypt.gensalt()
             password_bytes = body["password"].encode("ascii")
@@ -24,5 +33,5 @@ class UserViewSet(viewsets.ModelViewSet):
             if serializer.is_valid():
                 instance = serializer.save()
                 return Response({**serializer.data, "id":instance.id})
-            raise Exception(serializer.errors)
-        raise Exception(serializer.errors)
+            raise CustomAPIException(serializer.errors)
+        raise CustomAPIException(serializer.errors)
