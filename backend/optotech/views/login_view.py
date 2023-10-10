@@ -40,27 +40,24 @@ class LoginViewSet(viewsets.ModelViewSet):
         
         return response
        
-    def is_authenticated(self, request):     
+    def is_authenticated(self, request):
         is_auth = False
-        user = None      
+        user = None
 
         if request.session.get("user", False):
-            is_auth = True
-            user = request.session.get("user")
-            user_model = User.objects.get(id = user)
-            user = UserSerializer(user_model).data    
-            del user["password"]
+            if request.session.get_expiry_date() >= timezone.now():  # Verifica se a sessão ainda está ativa
+                is_auth = True
+                user = request.session.get("user")
+                user_model = User.objects.get(id=user)
+                user = UserSerializer(user_model).data
+                del user["password"]
 
-            if request.session.get_expiry_date() <= timezone.now():
-                self.clean_session(request)
-                return
-            
-            user["expirationDate"] = request.session.get_expiry_date()
+                user["expirationDate"] = request.session.get_expiry_date()
 
         response = {
-            "isAuth" : is_auth,
+            "isAuth": is_auth,
             "user": user
         }
 
         return Response(response)
-          
+       

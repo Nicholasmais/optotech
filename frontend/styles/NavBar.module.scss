@@ -1,0 +1,44 @@
+$cor-de-fundo-bege: beige;
+$cor-de-fundo-azure: azure;
+
+$altura-minima-switch: 20vh;
+$altura-minima-snellen: 70vh;
+
+$altura-margin-top-switch: calc(100vh - ($altura-minima-switch + $altura-minima-snellen));
+
+$border: 5px;
+$font-size: 20px;
+$letter-spacing: 10px;
+
+$user-icon-size: 40px;
+$icon-scale: 0.2;
+
+.navbar {
+  padding-top: 1rem;
+  display: flex;
+  align-items: center;
+
+  .logoContainer {
+    margin-top: 2.5%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .user {
+    position: relative;
+    z-index: 2;
+    right: #{calc(1 - $icon-scale)}rem;
+    top: #{calc((1 - $icon-scale) / 2)}rem;
+    margin-left: auto; 
+    height: $user-icon-size;
+    width: $user-icon-size;
+    transition: transform 0.3s ease;
+
+    &:hover{
+      margin-right: calc(0% + $user-icon-size*$icon-scale);     
+      transform: scale(calc(1 + $icon-scale));
+      cursor: pointer;
+    }
+  }
+}

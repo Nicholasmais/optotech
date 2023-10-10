@@ -1,0 +1,104 @@
+$cor-de-fundo-bege: beige;
+$cor-de-fundo-azure: azure;
+$altura-minima-switch: 20vh;
+$altura-minima-snellen: 70vh;
+$altura-margin-top-switch: calc(100vh - (#{$altura-minima-switch} + #{$altura-minima-snellen}));
+$border: 5px;
+$font-size: 20px;
+$letter-spacing: 10px;
+$user-icon-size: 40px;
+$icon-scale: 0.2;
+
+.meus-dados-container {
+  margin: 0 auto;
+  width: 60%;
+  margin-top: 80px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  background-color: $cor-de-fundo-bege;
+  button {    
+    color: white;
+
+    &:hover{
+      opacity: 0.5;
+    }
+  }
+  
+  .button-container{
+    margin: 0 auto;
+    width: 10rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    .alterar-button {
+      background-color: #007bff; /* Azul */
+    }
+    .iniciar-button {
+      background-color: #28a745; /* Verde */
+    }
+    .backButton {
+      background-color: #dc3545; /* Vermelho */
+    }
+  }
+}
+
+.header {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  background-color: $cor-de-fundo-azure; /* Cor de fundo azul */
+  border: 2px solid #007bff; /* Borda azul */
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 20px;
+  color: #333; /* Cor do texto mais escura */
+  font-family: Arial, sans-serif; /* Fonte */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+
+
+  p {
+    font-weight: bold;
+  }    
+
+  hr {
+    margin: 0px;
+    margin-top: 20px;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+  }
+}
+.historico{
+  width: 80%;
+  margin: 0 auto;
+}
+.appointment-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #333;
+  }
+
+  th {
+    background-color: $cor-de-fundo-bege;
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: $cor-de-fundo-bege;
+  }
+
+  tr:hover {
+    background-color: #e0e0e0;
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import styles from '../styles/Login.module.scss';
 const api = require('../services/api');
 import { toast, ToastContainer } from 'react-toastify';
@@ -76,7 +76,9 @@ function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOp
         </div>
       ) : (
         <>
-          <button onClick={handleUpdateClick}>Meus dados</button>
+          <Link href="/meus-dados">
+            <button>Meus dados</button>
+          </Link>
           <button onClick={logout}>Sair</button>
         </>
       )}
