@@ -1,10 +1,6 @@
 const axios = require('axios');
 
 const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'http://localhost:8000';
-console.log(process.env.NEXT_PUBLIC_BASE_API);
-for (const key in process.env) {
-  console.log(`${key} = ${process.env[key]}`);
-}
 
 const getUsers = async() => {
   return await axios.get(`${baseApiUrl}/users/`)
