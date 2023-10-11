@@ -62,5 +62,8 @@ out/
 # Arquivos de ambiente locais
 .env.local
 .env
+backend/venv/
+backend/.venv
 venv/
-
+.venv
+/venv/
