@@ -76,11 +76,7 @@ export default function Home() {
         :
         null;    
   }, [hasLoggedIn]);
-  console.log(process.env.NEXT_PUBLIC_BASE_API);
-  for (const key in process.env) {
-    console.log(`${key} = ${process.env[key]}`);
-  }
-  console.log("OI")
+ 
   useEffect(() => {    
     const isLoggedIn = api.checkSessionCookie();
     setHasLoggedIn(isLoggedIn);
