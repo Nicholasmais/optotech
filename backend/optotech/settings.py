@@ -55,11 +55,6 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de ban
 SESSION_COOKIE_HTTPONLY = False
 SESSION_COOKIE_AGE = 1 * 60 * 60
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
-CORS_ALLOW_CREDENTIALS = True
-
 ROOT_URLCONF = 'optotech.urls'
 
 TEMPLATES = [
@@ -92,6 +87,12 @@ dotenv_path = join(dirname(__file__) + r"\utils", '.env')
 load_dotenv(dotenv_path)
 
 ALLOWED_HOSTS = [".vercel.app", "localhost"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    os.environ.get("BASE_API")
+]
+CORS_ALLOW_CREDENTIALS = True
 
 DATABASES = {
     'default': {

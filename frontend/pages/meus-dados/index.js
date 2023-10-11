@@ -77,10 +77,7 @@ export default function MeusDados() {
 export async function getServerSideProps(context) {
   const { user, isAuth } = context.req.cookies; // Obtenha informações de autenticação a partir dos cookies
 
-  console.log('user:', user); // Exibe o valor de user no console
-  console.log('isAuth:', isAuth); // Exibe o valor de isAuth no console
-  console.log(context.req.cookies);
-  console.log(await api.isAuth())
+
   if (isAuth) {
     return {
       redirect: {
