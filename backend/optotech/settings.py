@@ -90,8 +90,7 @@ ALLOWED_HOSTS = [".vercel.app", "localhost"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    os.environ.get("BASE_API"),
-    ".vercel.app"
+    os.environ.get("BASE_API")
 ]
 CORS_ALLOW_CREDENTIALS = True
 
