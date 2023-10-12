@@ -35,7 +35,6 @@ class AppointmentView(viewsets.ModelViewSet):
                     **request.data, 
                     "id": str(instance.id)
                     })
-        print(appointment_seriailzer.errors)
         raise CustomAPIException(appointment_seriailzer.errors, 400)
     
     def teste(self, request):

@@ -3,10 +3,10 @@ from ..models.user import User
 from ..serializers.user_serializer import UserSerializer
 from rest_framework.response import Response
 import bcrypt
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.utils import timezone
 from ..utils.custom_exception_handler import CustomAPIException
-from django.shortcuts import redirect
+from django.contrib.sessions.models import Session
 
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -48,21 +48,32 @@ class LoginViewSet(viewsets.ModelViewSet):
     def is_authenticated(self, request):
         is_auth = False
         user = None
-        for key, value in request.session.items():
-            print(key, value)
-        print("")
-        for cookie, val in request.COOKIES.items():
-            print(cookie, val)
-        print("session_id", request.session.keys())
-        if request.session.get("user", False):
-            if request.session.get_expiry_date() >= timezone.now():  # Verifica se a sessão ainda está ativa
-                is_auth = True
-                user = request.session.get("user")
-                user_model = User.objects.get(id=user)
-                user = UserSerializer(user_model).data
-                del user["password"]
 
-                user["expirationDate"] = request.session.get_expiry_date()
+        if not Session.objects.filter(session_key=request.COOKIES.get("sessionid")):
+            response = {
+                "isAuth": is_auth,
+                "user": user
+            }
+            return Response(response)
+        
+        session = Session.objects.get(session_key=request.COOKIES.get("sessionid"))
+             
+        if session.expire_date <= timezone.now():
+            response = {
+                "isAuth": is_auth,
+                "user": user
+            }
+            return Response(response)
+
+        is_auth = True
+        user = session.get_decoded()["user"]
+        
+        user_model = User.objects.get(id=user)
+        user = UserSerializer(user_model).data
+
+        del user["password"]
+
+        user["expirationDate"] = session.expire_date
 
         response = {
             "isAuth": is_auth,
