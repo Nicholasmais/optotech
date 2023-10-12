@@ -30,7 +30,7 @@ class LoginViewSet(viewsets.ModelViewSet):
 
         request.session["user"] = str(user.id)    
         request.session.save()
-        
+
         user = UserSerializer(user).data    
         del user["password"]
   
@@ -48,7 +48,12 @@ class LoginViewSet(viewsets.ModelViewSet):
     def is_authenticated(self, request):
         is_auth = False
         user = None
-
+        for key, value in request.session.items():
+            print(key, value)
+        print("")
+        for cookie, val in request.COOKIES.items():
+            print(cookie, val)
+        print("session_id", request.session.keys())
         if request.session.get("user", False):
             if request.session.get_expiry_date() >= timezone.now():  # Verifica se a sessão ainda está ativa
                 is_auth = True
