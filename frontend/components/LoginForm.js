@@ -5,11 +5,11 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const api = require('../services/api'); 
 
-function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn}) {
+function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj}) {
   const { setAuthData } = useAuth(); 
-  const [isLogin, setIsLogin] = useState(true);
-  const [user, setUser] = useState('');
-  const [email, setEmail] = useState('');
+  const [isLogin, setIsLogin] = useState(isMeusDados ? !isMeusDados : true);
+  const [user, setUser] = useState(userObj ? userObj.user : '');
+  const [email, setEmail] = useState(userObj ? userObj.email : '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); 
   const [isUserValid, setIsUserValid] = useState(true);
@@ -73,19 +73,22 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
           password: password
         };   
         try {
-          const res = await api.login(body);
-          setShowAuthMessage(true);
-          setAuthData({
-            isAuth: res.isAuth,
-            user: res.user         
-          });
+          await api.login(body).then(res => {
+            setShowAuthMessage(true);
+            setAuthData({
+              isAuth: res.isAuth,
+              user: res.user
+            });
 
-          setIsLoginFormOpen(false);
-          setHasLoggedIn(true);
-          setIsLoggedFormOpen(true);
-          
+            setIsLoginFormOpen(false);
+            setHasLoggedIn(true);
+            setIsLoggedFormOpen(true);
+          }).catch((err) => {
+            toast.error(err.response.data.detail, toastConfig);  
+          });
         } catch (error) {
           console.error(error);
+          toast.error(error.response.data.detail, toastConfig);  
         }
         setHasTriedToLogIn(true);            
       }
@@ -100,18 +103,30 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
           email: email,
           password: password
         };
-        api.signup(body).then((res) => {
-          setShowAuthMessage(true);
-          setIsLoginFormOpen(true);
-          setHasLoggedIn(false);
-          setIsLoggedFormOpen(false);
-          toggleForm();
-          setIsLogin(true);
-          toast.success("Registro realizado com sucesso.", toastConfig);  
-        }).catch((error) => {
-          console.error(error);  
-          toast.error(error.response.data.detail, toastConfig);  
-        });
+        if (!isMeusDados){
+          await api.signup(body).then((res) => {
+            setShowAuthMessage(true);
+            setIsLoginFormOpen(true);
+            setHasLoggedIn(false);
+            setIsLoggedFormOpen(false);
+            toggleForm();
+            setIsLogin(true);
+            toast.success("Registro realizado com sucesso.", toastConfig);  
+          }).catch((error) => {
+            console.error(error);  
+            toast.error(error.response.data.detail, toastConfig);  
+          });
+        }
+        else{
+          await api.updateData(body).then((res) => {
+            setAuthData(res);
+            setShowAuthMessage(true); 
+            toast.success("Usuário atualizado com sucesso.", toastConfig);  
+          }).catch((error) => {
+            console.error(error);  
+            toast.error(error.response.data.detail, toastConfig);  
+          });
+        }
       }
     }
   }
@@ -173,15 +188,20 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             )}
           </div>
         )}
-        <button type="submit">{isLogin ? 'Entrar' : 'Cadastrar'}</button>
+        <button type="submit">{isLogin ? 'Entrar' : isMeusDados ? 'Atualizar' : 'Cadastrar'}</button>
       </form>
-      <button
-        className={styles.button}
-        onClick={toggleForm}
-      >
-        {isLogin ? 'Criar Conta' : 'Já tem uma conta? Login'}
-      </button>
-
+      {
+        isMeusDados ?
+          null
+          :
+          <button
+            className={styles.button}
+            onClick={toggleForm}
+          >
+            {isLogin ? 'Criar Conta' : 'Já tem uma conta? Login'}
+          </button>
+      }
+      
       {showAuthMessage && (
         <div className={styles.authMessage}>
           {isLogin ? 'Autenticado com sucesso!' : 'Registro realizado com sucesso!'}

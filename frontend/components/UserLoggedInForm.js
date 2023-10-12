@@ -24,11 +24,7 @@ function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOp
     pauseOnHover: true,     // Pause auto close on hover
     draggable: true,        // Allow the toast to be dragged
     closeButton: false
-  };
-  
-  const handleUpdateClick = () => {
-    setIsEditing(true);
-  };
+  };  
 
   const handleSaveClick = () => {    
     onUpdateUser(updatedUser, updatedEmail);

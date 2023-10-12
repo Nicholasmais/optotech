@@ -33,5 +33,6 @@ urlpatterns = [
     path('isAuth/', LoginViewSet.as_view({'get': 'is_authenticated'}), name='is-authenticated'),
     path('appointment/', AppointmentView.as_view({'get': 'user_appointments', 'post': 'create'}), name='appointment'),
     path('user-appointments/', AppointmentView.as_view({'get': 'user_appointments', 'post': 'teste'}), name='appointment'),
+    path('update-data/', UserViewSet.as_view({'put': 'update_data'}), name='update-data'),
     path('', include(router.urls)),
 ]

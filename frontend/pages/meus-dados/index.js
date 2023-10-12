@@ -5,16 +5,19 @@ import { useAuth } from '../../contexts/AuthContext';
 import NavBar from '../../components/NavBar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoginForm from '../../components/LoginForm';
+import { useRouter } from 'next/router';
 
 const api = require('../../services/api');
 
 export default function MeusDados() {
   const { authData, setAuthData } = useAuth();
-  const [user, setUser] = useState({
-    user: authData?.user?.user || null,
-    email: authData?.user?.email || null
-  });
+
+  let user = authData?.user?.user || '';
+  let email = authData?.user?.email || '';
+
   const [appointmentHistory, setAppointmentHistory] = useState([]);
+  const [isOpenForm, setIsOpenForm] = useState(false);
 
   const toastConfig = {
     position: "top-left", // Position of the toast
@@ -26,24 +29,34 @@ export default function MeusDados() {
     closeButton: false
   };
 
+  const router = useRouter();
+
+  useEffect(() => {
+    user = authData?.user?.user || '';
+    email = authData?.user?.email || '';
+  }, [authData])
+
   useEffect(() =>{
     const getUserAppointment = async() => {
       await api.appointment().then((res) => {
         setAppointmentHistory(res);
       }).catch((err) => {
-        toast.error(err, toastConfig);
+        toast.error(err.response.data.detail, toastConfig);  
       })
     }
-    getUserAppointment();
-    api.isAuth().then((res) => {
-      setAuthData(res);
-      setUser({
-        user: authData?.user?.user,
-        email: authData?.user?.email
+    const checkUser = async() => {
+      await api.isAuth().then((res) => {
+        setAuthData(res);
+        if (!res.isAuth){
+          router.push("/");
+        }
+      }).catch((err) => {
+        toast.error('Erro ao se conectar com servidor.', toastConfig);
       });
-    }).catch((err) => {
-      toast.error('Erro ao se conectar com servidor.', toastConfig);
-    });
+    }
+    checkUser();
+    getUserAppointment();
+
   }, [])
 
 
@@ -56,12 +69,12 @@ export default function MeusDados() {
         <h1 className={styles.header}>Meus Dados</h1>
 
         <div className={styles['user-info']}>
-          <p><strong>Nome:</strong> {user.user}</p>
-          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Nome:</strong> {user}</p>
+          <p><strong>Email:</strong> {email}</p>
         </div>
 
         <div className={styles['button-container']}>
-          <button className={styles['alterar-button']}>Alterar Dados</button>
+          <button className={styles['alterar-button']} onClick={()=>setIsOpenForm(!isOpenForm)}>Alterar Dados</button>
           <Link href="/atendimento">
             <button className={styles['iniciar-button']}>Iniciar Atendimento</button>
           </Link>
@@ -72,6 +85,10 @@ export default function MeusDados() {
 
         <hr />
       </div>
+
+      {isOpenForm && (
+        <LoginForm isMeusDados={true} userObj={{user: user, email: email}}></LoginForm>
+      )}
 
       <div className={styles['historico']}>
         <h2 className={styles.header}>Histórico de Atendimentos</h2>
@@ -98,25 +115,4 @@ export default function MeusDados() {
       </div>
     </>
   );
-}
-
-export async function getServerSideProps(context) {
-  const { user, isAuth } = context.req.cookies; // Obtenha informações de autenticação a partir dos cookies
-
-
-  if (isAuth) {
-    return {
-      redirect: {
-        destination: '/', // Redirecione para a página inicial se não estiver autenticado
-        permanent: false,
-      },
-    };
-  }
-
-  // Certifique-se de que `user` seja definido ou defina-o como `null`
-  const userData = user || null;
-
-  return {
-    props: { user: userData },
-  };
 }

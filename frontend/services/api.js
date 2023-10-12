@@ -101,6 +101,17 @@ const createAppointment = async(body) => {
   }
 }
 
+const updateData = async(body) => {
+  try{
+    const res = await axios.put(`${baseApiUrl}/update-data/`, body,  {
+      withCredentials: true
+    })    
+    return res.data;    
+  } catch(err) {
+    throw err
+  }
+}
+
 module.exports = {
   getUsers: getUsers,
   login: login,
@@ -110,5 +121,6 @@ module.exports = {
   checkSessionCookie: checkSessionCookie,
   clearCookie: clearCookie,
   appointment: appointment,
-  createAppointment: createAppointment
+  createAppointment: createAppointment,
+  updateData: updateData
 };

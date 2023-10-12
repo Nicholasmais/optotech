@@ -35,3 +35,31 @@ class UserViewSet(viewsets.ModelViewSet):
                 return Response({**serializer.data, "id":instance.id})
             raise CustomAPIException(serializer.errors, 400)
         raise CustomAPIException(serializer.errors, 400)
+
+    def update_data(self, request):
+        user_id = request.session.get("user")
+        user_model = User.objects.get(id = user_id)
+        body = request.data
+
+        user_serializer = self.serializer_class(user_model, data = body)
+        if user_serializer.is_valid():
+            salt = bcrypt.gensalt()
+            password_bytes = body["password"].encode("ascii")
+            password_hashed = bcrypt.hashpw(password_bytes, salt)
+            
+            body["password"]  = password_hashed.decode("utf-8")
+            user_serializer = self.serializer_class(user_model, data = body)
+            if user_serializer.is_valid():
+
+                instance = user_serializer.save()
+                del body["password"]
+                
+                return Response({
+                    "isAuth": True,
+                    "user":{
+                    **body,
+                    "id": str(instance.id)
+                    }
+                })
+            raise CustomAPIException(user_serializer.errors, 400)
+        return CustomAPIException("Erro ao atualizar usuário", 400)
