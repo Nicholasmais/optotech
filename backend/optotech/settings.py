@@ -104,8 +104,8 @@ DATABASES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de banco de dados por padrão
 SESSION_COOKIE_AGE = 1 * 60 * 60
 
-SESSION_COOKIE_DOMAIN = os.environ.get("BASE_API")
-CSRF_COOKIE_DOMAIN = os.environ.get("BASE_API")
+SESSION_COOKIE_DOMAIN = ".vercel.app"
+CSRF_COOKIE_DOMAIN = ".vercel.app"
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
