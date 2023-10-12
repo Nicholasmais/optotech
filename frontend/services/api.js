@@ -1,4 +1,6 @@
 const axios = require('axios');
+import Cookies from 'js-cookie'
+export const setItem = async (key, value) =>  Cookies.set(key, value, { expires: 1});
 
 const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'http://localhost:8000';
 
@@ -17,7 +19,6 @@ const login = async (body) => {
     const response = await axios.post(`${baseApiUrl}/login/`, body, {
       withCredentials: true,
     });
-
     return response.data;
   } catch (error) {
     throw error;
