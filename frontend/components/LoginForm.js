@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 const api = require('../services/api'); 
 
-function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj}) {
+function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj, setIsOpenForm, isOpenForm}) {
   const { setAuthData } = useAuth(); 
   const [isLogin, setIsLogin] = useState(isMeusDados ? !isMeusDados : true);
   const [user, setUser] = useState(userObj ? userObj.user : '');
@@ -185,6 +185,12 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
           </div>
         )}
         <button type="submit">{isLogin ? 'Entrar' : isMeusDados ? 'Atualizar' : 'Cadastrar'}</button>
+        {
+        isMeusDados ? 
+          <button type="button" onClick={() => setIsOpenForm(!isOpenForm)} >Fechar</button>
+          :
+          null
+        }
       </form>
       {
         isMeusDados ?

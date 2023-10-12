@@ -52,7 +52,7 @@ $icon-scale: 0.2;
 
 .snellen {
   position: relative;
-  height: $altura-minima-snellen;
+  min-height:$altura-minima-snellen;
   width: 90%;
   margin: 0 auto;
   background-color: white;
@@ -60,7 +60,7 @@ $icon-scale: 0.2;
 
   .row_to_read{
     width: 100%;
-    height: 30%;
+    height: 50%;
     background-color: aliceblue;
     display: flex;
     flex-direction: row;
@@ -69,31 +69,31 @@ $icon-scale: 0.2;
     letter-spacing: $letter-spacing;
   }
 
-  .all_letters{
-    position: absolute;
-    width: 25%;
-    left: 75%;
-    top:30%;
+  .all_letters {
+    width: clamp(200px, 25%, 400px);
     display: flex;
     flex-direction: column;
     align-items: center;
+    float: right;
   }
-
-  .change_active_row{
-    margin-top: 2%;
+  
+  .change_active_row {
+    position: absolute;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    :hover{
+    left: 50%;
+    height: 70px;
+    transform: translate(-50%, 0%);
+    :hover {
       transform: scale(1.25);
       cursor: pointer;
-    }
+    }  
+    
     div{
-      width: 25px;
-      height: 50px;
-      margin: 0 10px -25px 10px;      
+      width: 25px;      
+      margin: 0 10px -25px 10px;
     }
-
     div:nth-of-type(1){
       border-top: 60px solid transparent;
       border-bottom: 60px solid transparent;       
@@ -105,4 +105,22 @@ $icon-scale: 0.2;
       border-left: 60px solid black;
     }
   }
+
+  @media (max-width: 700px) {
+    .preview{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .change_active_row{
+        position: relative;
+      }
+  
+      .all_letters{
+        position: relative;
+        float: none;
+        margin: 0 auto;
+        margin-top: 60px; 
+      }
+    }
+  }  
 }

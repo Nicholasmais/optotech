@@ -87,31 +87,34 @@ export default function MeusDados() {
       </div>
 
       {isOpenForm && (
-        <LoginForm isMeusDados={true} userObj={{user: user, email: email}}></LoginForm>
+        <LoginForm isMeusDados={true} userObj={{user: user, email: email}} setIsOpenForm= {setIsOpenForm} isOpenForm = {isOpenForm}></LoginForm>
       )}
 
       <div className={styles['historico']}>
         <h2 className={styles.header}>Histórico de Atendimentos</h2>
-        <table className={styles['appointment-table']}>
-          <thead>
-            <tr>
-              <th style={{width: "30%"}}>Paciente</th>
-              <th style={{width: "20%"}}>Idade</th>
-              <th style={{width: "30%"}}>Data do atendimento</th>
-              <th style={{width: "20%"}}>Acuidade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointmentHistory.map((appointment, index) => (
-              <tr key={index}>
-                <td>{appointment.paciente}</td>
-                <td>{appointment.idade}</td>
-                <td>{appointment.data_atendimento}</td>
-                <td>{appointment.acuidade}</td>
+        
+        <div className={styles['table-div']}>
+          <table className={styles['appointment-table']}>
+            <thead>
+              <tr>
+                <th style={{width: "30%"}}>Paciente</th>
+                <th style={{width: "20%"}}>Idade</th>
+                <th style={{width: "30%"}}>Data do atendimento</th>
+                <th style={{width: "20%"}}>Acuidade</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {appointmentHistory.map((appointment, index) => (
+                <tr key={index}>
+                  <td>{appointment.paciente}</td>
+                  <td>{appointment.idade}</td>
+                  <td>{appointment.data_atendimento}</td>
+                  <td>{appointment.acuidade}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

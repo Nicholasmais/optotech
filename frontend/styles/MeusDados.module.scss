@@ -43,7 +43,7 @@ $icon-scale: 0.2;
     }
     .backButton {
       background-color: #dc3545; /* Vermelho */
-    }
+    }    
   }
 }
 
@@ -79,11 +79,16 @@ $icon-scale: 0.2;
   width: 80%;
   margin: 0 auto;
   padding-bottom: 5vh;
+
+  .table-div{
+    overflow-x: auto;
+  }
 }
+
 .appointment-table {
   width: 100%;
-  margin-top: 20px;
   border-collapse: collapse;
+  overflow-x:auto;
 
   th, td {
     padding: 10px;
@@ -103,4 +108,24 @@ $icon-scale: 0.2;
   tr:hover {
     background-color: #e0e0e0;
   }
+}
+
+@media (max-width: 700px) {
+  .button-container{
+    display: flex;
+    flex-direction: column !important;
+  }
+
+  .historico{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    h2{
+      position: relative;
+      text-align: center;     
+    }
+    .table-div{
+      border: 1px solid #000;
+    }
+  }  
 }
