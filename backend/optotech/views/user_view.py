@@ -33,5 +33,5 @@ class UserViewSet(viewsets.ModelViewSet):
             if serializer.is_valid():
                 instance = serializer.save()
                 return Response({**serializer.data, "id":instance.id})
-            raise CustomAPIException(serializer.errors)
-        raise CustomAPIException(serializer.errors)
+            raise CustomAPIException(serializer.errors, 400)
+        raise CustomAPIException(serializer.errors, 400)

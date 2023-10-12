@@ -15,14 +15,14 @@ class LoginViewSet(viewsets.ModelViewSet):
         body = request.data
         
         if not User.objects.filter(email=body.get("email")):
-            raise CustomAPIException("Usuário não encontrado")
+            raise CustomAPIException("Usuário não encontrado", 404)
 
         user = User.objects.get(email=body.get("email"))
 
         password_bytes = body["password"].encode("ascii")
 
         if not bcrypt.checkpw(password_bytes, user.password.encode("utf-8")):
-            raise CustomAPIException("Senha incorreta")                        
+            raise CustomAPIException("Senha incorreta", 401)                        
 
         request.session["user"] = str(user.id)    
 

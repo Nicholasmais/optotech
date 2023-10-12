@@ -20,6 +20,7 @@ from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from .views.user_view import UserViewSet
 from .views.login_view import LoginViewSet
+from .views.appointment import AppointmentView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -30,5 +31,7 @@ urlpatterns = [
     path('logout/', LoginViewSet.as_view({'post': 'logout'}), name='logout'),
     path('signup/', UserViewSet.as_view({'post': 'signup'}), name='signup'),
     path('isAuth/', LoginViewSet.as_view({'get': 'is_authenticated'}), name='is-authenticated'),
+    path('appointment/', AppointmentView.as_view({'get': 'user_appointments', 'post': 'create'}), name='appointment'),
+    path('user-appointments/', AppointmentView.as_view({'get': 'user_appointments', 'post': 'teste'}), name='appointment'),
     path('', include(router.urls)),
 ]

@@ -78,6 +78,7 @@ $icon-scale: 0.2;
 .historico{
   width: 80%;
   margin: 0 auto;
+  padding-bottom: 5vh;
 }
 .appointment-table {
   width: 100%;
@@ -87,6 +88,7 @@ $icon-scale: 0.2;
   th, td {
     padding: 10px;
     border: 1px solid #333;
+    text-align: center;
   }
 
   th {
@@ -95,7 +97,7 @@ $icon-scale: 0.2;
   }
 
   tr:nth-child(even) {
-    background-color: $cor-de-fundo-bege;
+    background-color: $cor-de-fundo-azure;
   }
 
   tr:hover {
