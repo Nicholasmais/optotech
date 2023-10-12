@@ -1,14 +1,25 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router';
-import { setItem } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
+
+const api = require('../../services/api');
 
 export default function AuthToken() {
+  const { setAuthData } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (router.query) { 
-      setItem('token', router.query.token);
-      router.push('/')
+    const setCookie = async() => {
+      await api.setItem('sessionid', router.query.token).then(async() =>{
+        await api.isAuth().then((res) => {
+          setAuthData({
+            isAuth: res.isAuth,
+            user: res.user
+          });
+          router.push("/");
+        });        
+      } );
     }
+    setCookie();
   }, [router.query]);
 }

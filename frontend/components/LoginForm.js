@@ -3,6 +3,8 @@ import { useAuth  } from '../contexts/AuthContext';
 import styles from '../styles/Login.module.scss';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
+
 const api = require('../services/api'); 
 
 function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj}) {
@@ -17,7 +19,8 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isConfirmedPasswordValid, setIsConfirmedPasswordValid] = useState(true); 
   const [showAuthMessage, setShowAuthMessage] = useState(false); // Novo estado para mostrar a mensagem de autenticação
- 
+  const router = useRouter();
+
   const toastConfig = {
     position: "top-left", // Position of the toast
     autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
@@ -73,16 +76,9 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
           password: password
         };   
         try {
-          await api.login(body).then(() => {
+          await api.login(body).then((res) => {
             setShowAuthMessage(true);
-            // setAuthData({
-            //   isAuth: res.isAuth,
-            //   user: res.user
-            // });
-
-            setIsLoginFormOpen(false);
-            setHasLoggedIn(true);
-            setIsLoggedFormOpen(true);
+            router.push(res.url);            
           }).catch((err) => {
             toast.error(err.response.data.detail, toastConfig);  
           });

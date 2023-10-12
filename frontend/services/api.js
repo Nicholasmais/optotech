@@ -1,6 +1,5 @@
 const axios = require('axios');
 import Cookies from 'js-cookie'
-export const setItem = async (key, value) =>  Cookies.set(key, value, { expires: 1});
 
 const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'http://localhost:8000';
 
@@ -59,6 +58,11 @@ const isAuth = async() => {
       throw error; 
     });
 }
+
+const setItem = async (key, value) =>{
+  Cookies.set(key, value, { expires: 1});
+} 
+
 
 function checkCookie(name) {
   const cookies = document.cookie.split('; ');
@@ -126,5 +130,6 @@ module.exports = {
   clearCookie: clearCookie,
   appointment: appointment,
   createAppointment: createAppointment,
-  updateData: updateData
+  updateData: updateData,
+  setItem: setItem
 };
