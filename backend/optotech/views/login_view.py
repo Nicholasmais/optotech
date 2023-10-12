@@ -21,8 +21,11 @@ class LoginViewSet(viewsets.ModelViewSet):
 
         password_bytes = body["password"].encode("ascii")
 
-        if not bcrypt.checkpw(password_bytes, user.password.encode("utf-8")):
-            raise CustomAPIException("Senha incorreta", 401)                        
+        try:
+            if not bcrypt.checkpw(password_bytes, user.password.encode("utf-8")):
+                raise CustomAPIException("Senha incorreta", 401)
+        except Exception as e:
+            raise CustomAPIException(str(e), 401)
 
         request.session["user"] = str(user.id)    
 

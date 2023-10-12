@@ -55,6 +55,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de ban
 SESSION_COOKIE_HTTPONLY = False
 SESSION_COOKIE_AGE = 1 * 60 * 60
 
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
+
 ROOT_URLCONF = 'optotech.urls'
 
 TEMPLATES = [

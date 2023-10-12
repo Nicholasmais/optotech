@@ -72,7 +72,7 @@ export default function Home() {
         console.log(res);
       }).catch((err) => {
         console.log(err);
-        toast.error('Erro ao salvar atendimento.', toastConfig);
+        toast.error(err.response.data.detail, toastConfig);  
       })
     }
   }
