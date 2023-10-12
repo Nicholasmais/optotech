@@ -73,12 +73,12 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
           password: password
         };   
         try {
-          await api.login(body).then(res => {
+          await api.login(body).then(() => {
             setShowAuthMessage(true);
-            setAuthData({
-              isAuth: res.isAuth,
-              user: res.user
-            });
+            // setAuthData({
+            //   isAuth: res.isAuth,
+            //   user: res.user
+            // });
 
             setIsLoginFormOpen(false);
             setHasLoggedIn(true);

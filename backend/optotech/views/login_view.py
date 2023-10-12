@@ -3,9 +3,10 @@ from ..models.user import User
 from ..serializers.user_serializer import UserSerializer
 from rest_framework.response import Response
 import bcrypt
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from ..utils.custom_exception_handler import CustomAPIException
+from django.shortcuts import redirect
 
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -28,12 +29,13 @@ class LoginViewSet(viewsets.ModelViewSet):
             raise CustomAPIException(str(e), 401)
 
         request.session["user"] = str(user.id)    
-
+        request.session.save()
         user = UserSerializer(user).data    
         del user["password"]
-
-        return self.is_authenticated(request)
-
+        print(request.session)
+        print(request.session.session_key)
+        return Response({"url":f"auth/{request.session.session_key}"})
+    
     def logout(self, request):
         request.session.flush()
         response = HttpResponse("Sessão apagada e cookies limpos.")
