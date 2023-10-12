@@ -17,6 +17,7 @@ const login = async (body) => {
   try {
     const response = await axios.post(`${baseApiUrl}/login/`, body, {
       withCredentials: true,
+      credentials: 'include'
     });
     return response.data;
   } catch (error) {
@@ -28,6 +29,7 @@ const signup = async (body) => {
   try {
     const response = await axios.post(`${baseApiUrl}/signup/`, body, {
       withCredentials: true,
+      credentials: 'include'
     });
     return response.data;
   } catch (error) {
@@ -39,6 +41,7 @@ const logout = async (body) => {
   try {
     const response = await axios.post(`${baseApiUrl}/logout/`, body, {
       withCredentials: true,
+      credentials: 'include'
     });
 
     return response.data;
@@ -50,6 +53,7 @@ const logout = async (body) => {
 const isAuth = async() => {
   return await axios.get(`${baseApiUrl}/isAuth/`, {
     withCredentials: true,
+    credentials: 'include'
   })
     .then((response) => {
       return response.data; 
@@ -90,7 +94,8 @@ function clearCookie() {
 const appointment = async() => {
   try {
     const res = await axios.get(`${baseApiUrl}/appointment/`, {
-      withCredentials: true
+      withCredentials: true,
+      credentials: 'include'
     });
     return res.data;
   } catch (err){
@@ -101,7 +106,8 @@ const appointment = async() => {
 const createAppointment = async(body) => {
   try {
     const res = await axios.post(`${baseApiUrl}/appointment/`, body, {
-      withCredentials: true
+      withCredentials: true,
+      credentials: 'include'
     });
     return res.data;
   } catch (err){
@@ -112,7 +118,8 @@ const createAppointment = async(body) => {
 const updateData = async(body) => {
   try{
     const res = await axios.put(`${baseApiUrl}/update-data/`, body,  {
-      withCredentials: true
+      withCredentials: true,
+      credentials: 'include'
     })    
     return res.data;    
   } catch(err) {
