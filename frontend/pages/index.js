@@ -45,14 +45,15 @@ export default function Home() {
         null;    
   }, [hasLoggedIn]);
  
-  useEffect(() => {      
+  useEffect(() => {    
+    const isLoggedIn = api.checkSessionCookie();
+    setHasLoggedIn(isLoggedIn);
+  
     api.isAuth().then((res) => {
       setAuthData(res);      
     }).catch((err) => {
       toast.error("Erro ao se conectar com servidor.", toastConfig)
-    });
-    const isLoggedIn = authData.isAuth;
-    setHasLoggedIn(isLoggedIn);
+    })
   }, []);
   
 
