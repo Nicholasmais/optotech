@@ -30,10 +30,10 @@ class LoginViewSet(viewsets.ModelViewSet):
 
         request.session["user"] = str(user.id)    
         request.session.save()
+        
         user = UserSerializer(user).data    
         del user["password"]
-        print(request.session)
-        print(request.session.session_key)
+  
         return Response({"url":f"auth/{request.session.session_key}"})
     
     def logout(self, request):
