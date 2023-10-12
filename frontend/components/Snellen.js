@@ -70,8 +70,8 @@ const Snellen = () => {
                 <div key={index} style={{ fontSize: `${40}px` }}>
                   {row.letters}
                 </div>
-              )
-              )}
+              ))
+            }
           </div>
         </div>
       </div>

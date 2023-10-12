@@ -45,12 +45,14 @@ export default function Home() {
         null;    
   }, [hasLoggedIn]);
  
-  useEffect(() => {    
-    const isLoggedIn = api.checkSessionCookie();
-    setHasLoggedIn(isLoggedIn);
-  
+  useEffect(() => {         
     api.isAuth().then((res) => {
-      setAuthData(res);      
+      if (!res.isAuth){
+        api.removeItem("sessionid");
+      }
+      const isLoggedIn = api.checkSessionCookie();
+      setHasLoggedIn(isLoggedIn);
+      setAuthData(res);
     }).catch((err) => {
       toast.error("Erro ao se conectar com servidor.", toastConfig)
     })
