@@ -61,18 +61,7 @@ export default function Home() {
     <>
       <NavBar toggleLoginForm={toggleLoginForm}></NavBar>
 
-      <Snellen></Snellen>
-
-      {
-        isLoginFormOpen ? (
-          <LoginForm 
-          setIsLoginFormOpen = {setIsLoginFormOpen}
-          setHasLoggedIn = {setHasLoggedIn}
-          setIsLoggedFormOpen = {setIsLoggedFormOpen}
-          setHasTriedToLogIn = {setHasTriedToLogIn}
-          />
-        ) : null
-      }
+      <Snellen></Snellen>   
 
       {
         hasLoggedIn ? ( isLoggedFormOpen ? ( 
@@ -83,7 +72,16 @@ export default function Home() {
           setHasTriedToLogIn = {setHasTriedToLogIn}
           />
           ) : null
-        ) : null
+        ) : 
+          isLoginFormOpen ? (
+            <LoginForm 
+            setIsLoginFormOpen = {setIsLoginFormOpen}
+            setHasLoggedIn = {setHasLoggedIn}
+            setIsLoggedFormOpen = {setIsLoggedFormOpen}
+            setHasTriedToLogIn = {setHasTriedToLogIn}
+            />
+          ) : null
+        
       }
     </>
   );
