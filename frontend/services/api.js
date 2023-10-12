@@ -72,7 +72,10 @@ function checkCookie(name) {
 
 function checkSessionCookie() {
   const sessionCookie = checkCookie('sessionid');
-  return sessionCookie !== null && sessionCookie !== '';
+  const csrfToken = checkCookie('csrftoken');
+  const isSession = sessionCookie !== null && sessionCookie !== '';
+  const isCsrf = csrfToken !== null && csrfToken !== ''
+  return isSession || isCsrf;
 }
 
 function clearCookie() {
