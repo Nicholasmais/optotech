@@ -50,16 +50,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de banco de dados por padrão
-SESSION_COOKIE_AGE = 1 * 60 * 60
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
-
 ROOT_URLCONF = 'optotech.urls'
 
 TEMPLATES = [
@@ -110,6 +100,18 @@ DATABASES = {
         'PORT': os.environ.get("DB_PORT"),
     }
 }
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o mecanismo de banco de dados por padrão
+SESSION_COOKIE_AGE = 1 * 60 * 60
+
+SESSION_COOKIE_DOMAIN = os.environ.get("BASE_API")
+CSRF_COOKIE_DOMAIN = os.environ.get("BASE_API")
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
 
 
 # Password validation
