@@ -63,10 +63,15 @@ const isAuth = async() => {
     });
 }
 
-const setItem = async (key, value) =>{
-  Cookies.set(key, value, { expires: 1});
-} 
+const setItem = async (key, value) => {
+  const expirationDate = new Date();
+  expirationDate.setHours(expirationDate.getHours() + 1); // Adiciona 1 hora à data atual
+  Cookies.set(key, value, { expires: expirationDate });
+}
 
+const removeItem = async (key) =>{
+  Cookies.remove(key);
+} 
 
 function checkCookie(name) {
   const cookies = document.cookie.split('; ');
@@ -138,5 +143,6 @@ module.exports = {
   appointment: appointment,
   createAppointment: createAppointment,
   updateData: updateData,
-  setItem: setItem
+  setItem: setItem,
+  removeItem: removeItem
 };
