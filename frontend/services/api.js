@@ -79,6 +79,28 @@ function clearCookie() {
   document.cookie = `sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 
+const appointment = async() => {
+  try {
+    const res = await axios.get(`${baseApiUrl}/appointment/`, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (err){
+    throw err
+  }
+}
+
+const createAppointment = async(body) => {
+  try {
+    const res = await axios.post(`${baseApiUrl}/appointment/`, body, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (err){
+    throw err
+  }
+}
+
 module.exports = {
   getUsers: getUsers,
   login: login,
@@ -86,5 +108,7 @@ module.exports = {
   signup: signup,
   isAuth: isAuth,
   checkSessionCookie: checkSessionCookie,
-  clearCookie: clearCookie
+  clearCookie: clearCookie,
+  appointment: appointment,
+  createAppointment: createAppointment
 };

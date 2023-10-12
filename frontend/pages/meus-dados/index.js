@@ -3,6 +3,9 @@ import styles from '../../styles/MeusDados.module.scss'; // Importe os estilos c
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 import NavBar from '../../components/NavBar';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const api = require('../../services/api');
 
 export default function MeusDados() {
@@ -11,20 +14,43 @@ export default function MeusDados() {
     user: authData?.user?.user || null,
     email: authData?.user?.email || null
   });
+  const [appointmentHistory, setAppointmentHistory] = useState([]);
 
-  const appointmentHistory = [
-    {
-      patientName: 'Maria Pereira',
-      snellenVision: '20/20',
-      age: 35,
-      birthDate: '1988-05-15',
-      appointmentTime: '2023-10-10T09:00:00',
-    },
-  ];  
+  const toastConfig = {
+    position: "top-left", // Position of the toast
+    autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
+    hideProgressBar: false, // Show/hide the progress bar
+    closeOnClick: true,     // Close the toast when clicked
+    pauseOnHover: true,     // Pause auto close on hover
+    draggable: true,        // Allow the toast to be dragged
+    closeButton: false
+  };
+
+  useEffect(() =>{
+    const getUserAppointment = async() => {
+      await api.appointment().then((res) => {
+        setAppointmentHistory(res);
+      }).catch((err) => {
+        toast.error(err, toastConfig);
+      })
+    }
+    getUserAppointment();
+    api.isAuth().then((res) => {
+      setAuthData(res);
+      setUser({
+        user: authData?.user?.user,
+        email: authData?.user?.email
+      });
+    }).catch((err) => {
+      toast.error('Erro ao se conectar com servidor.', toastConfig);
+    });
+  }, [])
+
 
   return (
       <>
       <NavBar style={{marginTop: "1rem"}}></NavBar>
+      <ToastContainer />
 
       <div className={styles['meus-dados-container']}>
         <h1 className={styles.header}>Meus Dados</h1>
@@ -36,7 +62,9 @@ export default function MeusDados() {
 
         <div className={styles['button-container']}>
           <button className={styles['alterar-button']}>Alterar Dados</button>
-          <button className={styles['iniciar-button']}>Iniciar Atendimento</button>
+          <Link href="/atendimento">
+            <button className={styles['iniciar-button']}>Iniciar Atendimento</button>
+          </Link>
           <Link href="/">
             <button className={styles.backButton}>Voltar</button>
           </Link>
@@ -50,21 +78,19 @@ export default function MeusDados() {
         <table className={styles['appointment-table']}>
           <thead>
             <tr>
-              <th>Paciente</th>
-              <th>Visão (20/20, 20/30, etc.)</th>
-              <th>Idade</th>
-              <th>Data de Nascimento</th>
-              <th>Hora da Consulta</th>
+              <th style={{width: "30%"}}>Paciente</th>
+              <th style={{width: "20%"}}>Idade</th>
+              <th style={{width: "30%"}}>Data do atendimento</th>
+              <th style={{width: "20%"}}>Acuidade</th>
             </tr>
           </thead>
           <tbody>
             {appointmentHistory.map((appointment, index) => (
               <tr key={index}>
-                <td>{appointment.patientName}</td>
-                <td>{appointment.snellenVision}</td>
-                <td>{appointment.age}</td>
-                <td>{appointment.birthDate}</td>
-                <td>{appointment.appointmentTime}</td>
+                <td>{appointment.paciente}</td>
+                <td>{appointment.idade}</td>
+                <td>{appointment.data_atendimento}</td>
+                <td>{appointment.acuidade}</td>
               </tr>
             ))}
           </tbody>
