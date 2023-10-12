@@ -67,3 +67,5 @@ backend/.venv
 venv/
 .venv
 /venv/
+.vscode/
+.vscode/launch.json
