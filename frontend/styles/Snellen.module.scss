@@ -109,6 +109,17 @@ $icon-scale: 0.2;
     }   
   }
   @media (max-width: 700px) {
+    .base{
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .all_letters{
+      position: relative;
+      float: none;
+      margin: 0 auto;
+      margin-top: 60px;
+    }
     .preview{
       display: flex;
       flex-direction: column;
@@ -116,13 +127,9 @@ $icon-scale: 0.2;
       .change_active_row{
         position: relative;
       }
+      
   
-      .all_letters{
-        position: relative;
-        float: none;
-        margin: 0 auto;
-        margin-top: 60px; 
-      }
+      
     }
   }  
 }
