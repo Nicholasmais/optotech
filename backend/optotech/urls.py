@@ -21,6 +21,7 @@ from django.urls import path, include
 from .views.user_view import UserViewSet
 from .views.login_view import LoginViewSet
 from .views.appointment import AppointmentView
+from .views.matrix_letter import MatrixLetterView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -34,5 +35,6 @@ urlpatterns = [
     path('appointment/', AppointmentView.as_view({'get': 'user_appointments', 'post': 'create'}), name='appointment'),
     path('user-appointments/', AppointmentView.as_view({'get': 'user_appointments', 'post': 'teste'}), name='appointment'),
     path('update-data/', UserViewSet.as_view({'put': 'update_data'}), name='update-data'),
+    path('matrix-letter/', MatrixLetterView.as_view({'get': 'get_letra'}), name='matrix-letter'),
     path('', include(router.urls)),
 ]

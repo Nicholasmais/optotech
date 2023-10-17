@@ -132,6 +132,30 @@ const updateData = async(body) => {
   }
 }
 
+const MatrixLetter = async(letter) =>{
+  try{
+    let res;
+    if (letter){
+      res = await axios.get(`${baseApiUrl}/matrix-letter?letra=${letter}/`,
+      {
+        withCredentials:true,
+        credentials:'include'
+      });
+    }
+    else{
+      res = await axios.get(`${baseApiUrl}/matrix-letter/`,
+      {
+        withCredentials:true,
+        credentials:'include'
+      });
+    }
+    return res.data;
+
+  } catch(err) {
+    throw err;
+  }  
+}
+
 module.exports = {
   getUsers: getUsers,
   login: login,
@@ -144,5 +168,6 @@ module.exports = {
   createAppointment: createAppointment,
   updateData: updateData,
   setItem: setItem,
-  removeItem: removeItem
+  removeItem: removeItem,
+  MatrixLetter: MatrixLetter
 };
