@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Snellen.module.scss';
+import MatrixLetter from './MatrixLetter';
 
 const Snellen = () => {
-  const [activeRow, setActiveRow] = useState(0);
+  const [activeRow, setActiveRow] = useState(1);
   const [activeCustomRow, setActiveCustomRow] = useState(0); // Linha ativa na visualização "Personalize"
   const [customFontSize, setCustomFontSize] = useState(100); // Tamanho de fonte padrão
   const [customLetters, setCustomLetters] = useState([
@@ -57,7 +58,7 @@ const Snellen = () => {
     if (isSnellen) {
       const newRow = activeRow + increment;
       if (newRow >= 0 && newRow < snellen_letters.length) {
-        setActiveRow(newRow);
+        setActiveRow(newRow);   
       }
     } else {
       const newRow = activeCustomRow + increment;
@@ -96,15 +97,15 @@ const Snellen = () => {
           {
             isSnellen ? (
               <div className={styles.row_to_read} style={{ fontSize: `${snellen_letters[activeRow].size}px` }}>          
-                <span>
-                  {snellen_letters[activeRow].letters}
-                </span>
+                {snellen_letters[activeRow].letters.map((letra, letraIndex) => 
+                  <MatrixLetter letter={letra} fontSize={snellen_letters[activeRow].size} key={`${letraIndex}-matrixLetter`}></MatrixLetter>                  
+                )}
               </div>
             ) : (
               <div className={styles.row_to_read} style={{ fontSize: `${customLetters[activeCustomRow].size}px` }}>          
-                <span>
-                  {customLetters[activeCustomRow].letters}
-                </span>
+                {customLetters[activeCustomRow].letters.map((letra, letraIndex) => 
+                  <MatrixLetter letter={letra} fontSize={customLetters[activeCustomRow].size} key={`${letraIndex}-matrixLetter`}></MatrixLetter>                  
+                )}              
               </div>
             )
           }
