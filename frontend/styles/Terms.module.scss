@@ -1,0 +1,33 @@
+.responsibilityContainer {
+  background-color: #f5f5f5;
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 3%;
+  padding-bottom: 4%;
+  margin-bottom: 5%;
+}
+
+.title {
+  font-size: 1.8rem; /* Aumentando o valor do rem */
+  font-weight: bold;
+  margin-bottom: 0.6rem;
+}
+
+.description {
+  font-size: 1.2rem; /* Aumentando o valor do rem */
+  margin-bottom: 1.2rem;
+}
+
+.list {
+  list-style-type: disc;
+  margin-left: 1.2rem;
+  font-size: 1.2rem; /* Aumentando o valor do rem */
+}
+
+.note {
+  font-size: 1rem; /* Aumentando o valor do rem */
+  margin-top: 1.2rem;
+}

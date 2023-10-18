@@ -73,6 +73,25 @@ $icon-scale: 0.2;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    
+    .custom-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+    }
+    
+    /* Estilização para as etiquetas "Linha X" */
+    .custom-label {
+      font-weight: bold;      
+    }
+
+    /* Estilização para as entradas de letras personalizadas */
+    .custom-input {      
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px; /* Ajuste conforme necessário */
+    }  
 
     .all_letters {
       width: clamp(200px, 25%, 400px);
@@ -80,34 +99,9 @@ $icon-scale: 0.2;
       flex-direction: column;
       align-items: center;
       float: right;
-    }
-    
-    .change_active_row {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      height: 70px;
-      & div:hover {
-        transform: scale(1.25);
-        cursor: pointer;
-      }  
-      
-      div{
-        width: 25px;      
-        margin: 0 10px -25px 10px;
-      }
-      div:nth-of-type(1){
-        border-top: 60px solid transparent;
-        border-bottom: 60px solid transparent;       
-        border-right:60px solid black;
-      }
-      div:nth-of-type(2){
-        border-top: 60px solid transparent;
-        border-bottom: 60px solid transparent;      
-        border-left: 60px solid black;
-      }
-    }   
+    }          
   }
+  
   @media (max-width: 700px) {
     .base{
       flex-direction: column;

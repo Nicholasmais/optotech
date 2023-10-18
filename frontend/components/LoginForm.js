@@ -127,6 +127,10 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
     }
   }
 
+  const goTerms = () => {
+    router.push('/terms');
+  }
+
   return (
     <div className={styles.formContainer}>
       <ToastContainer />
@@ -203,7 +207,8 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             {isLogin ? 'Criar Conta' : 'Já tem uma conta? Login'}
           </button>
       }
-      
+      <button type="button" onClick={goTerms} >Ajuda</button>
+
       {showAuthMessage && (
         <div className={styles.authMessage}>
           {isLogin ? 'Autenticado com sucesso!' : 'Registro realizado com sucesso!'}
