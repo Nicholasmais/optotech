@@ -5,6 +5,7 @@ import styles from '../styles/Login.module.scss';
 const api = require('../services/api');
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
 
 function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn}) {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,6 +17,8 @@ function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOp
   const [updatedUser, setUpdatedUser] = useState(user);
   const [updatedEmail, setUpdatedEmail] = useState(email);
   
+  const router = useRouter();
+
   const toastConfig = {
     position: "top-left", // Position of the toast
     autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
@@ -25,6 +28,10 @@ function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOp
     draggable: true,        // Allow the toast to be dragged
     closeButton: false
   };  
+
+  const goTerms = () => {
+    router.push('/terms');
+  }
 
   const handleSaveClick = () => {    
     onUpdateUser(updatedUser, updatedEmail);
@@ -78,6 +85,7 @@ function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOp
           <button onClick={logout}>Sair</button>
         </>
       )}
+      <button type="button" onClick={goTerms} >Ajuda</button>
     </div>
   );
 }

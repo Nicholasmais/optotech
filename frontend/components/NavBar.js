@@ -2,10 +2,11 @@ import React from 'react'
 import styles from '../styles/NavBar.module.scss';
 import logo from '../assets/logo.png';
 import user from '../assets/user.png';
+import arrow from '../assets/go-back.png';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const NavBar = ({toggleLoginForm, style}) => {
+const NavBar = ({toggleLoginForm, style, goBack}) => {
   return (
     <div className={styles.navbar} style={style}>
       <ToastContainer />
@@ -17,7 +18,12 @@ const NavBar = ({toggleLoginForm, style}) => {
           <img src={user.src} alt="User" className={styles.user} />
         </div>
           :
-        null
+          goBack ? 
+          <div className={styles.user} onClick={goBack}>
+            <img src={arrow.src} alt="Arrow" className={styles.arrow} />
+          </div>
+          :
+          null
       }      
     </div>
   )

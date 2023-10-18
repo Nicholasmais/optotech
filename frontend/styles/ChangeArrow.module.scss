@@ -1,0 +1,25 @@
+.change_active_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 70px;
+  & div:hover {
+    transform: scale(1.25);
+    cursor: pointer;
+  }  
+  
+  div{
+    width: 25px;      
+    margin: 0 10px -25px 10px;
+  }
+  div:nth-of-type(1){
+    border-top: 60px solid transparent;
+    border-bottom: 60px solid transparent;       
+    border-right:60px solid black;
+  }
+  div:nth-of-type(2){
+    border-top: 60px solid transparent;
+    border-bottom: 60px solid transparent;      
+    border-left: 60px solid black;
+  }
+}
