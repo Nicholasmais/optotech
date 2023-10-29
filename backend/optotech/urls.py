@@ -22,9 +22,11 @@ from .views.user_view import UserViewSet
 from .views.login_view import LoginViewSet
 from .views.appointment import AppointmentView
 from .views.matrix_letter import MatrixLetterView
+from .views.aluno import AlunoViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
+router.register(r'alunos', AlunoViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),    

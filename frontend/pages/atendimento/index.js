@@ -69,7 +69,6 @@ export default function Home() {
 
       await api.createAppointment(obj).then((res) => {
         toast.success('Sucesso ao salvar atendimento.', toastConfig);
-        console.log(res);
       }).catch((err) => {
         console.log(err);
         toast.error(err.response.data.detail, toastConfig);  
