@@ -132,6 +132,56 @@ const updateData = async(body) => {
   }
 }
 
+
+const alunos = async() => {
+  try {
+    const res = await axios.get(`${baseApiUrl}/alunos/`, {
+      withCredentials: true,
+      credentials: 'include'
+    });
+    return res.data;
+  } catch (err){
+    throw err
+  }
+}
+
+const createAluno = async(body) => {
+  try {
+    const res = await axios.post(`${baseApiUrl}/alunos/`, body, {
+      withCredentials: true,
+      credentials: 'include'
+    });
+    return res.data;
+  } catch (err){
+    throw err
+  }
+}
+
+const updateAluno = async(body) => {
+  try{
+    const res = await axios.put(`${baseApiUrl}/alunos/`, body,  {
+      withCredentials: true,
+      credentials: 'include'
+    })    
+    return res.data;    
+  } catch(err) {
+    throw err
+  }
+}
+
+const deleteAluno = async(body) => {
+  try{
+    const res = await axios.delete(`${baseApiUrl}/alunos/`, body,  {
+      withCredentials: true,
+      credentials: 'include'
+    })    
+    return res.data;    
+  } catch(err) {
+    throw err
+  }
+}
+
+
 const MatrixLetter = async(letter) =>{
   try{
     let res;
@@ -167,6 +217,10 @@ module.exports = {
   appointment: appointment,
   createAppointment: createAppointment,
   updateData: updateData,
+  alunos: alunos,
+  createAluno: createAluno,
+  updateAluno: updateAluno,
+  deleteAluno: deleteAluno,
   setItem: setItem,
   removeItem: removeItem,
   MatrixLetter: MatrixLetter

@@ -28,18 +28,27 @@ $icon-scale: 0.2;
   
   .button-container{
     margin: 0 auto;
-    width: 10rem;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-
+    flex-wrap: wrap;
     .alterar-button {
+      width: 10rem;
       background-color: #007bff; /* Azul */
     }
     .iniciar-button {
       background-color: #28a745; /* Verde */
+    }
+    .alunos {
+      width: 10rem;
+      background-color: #ddc515; /* Amarelo */
+    }
+    .historico-btn {
+      width: 10rem;
+      background-color: #df8621; /* Laranja */
     }
     .backButton {
       background-color: #dc3545; /* Vermelho */
@@ -78,11 +87,77 @@ $icon-scale: 0.2;
 .historico{
   width: 80%;
   margin: 0 auto;
-  padding-bottom: 5vh;
+  padding-top: 20vh;
 
   .table-div{
     overflow-x: auto;
   }
+
+  .iniciar-button {
+    width: 10rem;
+    background-color: #28a745; /* Verde */
+  }
+
+  .alunos {
+    width: 10rem;
+    background-color: #ddc515; /* Amarelo */
+  }
+  .historico-btn {
+    width: 10rem;
+    background-color: #df8621; /* Laranja */
+  }
+
+  .cadastro{
+    /* Estilos para o formulário */
+    form {
+      width: 300px; /* Largura total do formulário */
+      margin: 0 auto; /* Centraliza o formulário na página */
+    }
+
+    /* Estilos para rótulos (labels) */
+    label {
+      margin-bottom: 5px; /* Espaço entre rótulos */
+    }
+  
+    /* Estilos para o botão de envio */
+    button {
+      background-color: #007bff; /* Cor de fundo do botão */
+      color: #fff; /* Cor do texto do botão */
+      padding: 10px 10px; /* Espaçamento interno do botão */
+      border: none; /* Remove a borda */
+      border-radius: 4px; /* Cantos arredondados */
+      cursor: pointer; /* Altera o cursor ao passar o mouse sobre o botão */
+    }
+
+    /* Estilos para o botão de envio ao passar o mouse */
+    button:hover {
+      background-color: #0056b3; /* Cor de fundo alterada no hover */
+    }   
+  }
+
+  .form-row{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;    
+    .buttons{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center !important;
+      flex-wrap: wrap;
+      button{
+        width: 10rem;
+      }
+    }
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
 }
 
 .appointment-table {
