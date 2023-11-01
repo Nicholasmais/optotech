@@ -42,21 +42,21 @@ export default function MeusDados() {
       toast.error(err.response.data.detail, toastConfig);  
     })
   }
+
+  const getUserAppointment = async() => {
+    await api.appointment().then((res) => {
+      setAppointmentHistory(res);
+    }).catch((err) => {
+      toast.error(err.response.data.detail, toastConfig);  
+    })
+  }
   
   useEffect(() => {
     user = authData?.user?.user || '';
     email = authData?.user?.email || '';
   }, [authData])
 
-  useEffect(() =>{
-    const getUserAppointment = async() => {
-      await api.appointment().then((res) => {
-        setAppointmentHistory(res);
-      }).catch((err) => {
-        toast.error(err.response.data.detail, toastConfig);  
-      })
-    }
-
+  useEffect(() =>{  
     const checkUser = async() => {
       await api.isAuth().then((res) => {
         setAuthData(res);
@@ -72,7 +72,7 @@ export default function MeusDados() {
     getAlunos();
     getUserAppointment();
 
-  }, [])
+  }, []);
 
   const renderSwitch = (current) => {
     switch(current) {
@@ -86,7 +86,7 @@ export default function MeusDados() {
           />);
       
       case 'alunos':
-        return (<Alunos alunos={alunos} setCurrent={setCurrent} getAlunos={getAlunos}/>);
+        return (<Alunos alunos={alunos} setCurrent={setCurrent} getAlunos={getAlunos} setAppointmentHistory={setAppointmentHistory}/>);
       
       case 'historico':
         return (<History appointmentHistory={appointmentHistory} setCurrent={setCurrent}/>);

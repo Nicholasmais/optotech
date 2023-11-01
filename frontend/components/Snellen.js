@@ -3,11 +3,18 @@ import styles from '../styles/Snellen.module.scss';
 import MatrixLetter from './MatrixLetter';
 import { toast } from 'react-toastify';
 import ChangeArrows from './ChangeArrows';
+import eye from '../assets/eye.png';
+import hidden_eye from '../assets/hidden-eye.png';
 const api = require('../services/api');
 
 const Snellen = () => {
-  const [activeRow, setActiveRow] = useState(0);
+  const [activeRow, setActiveRow] = useState(3);
   const [activeCustomRow, setActiveCustomRow] = useState(0); // Linha ativa na visualização "Personalize"
+  
+  const letterPx = (distance, snellen_value, dpi = 96) => {
+    return ( 0.0145 * snellen_value * distance * dpi / 25.4);
+  }
+
   const [customFontSize, setCustomFontSize] = useState(2.6); // Tamanho de fonte padrão
   const [customLetters, setCustomLetters] = useState([
     {
@@ -44,44 +51,46 @@ const Snellen = () => {
     }
   ]);
   
-  const fontSize = 2.6;
+  const fontSize = 8.72;
   const [isSnellen, setIsSnellen] = useState(true);
   const snellen_letters = [
     {
       letters: ["E"],
-      size: fontSize,
+      size: letterPx(6, 200),
     },
     {
       letters: ["F", "P"],
-      size: fontSize * 0.8,
+      size: letterPx(6, 100),
     },
     {
       letters: ["T", "O", "Z"],
-      size: fontSize * 0.8 * 0.8,
+      size: letterPx(6, 70),
     },
     {
       letters: ["L", "P", "E", "D"],
-      size: fontSize * 0.8 * 0.8 * 0.8,
+      size: letterPx(6, 60),
     },
     {
       letters: ["P", "E", "C", "F", "D"],
-      size: fontSize * 0.8 * 0.8 * 0.8 * 0.8,
+      size: letterPx(6, 40),
     },
     {
       letters: ["E", "D", "F", "C", "Z", "P"],
-      size: fontSize * 0.8 * 0.8 * 0.8 * 0.8 * 0.8,
+      size: letterPx(6, 30),
     },
     {
       letters: ["F", "E", "L", "O", "P", "Z", "D"],
-      size: fontSize * 0.8 * 0.8 * 0.8 * 0.8 * 0.8 * 0.8,
+      size: letterPx(6, 25),
     },
     {
       letters: ["D", "E", "F", "P", "O", "T", "E", "C"],
-      size: fontSize * 0.8 * 0.8 * 0.8 * 0.8 * 0.8 * 0.8 * 0.8,
+      size: letterPx(6, 20),
     },
   ];
 
   const [allLettersMatrix, setAllLettersMatrix] = useState({});
+
+  const [isHiddenEye, setIsHiddenEye] = useState(false);
 
   const changeActiveRow = (increment) => {
     if (isSnellen) {
@@ -97,12 +106,8 @@ const Snellen = () => {
     }
   }
 
-  const feetToMeter = (feet) => {
-    return feet / 3,281;
-  }
-
   const distanceToRead = (font) => {
-    return font * 6 / 2.6;
+    return (font / (5*0.0145*20));
   }
 
 //  6m supoe 26mm
@@ -215,22 +220,30 @@ useEffect(() => {
           </div>
           
           <ChangeArrows changeFunction={changeActiveRow}></ChangeArrows>
-
+          
           <div className={styles.all_letters} style={{flex:"1"}}>
             {
               isSnellen ?
                 snellen_letters.map((row, index) => (
-                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeRow ? `red` : "black" }}>
+                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeRow ? `red` : "black", filter: !isHiddenEye ? "blur(5px)" : "none"}}>
                     {row.letters}
                   </div>
                 ))
                 :
                 customLetters.map((row, index) => (
-                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeCustomRow ? `red` : "black" }}>
+                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeCustomRow ? `red` : "black", filter: !isHiddenEye ? "blur(5px)" : "none" }}>
                     {row.letters}
                   </div>
                 ))
             }
+            <div className={styles.eye} onClick={() => {setIsHiddenEye(!isHiddenEye)}}>
+              {
+              isHiddenEye ? 
+                <img src={eye.src} alt="Eye" className={styles.eye} /> 
+                :
+                <img src={hidden_eye.src} alt="hidden_eye" className={styles.hidden_eye} />
+              }
+            </div>
           </div>
         </div>
       </div>

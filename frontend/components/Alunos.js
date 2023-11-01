@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import styles from '../styles/MeusDados.module.scss'; // Importe os estilos corretos
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Link from 'next/link';
 
 const api = require('../services/api'); 
 
-const Alunos = ({alunos, setCurrent, getAlunos}) => {
+const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
   const [nome, setNome] = useState('');
   const [idade, setIdade] = useState('');
   const [codigo, setCodigo] = useState('');
@@ -32,17 +33,33 @@ const Alunos = ({alunos, setCurrent, getAlunos}) => {
     }
 
     try {
-      const body = { paciente: nome, idade: idade, codigo: codigo };
-      await api.createAluno(body).then(() => {
+      const body = { nome: nome, idade: idade, codigo: codigo };
+      await api.createAluno(body).then((res) => {
         getAlunos();
+        setAppointmentHistory();        
+        toast.success("Sucesso ao criar aluno", toastConfig);
       }).catch((err) => {
-        toast.error(err.response.data.detail, toastConfig);
+        console.log(err);
+        toast.error(err.response?.data?.detail || "Erro ao criar aluno", toastConfig);
       });
     } catch (error) {
       console.error(error);
-      toast.error(error.response.data.detail, toastConfig);
+      toast.error(error.response?.data?.detail || "Erro ao criar aluno", toastConfig);
     }
   };
+
+  const handleDeleteAluno = async(id) => {
+    try {
+      await api.deleteAluno(id).then(() => {
+        getAlunos();
+      }).catch((err) => {
+        toast.error(err.response.data?.detail || "Erro ao deletar aluno", toastConfig);
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data?.detail || "Erro ao deletar aluno", toastConfig);
+    }
+  }
 
   return (
     <>      
@@ -95,14 +112,23 @@ const Alunos = ({alunos, setCurrent, getAlunos}) => {
                 <th style={{width: "30%"}}>Aluno</th>
                 <th style={{width: "20%"}}>Idade</th>
                 <th style={{width: "30%"}}>Código</th>
+                <th style={{width: "20%"}}>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {alunos.map((appointment, index) => (
+              {alunos.map((aluno, index) => (
                 <tr key={index}>
-                  <td>{appointment.paciente}</td>
-                  <td>{appointment.idade}</td>
-                  <td>{appointment.codigo}</td>
+                  <td>{aluno.nome}</td>
+                  <td>{aluno.idade}</td>
+                  <td>{aluno.codigo}</td>
+                  <td>
+                    <div className={styles['row']}>
+                      <Link href={`/atendimento/${aluno.id}`}>
+                        <button className={styles["iniciar-button"]}>Iniciar atendimento</button>
+                      </Link>                      
+                      <button className={styles["voltar"]} onClick={() => handleDeleteAluno(aluno.id)}>Excluir</button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

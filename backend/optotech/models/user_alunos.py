@@ -1,12 +1,12 @@
 from django.db import models
 import uuid
+from .user import User
 from .aluno import Aluno
 
-class Appointment(models.Model):
+class UserAlunos(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, to_field="id", on_delete=models.PROTECT)  
     aluno = models.ForeignKey(Aluno, to_field="id", on_delete=models.PROTECT)
-    acuidade = models.CharField(max_length=7,null=False)    
-    data_atendimento = models.DateTimeField(auto_now_add=True, null = False )
 
     class Meta:
-        db_table = 'appointments'
+        db_table = 'user_alunos'

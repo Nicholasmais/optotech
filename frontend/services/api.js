@@ -132,10 +132,21 @@ const updateData = async(body) => {
   }
 }
 
-
 const alunos = async() => {
   try {
     const res = await axios.get(`${baseApiUrl}/alunos/`, {
+      withCredentials: true,
+      credentials: 'include'
+    });
+    return res.data;
+  } catch (err){
+    throw err
+  }
+}
+
+const aluno = async(id) => {
+  try {
+    const res = await axios.get(`${baseApiUrl}/alunos/${id}/`, {
       withCredentials: true,
       credentials: 'include'
     });
@@ -169,9 +180,9 @@ const updateAluno = async(body) => {
   }
 }
 
-const deleteAluno = async(body) => {
+const deleteAluno = async(id) => {
   try{
-    const res = await axios.delete(`${baseApiUrl}/alunos/`, body,  {
+    const res = await axios.delete(`${baseApiUrl}/alunos/${id}`,  {
       withCredentials: true,
       credentials: 'include'
     })    
@@ -218,6 +229,7 @@ module.exports = {
   createAppointment: createAppointment,
   updateData: updateData,
   alunos: alunos,
+  aluno: aluno,
   createAluno: createAluno,
   updateAluno: updateAluno,
   deleteAluno: deleteAluno,
