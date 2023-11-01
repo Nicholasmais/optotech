@@ -5,6 +5,8 @@ from ..serializers.appointment_serializer import AppointmentSerializer
 from ..models.user_appointments import UserAppointments
 from ..serializers.user_appointment_serializer import UserAppointmentsSerializer
 from ..utils.custom_exception_handler import CustomAPIException
+from .aluno import Aluno
+from ..serializers.aluno_serializer import AlunoSerializer
 
 class AppointmentView(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
@@ -18,6 +20,12 @@ class AppointmentView(viewsets.ModelViewSet):
         for appointment in user_appointments:
             appointment_model = Appointment.objects.get(id = str(appointment.appointment_id))
             appointment_dict = AppointmentSerializer(appointment_model).data
+
+            aluno_model = Aluno.objects.get(id = appointment_dict.get("aluno"))
+            aluno_dict = AlunoSerializer(aluno_model).data
+
+            appointment_dict["aluno"] = aluno_dict
+
             appointments_list.append(appointment_dict)
 
         return Response(appointments_list)

@@ -21,7 +21,7 @@ const History = ({appointmentHistory, setCurrent}) => {
             <tbody>
               {appointmentHistory.map((appointment, index) => (
                 <tr key={index}>
-                  <td>{appointment.paciente}</td>
+                  <td>{appointment.aluno.nome}</td>
                   <td>{appointment.data_atendimento}</td>
                   <td>{appointment.acuidade}</td>
                 </tr>

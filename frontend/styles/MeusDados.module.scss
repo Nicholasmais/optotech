@@ -183,6 +183,22 @@ $icon-scale: 0.2;
   tr:hover {
     background-color: #e0e0e0;
   }
+
+  .row{
+    display: flex;
+    flex-direction: row;
+
+    & button{
+      padding: 5px 5px;
+    }
+    & .iniciar-button{
+      background-color: #28a745; /* Verde */
+      width: auto;
+    }
+    & .voltar{
+      background-color: #dc3545; /* Verde */
+    }
+  }
 }
 
 @media (max-width: 700px) {

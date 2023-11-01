@@ -13,7 +13,7 @@ $letter-spacing: 10px;
 $user-icon-size: 40px;
 $icon-scale: 0.2;
 
-.navbar {
+.navbar {  
   padding-top: 1rem;
   display: flex;
   align-items: center;
@@ -21,7 +21,7 @@ $icon-scale: 0.2;
   .logoContainer {
     margin-top: 2.5%;
     position: absolute;
-    left: 50%;
+    left: 20%;
     transform: translateX(-50%);
   }
 

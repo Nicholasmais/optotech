@@ -1,4 +1,20 @@
+$cor-de-fundo-bege: beige;
+$cor-de-fundo-azure: azure;
+
+$altura-minima-switch: 20vh;
+$altura-minima-snellen: 70vh;
+
+$altura-margin-top-switch: calc(100vh - (#{$altura-minima-switch} + #{$altura-minima-snellen}));
+
+$border: 5px;
+$font-size: 20px;
+$letter-spacing: 10px;
+
+$user-icon-size: 40px;
+$icon-scale: 0.2;
+
 .change_active_row {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -21,5 +37,44 @@
     border-top: 60px solid transparent;
     border-bottom: 60px solid transparent;      
     border-left: 60px solid black;
+  }
+}
+
+.formContainer {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 1rem;
+  background-color: $cor-de-fundo-bege;
+
+  h2 {
+    margin: 0px;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin: 5px;
+      border-radius: 5px;
+    }
+
+    // Add styles for invalid input fields
+    input.invalid {
+      border-color: red; // You can customize this color
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 4px;
+    }
   }
 }
