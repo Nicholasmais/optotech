@@ -11,6 +11,8 @@ from ..serializers.aluno_serializer import AlunoSerializer
 from ..models.user_alunos import UserAlunos
 from ..serializers.user_alunos_serializer import UserAlunosSerializer
 from rest_framework.response import Response
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 
 class AlunoViewSet(viewsets.ModelViewSet):
     queryset = Aluno.objects.all()
@@ -25,16 +27,21 @@ class AlunoViewSet(viewsets.ModelViewSet):
         for user_aluno in alunos_user:
             aluno_model = Aluno.objects.get(id = str(user_aluno.aluno_id))
             aluno_dict = AlunoSerializer(aluno_model).data
+            aluno_dict["idade"] = self.__calculate_idade__(aluno_dict.get("data_nascimento"))
             alunos.append(aluno_dict)
 
         alunos = sorted(alunos, key = lambda aluno: aluno["data_criacao"], reverse = True)
         return Response(alunos)
     
-    def create(self, request):  
-        serializer = self.serializer_class(data = request.data)
+    def create(self, request):
+        body = request.data
+        body["data_nascimento"] = self.__transform_date__(body["data_nascimento"])
+
+        serializer = self.serializer_class(data = body)
         if serializer.is_valid():
             instance = serializer.save()
         else:
+            print(serializer.errors)
             raise CustomAPIException(serializer.errors, 400)
         
         user_id = request.session.get("user")
@@ -45,8 +52,9 @@ class AlunoViewSet(viewsets.ModelViewSet):
                 "aluno":str(instance.id)
                 })
             if user_aluno_serializer.is_valid():
-                user_aluno_serializer.save()                
-            raise CustomAPIException(user_aluno_serializer.errors, 400)
+                user_aluno_serializer.save()
+            else:            
+                raise CustomAPIException(user_aluno_serializer.errors, 400)
         return Response({**serializer.data, "id":instance.id})
 
     def destroy(self, request, pk):
@@ -58,7 +66,22 @@ class AlunoViewSet(viewsets.ModelViewSet):
                 aluno_appointment_id = aluno_dict.get("id")
                 UserAppointments.objects.filter(appointment = aluno_appointment_id).delete()
                 aluno_appointments_model.delete()
+
+        UserAlunos.objects.filter(aluno = pk).delete()
         
         Aluno.objects.filter(id = pk).delete()
 
         return Response({})
+
+    def __calculate_idade__(self, data_nascimento):        
+        data_nascimento = datetime.strptime(data_nascimento[:10], '%Y-%m-%d')
+
+        data_atual = datetime.now()
+        
+        return relativedelta(data_atual, data_nascimento).years
+    
+    def __transform_date__(self, date_string):
+        year = int(date_string[:4])
+        month = int(date_string[6:7])
+        day = int(date_string[8:])
+        return datetime(year, month, day)
