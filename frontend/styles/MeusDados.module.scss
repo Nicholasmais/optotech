@@ -99,7 +99,7 @@ $icon-scale: 0.2;
   }
 
   .alunos {
-    width: 10rem;
+    width: 5rem;
     background-color: #ddc515; /* Amarelo */
   }
   .historico-btn {
@@ -134,30 +134,33 @@ $icon-scale: 0.2;
       background-color: #0056b3; /* Cor de fundo alterada no hover */
     }   
   }
-
   .form-row{
-    width: 100%;
     display: flex;
     flex-direction: row;
-    align-items: center;    
-    .buttons{
+  
+    .form-column{
+      width: 100%;
       display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center !important;
-      flex-wrap: wrap;
-      button{
-        width: 10rem;
+      flex-direction: column;
+      align-items: center;    
+      .buttons{
+        display: flex;
+        flex-direction: column;
+        align-items: center !important;
+        flex-wrap: wrap;
+        button{
+          width: 10rem;
+          padding: 6px 8px;
+        }
       }
+    }  
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
     }
   }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-  }
-
 }
 
 .appointment-table {
@@ -189,7 +192,7 @@ $icon-scale: 0.2;
     flex-direction: row;
 
     & button{
-      padding: 5px 5px;
+      padding: 4px 8px;
     }
     & .iniciar-button{
       background-color: #28a745; /* Verde */

@@ -8,10 +8,8 @@ const api = require('../services/api');
 
 const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
   const [nome, setNome] = useState('');
-  const [idade, setIdade] = useState('');
+  const [nascimento, setNascimento] = useState('');
   const [codigo, setCodigo] = useState('');
-
-  const [showAuthMessage, setShowAuthMessage] = useState(false);
 
   const toastConfig = {
     position: "top-left",
@@ -27,13 +25,13 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
     e.preventDefault();
 
     // Validações básicas
-    if (!nome || !idade || !codigo) {
+    if (!nome || !nascimento || !codigo) {
       toast.error('Preencha todos os campos', toastConfig);
       return;
     }
 
     try {
-      const body = { nome: nome, idade: idade, codigo: codigo };
+      const body = { nome: nome, data_nascimento: nascimento, codigo: codigo };
       await api.createAluno(body).then((res) => {
         getAlunos();
         setAppointmentHistory();        
@@ -52,6 +50,7 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
     try {
       await api.deleteAluno(id).then(() => {
         getAlunos();
+        toast.success("Aluno excluído com sucesso", toastConfig);
       }).catch((err) => {
         toast.error(err.response.data?.detail || "Erro ao deletar aluno", toastConfig);
       });
@@ -66,38 +65,39 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
       <div className={styles['historico']}>
       <div className={styles['meus-dados-container']} style={{ marginTop: "-4rem", width: "60%" }}>
         <form onSubmit={handleSubmit}>
-          <div className={styles['form-row']}>
-            <div className={styles['form-group']}>
-              <label style={{ textAlign: "left" }}>Nome:</label>
-              <input
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-              />
+        <div className={styles['form-row']}>
+            <div className={styles['form-column']}>
+              <div className={styles['form-group']}>
+                <label style={{ textAlign: "left" }}>Nome:</label>
+                <input
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
+              </div>
+              <div className={styles['form-group']}>
+                <label style={{ textAlign: "left" }}>Data de Nascimento:</label>
+                <input
+                  type="date"
+                  onChange={(e) => setNascimento(e.target.value)}
+                />
+              </div>
             </div>
-            <div className={styles['form-group']}>
-              <label style={{ textAlign: "left" }}>Idade:</label>
-              <input
-                type="number"
-                value={idade}
-                onChange={(e) => setIdade(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className={styles['form-row']}>
-            <div className={styles['form-group']}>
-              <label style={{ textAlign: "left" }}>Código:</label>
-              <input
-                type="text"
-                value={codigo}
-                onChange={(e) => setCodigo(e.target.value)}
-              />              
-            </div>
-            <div className={styles['buttons']}>
-              <button className={styles['iniciar-button']} type="submit">Cadastrar</button>
-              <button className={styles['alunos']} onClick={() => { setCurrent("default") }}>Voltar</button>
-            </div>
-          </div>
+            <div className={styles['form-column']}>
+              <div className={styles['form-group']}>
+                <label style={{ textAlign: "left" }}>Código:</label>
+                <input
+                  type="text"
+                  value={codigo}
+                  onChange={(e) => setCodigo(e.target.value)}
+                />              
+              </div>
+              <div className={styles['buttons']}>
+                <button className={styles['iniciar-button']} type="submit">Cadastrar</button>
+                <button className={styles['alunos']} onClick={() => { setCurrent("default") }}>Voltar</button>
+              </div>
+            </div>   
+          </div>    
         </form>
         <ToastContainer />
       </div>
