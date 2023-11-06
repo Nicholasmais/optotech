@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const NavBar = ({toggleLoginForm, style, goBack}) => {
   return (
-    <div className={styles.navbar} style={style}>
+    <div className={styles.navbar} style={style} id='top-view'>
       <ToastContainer />
       <div className={styles.logoContainer}>
         <img src={logo.src} alt="Logo" className={styles.logo} />

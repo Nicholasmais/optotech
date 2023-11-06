@@ -5,61 +5,69 @@ import { toast } from 'react-toastify';
 import ChangeArrows from './ChangeArrows';
 import eye from '../assets/eye.png';
 import hidden_eye from '../assets/hidden-eye.png';
+import { useAuth  } from '../contexts/AuthContext';
+
 const api = require('../services/api');
 
 const Snellen = () => {
   const [activeRow, setActiveRow] = useState(3);
-  const [activeCustomRow, setActiveCustomRow] = useState(0); // Linha ativa na visualização "Personalize"
-  
-  const letterPx = (distance, snellen_value, dpi = 96) => {
-    return ( 0.0145 * snellen_value * distance * dpi / 25.4);
+  const [activeCustomRow, setActiveCustomRow] = useState(3); // Linha ativa na visualização "Personalize"
+  const { dpi } = useAuth(); 
+
+  const letterPx = (distance) => {
+    return (5 * distance * Math.tan(Math.PI / 10800) * 1000 * dpi / 25.4 );
   }
   
-  const distanceToRead = (snellen_value, font, dpi = 96) => {
-    return (font * 25.4 / (0.0145*snellen_value*dpi));
+  const distanceToRead = (pixel) => {
+    return (pixel * 25.4) / (5 * Math.tan(Math.PI / 10800) * 1000 * dpi);
   }
 
-  const [customFontSize, setCustomFontSize] = useState(5.6); // Tamanho de fonte padrão
+  const snellenTometers = (snellen) => {
+    return snellen * 0.304
+  }
+
+  const [baseFont, setBaseFont] = useState(letterPx(snellenTometers(20)));
+
   const [customLetters, setCustomLetters] = useState([
     {
       letters: ["E"],
       snellen: 200,
-      size: letterPx(6, 200),
+      size: letterPx(snellenTometers(200)),
     },
     {
       letters: ["F", "P"],
       snellen: 100,
-      size: letterPx(6, 100),
+      size: letterPx(snellenTometers(100)),
     },
     {
       letters: ["T", "O", "Z"],
       snellen: 70,
-      size: letterPx(6, 70),
+      size: letterPx(snellenTometers(70)),
     },
     {
       letters: ["L", "P", "E", "D"],
       snellen: 60,
-      size: letterPx(6, 60),
+      size: letterPx(snellenTometers(60)),
     },
     {
       letters: ["P", "E", "C", "F", "D"],
       snellen: 40,
-      size: letterPx(6, 40),
+      size: letterPx(snellenTometers(40)),
     },
     {
       letters: ["E", "D", "F", "C", "Z", "P"],
       snellen: 30,
-      size: letterPx(6, 30),
+      size: letterPx(snellenTometers(30)),
     },
     {
       letters: ["F", "E", "L", "O", "P", "Z", "D"],
       snellen: 25,
-      size: letterPx(6, 25),
+      size: letterPx(snellenTometers(25)),
     },
     {
       letters: ["D", "E", "F", "P", "O", "T", "E", "C"],
       snellen: 20,
-      size: letterPx(6, 20),
+      size: letterPx(snellenTometers(20)),
     },
   ]);
   
@@ -68,42 +76,42 @@ const Snellen = () => {
     {
       letters: ["E"],
       snellen: 200,
-      size: letterPx(6, 200),
+      size: letterPx(snellenTometers(200)),
     },
     {
       letters: ["F", "P"],
       snellen: 100,
-      size: letterPx(6, 100),
+      size: letterPx(snellenTometers(100)),
     },
     {
       letters: ["T", "O", "Z"],
       snellen: 70,
-      size: letterPx(6, 70),
+      size: letterPx(snellenTometers(70)),
     },
     {
       letters: ["L", "P", "E", "D"],
       snellen: 60,
-      size: letterPx(6, 60),
+      size: letterPx(snellenTometers(60)),
     },
     {
       letters: ["P", "E", "C", "F", "D"],
       snellen: 40,
-      size: letterPx(6, 40),
+      size: letterPx(snellenTometers(40)),
     },
     {
       letters: ["E", "D", "F", "C", "Z", "P"],
       snellen: 30,
-      size: letterPx(6, 30),
+      size: letterPx(snellenTometers(30)),
     },
     {
       letters: ["F", "E", "L", "O", "P", "Z", "D"],
       snellen: 25,
-      size: letterPx(6, 25),
+      size: letterPx(snellenTometers(25)),
     },
     {
       letters: ["D", "E", "F", "P", "O", "T", "E", "C"],
       snellen: 20,
-      size: letterPx(6, 20),
+      size: letterPx(snellenTometers(20)),
     },
   ];
 
@@ -123,25 +131,7 @@ const Snellen = () => {
         setActiveCustomRow(newRow);
       }
     }
-  }
-
-  useEffect(() => {
-    setCustomLetters((prevCustomLetters) => {
-      return prevCustomLetters.map((letter, index) => {
-        if (index === 0) {
-          return {
-            ...letter,
-            size: customFontSize,
-          };
-        } else {
-          return {
-            ...letter,
-            size: prevCustomLetters[index - 1].size * 0.8,
-          };
-        }
-      });
-    });
-  }, [customFontSize]);
+  } 
 
   useEffect(() => {
     const fetchAllLetters = async() => {
@@ -172,21 +162,21 @@ const Snellen = () => {
           {
             isSnellen ? (
               <>
-                <div className={styles.row_to_read} style={{ fontSize: `${snellen_letters[activeRow].size}cm` }}>          
+                <div className={styles.row_to_read} style={{ fontSize: `${snellen_letters[activeRow].size}px` }}>          
                   {snellen_letters[activeRow].letters.map((letra, letraIndex) =>                   
                     <MatrixLetter letter={allLettersMatrix[letra]} fontSize={snellen_letters[activeRow].size} key={`${letraIndex}-matrixLetter`}></MatrixLetter>                  
                   )}
                 </div>
-                <label> Distância recomendada: {distanceToRead(20,letterPx(6, 20)).toFixed(1)}m</label>
+                <label> Distância recomendada: {distanceToRead(letterPx(snellenTometers(20))).toFixed(1)}m</label>
               </>
             ) : (
               <>
-                <div className={styles.row_to_read} style={{ fontSize: `${customLetters[activeCustomRow].size}cm` }}>          
+                <div className={styles.row_to_read} style={{ fontSize: `${customLetters[activeCustomRow].size}px` }}>          
                   {customLetters[activeCustomRow].letters.map((letra, letraIndex) => 
                     <MatrixLetter letter={allLettersMatrix[letra]} fontSize={customLetters[activeCustomRow].size} key={`${letraIndex}-matrixLetter`}></MatrixLetter>                  
                   )}    
                 </div>
-                <label> Distância recomendada: {distanceToRead(20,letterPx(6, 20)).toFixed(1)}m</label>
+                <label> Distância: {distanceToRead(baseFont).toFixed(1)}m</label>
               </>
             )
           }
@@ -214,19 +204,27 @@ const Snellen = () => {
           ))}
           <div className={styles['font-size-input']}>
             <label>
-              Tamanho da fonte base (cm):
+              Tamanho da fonte base (px):
             </label>
             <input
               type="number"
               name="line"
               id="line"
-              value={customFontSize}
+              value={parseInt(baseFont)}
               onChange={(e) => {
-                setCustomFontSize(e.target.value);
+                setBaseFont(e.target.value);
+                const newLetters = customLetters.map((row, index) => {            
+                  const newSize = e.target.value * row.size / baseFont;
+                  return {
+                    letters: row.letters,
+                    size: newSize,
+                  };
+                });
+                setCustomLetters(newLetters);
               }}
-              min="1"
-              max="5"
-              step="0.1"
+              min="11"
+              max="55"
+              step={`1`}
               className={styles['custom-input']}
             />
           </div>

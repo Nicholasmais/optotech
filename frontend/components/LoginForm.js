@@ -128,7 +128,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
   }
 
   const goTerms = () => {
-    router.push('/terms');
+    router.push('/');
   }
 
   return (

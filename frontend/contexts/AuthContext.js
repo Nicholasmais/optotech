@@ -14,9 +14,10 @@ export const AuthContextProvider = ({ children }) => {
       expirationDate: '',
     },
   });
+  const [dpi, setDpi] = useState(96);
 
   return (
-    <AuthContext.Provider value={{ authData, setAuthData }}>
+    <AuthContext.Provider value={{ authData, setAuthData, dpi, setDpi }}>
       {children}
     </AuthContext.Provider>
   );

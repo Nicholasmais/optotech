@@ -30,7 +30,7 @@ function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOp
   };  
 
   const goTerms = () => {
-    router.push('/terms');
+    router.push('/');
   }
 
   const handleSaveClick = () => {    

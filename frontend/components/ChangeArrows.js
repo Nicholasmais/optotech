@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 const api = require('../services/api');
 
-const ChangeArrows = ({changeFunction}) => {
+const ChangeArrows = ({changeFunction, elementId = null}) => {
   const { authData, setAuthData } = useAuth();
 
   const [hasLoggedIn, setHasLoggedIn] = useState(false);
@@ -81,13 +81,17 @@ const ChangeArrows = ({changeFunction}) => {
     }
   }
 
+  function scrollIntoViewOnClick() {
+    const elementoDeDestino = document.getElementById(elementId);
+  
+    if (elementoDeDestino) {
+      elementoDeDestino.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+    
   useEffect(() => {
     const isLoggedIn = api.checkSessionCookie();
     setHasLoggedIn(isLoggedIn);
-
-    if (!isLoggedIn) {
-      router.push('/');
-    }
 
     api.isAuth().then((res) => {
       setAuthData(res);
@@ -116,10 +120,12 @@ const ChangeArrows = ({changeFunction}) => {
       <div className={styles.change_active_row}>
         <div onClick={() => {
           changeFunction(-1);
+          scrollIntoViewOnClick();
         }}>
         </div>
         <div onClick={() => {
           changeFunction(1);
+          scrollIntoViewOnClick();
         }}>
         </div>
       </div>
