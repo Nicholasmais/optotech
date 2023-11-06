@@ -18,14 +18,14 @@ const MatrixLetter = ({ letter, fontSize }) => {
 
   return (
     <div className={styles["row-to-read"]}>
-      <div className={styles.container} style={{ height: `${font}mm`, width: `${font}mm` }}>
+      <div className={styles.container} style={{ height: `${font}px`, width: `${font}px` }}>
         {matrix.map((row, rowIndex) => {
           return (
-            <div className={styles.row} style={{ height: `${font / 5}mm`, width: `${font}mm` }} key={`${rowIndex}-row`}>
+            <div className={styles.row} style={{ height: `${font / 5}px`, width: `${font}px` }} key={`${rowIndex}-row`}>
               {row.map((column, columnIndex) => (
                 <div
                   className={styles.column}
-                  style={{ backgroundColor: column ? "black" : "transparent", height: `${fontSize / 5}mm`, width: `${fontSize / 5}mm` }}
+                  style={{ backgroundColor: column ? "black" : "transparent", height: `${fontSize / 5}px`, width: `${fontSize / 5}px` }}
                   key={`${columnIndex}-column`}
                 ></div>
               ))}

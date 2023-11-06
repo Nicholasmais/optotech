@@ -5,7 +5,6 @@ from ..models.aluno import Aluno
 from ..serializers.aluno_serializer import AlunoSerializer
 from ..models.appointment import Appointment
 from ..serializers.appointment_serializer import AppointmentSerializer
-from ..models.user_appointments import UserAppointments
 from ..models.aluno import Aluno
 from ..serializers.aluno_serializer import AlunoSerializer
 from ..models.user_alunos import UserAlunos
@@ -64,7 +63,7 @@ class AlunoViewSet(viewsets.ModelViewSet):
             for aluno_model in aluno_appointments_model:
                 aluno_dict = AppointmentSerializer(aluno_model).data
                 aluno_appointment_id = aluno_dict.get("id")
-                UserAppointments.objects.filter(appointment = aluno_appointment_id).delete()
+                Appointment.objects.filter(appointment = aluno_appointment_id).delete()
                 aluno_appointments_model.delete()
 
         UserAlunos.objects.filter(aluno = pk).delete()

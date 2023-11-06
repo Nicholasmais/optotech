@@ -61,7 +61,7 @@ export default function MeusDados() {
       await api.isAuth().then((res) => {
         setAuthData(res);
         if (!res.isAuth){
-          router.push("/");
+          router.push("/snellen");
         }
       }).catch((err) => {
         toast.error('Erro ao se conectar com servidor.', toastConfig);
