@@ -144,7 +144,7 @@ const ResponsibilityComponent = () => {
               <li>Interpretação dos Resultados:
                 <ul>
                   <li>O teste é baseado na notação "20/XX", onde o número superior (20) representa a distância padrão de 20 pés, que é usada para testar a visão.</li>
-                  <li>O número inferior (XX) indica a menor linha que você conseguiu ler corretamente. Por exemplo, se você conseguiu ler a linha que corresponde ao "20/40", isso significa que, à distância padrão de 20 pés (20 metros), você conseguiu ler letras que normalmente são lidas por pessoas com visão normal a 40 pés (12 metros).</li>
+                  <li>O número inferior (XX) indica a menor linha que você conseguiu ler corretamente. Por exemplo, se você conseguiu ler a linha que corresponde ao "20/40", isso significa que, à distância padrão de 20 pés (6 metros), você conseguiu ler letras que normalmente são lidas por pessoas com visão normal a 40 pés (12 metros).</li>
                   <li>Quanto menor for o número após a barra, melhor é a sua acuidade visual. Se você conseguiu ler a linha "20/20", isso indica uma visão considerada normal.</li>
                 </ul>
               </li>
