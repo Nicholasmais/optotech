@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import Alunos from '../../components/Alunos';
 import History from '../../components/History';
 import MeusDadosComponent from '../../components/MeusDadosComponent';
+import Loading from '../../components/Loading';
 
 const api = require('../../services/api');
 
@@ -20,7 +21,7 @@ export default function MeusDados() {
   const [appointmentHistory, setAppointmentHistory] = useState([]);
   const [alunos, setAlunos] = useState([]);
   const [isOpenForm, setIsOpenForm] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState("default");  
 
   const toastConfig = {
@@ -36,18 +37,20 @@ export default function MeusDados() {
   const router = useRouter();
 
   const getAlunos = async() => {
+    setLoading(true);
     await api.alunos().then((res) => {
       setAlunos(res);
     }).catch((err) => {
-      toast.error(err.response.data.detail, toastConfig);  
+      toast.error(err.response?.data.detail, toastConfig);  
     })
+    setLoading(false);
   }
 
   const getUserAppointment = async() => {
     await api.appointment().then((res) => {
       setAppointmentHistory(res);
     }).catch((err) => {
-      toast.error(err.response.data.detail, toastConfig);  
+      toast.error(err.response?.data.detail, toastConfig);  
     })
   }
   
@@ -83,6 +86,7 @@ export default function MeusDados() {
           user={user}
           email={email}
           setCurrent={setCurrent}
+          loading={loading}
           />);
       
       case 'alunos':
@@ -100,11 +104,9 @@ export default function MeusDados() {
       <>
       <NavBar style={{marginTop: "1rem"}}></NavBar>
       <ToastContainer />
-
       {
        renderSwitch(current)
-      }
-      
+      }      
     </>
   );
 }

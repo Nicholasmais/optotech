@@ -4,15 +4,18 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
+import Loading from './Loading';
 const api = require('../services/api');
 
 const ChangeArrows = ({changeFunction, elementId = null}) => {
   const { authData, setAuthData } = useAuth();
-
+  const [loading, setLoading] = useState(false);
   const [hasLoggedIn, setHasLoggedIn] = useState(false);
 
-  const [acuity, setAcuity] = useState(4);
-  const [calculatedAcuity, setCalculatedAcuity] = useState(""); // State to hold calculated acuity
+  const [leftAcuity, setLeftAcuity] = useState(8);
+  const [rightAcuity, setRightAcuity] = useState(8);
+  const [calculatedLeftAcuity, setCalculatedLeftAcuity] = useState("");
+  const [calculatedRightAcuity, setCalculatedRightAcuity] = useState("");
 
   const toastConfig = {
     position: 'top-left',
@@ -29,25 +32,27 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
   const [aluno, setAluno] = useState({});
 
   const handleFormSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     
     const obj = {
       aluno: alunoId,
-      acuidade: calculatedAcuity,        
+      acuidade: `${calculatedLeftAcuity}.${calculatedRightAcuity}`,        
     }
 
     await api.createAppointment(obj).then((res) => {
       toast.success('Sucesso ao salvar atendimento.', toastConfig);
     }).catch((err) => {
       console.log(err);
-      toast.error(err.response.data?.detail || "Erro ao salvar atendimento", toastConfig);  
-    })  
+      toast.error(err.response?.data?.detail || "Erro ao salvar atendimento", toastConfig);  
+    });
+    setLoading(false);
   }
 
-  const calcuteAcuity = (val) =>{
+  const calculateLeftAcuity = (val) =>{
     const lineNumber = parseInt(val);
     if (!isNaN(lineNumber) && lineNumber > 0) {
-      setAcuity(val);
+      setLeftAcuity(val);
       let denominator;
       switch(lineNumber){          
         case 1:
@@ -75,9 +80,46 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
           denominator = 20;
           break
       }
-      setCalculatedAcuity(`20/${denominator}`);
+      setCalculatedLeftAcuity(`20/${denominator}`);
     } else {
-      setCalculatedAcuity("");
+      setCalculatedLeftAcuity("");
+    }
+  }
+
+  const calculateRightAcuity = (val) =>{
+    const lineNumber = parseInt(val);
+    if (!isNaN(lineNumber) && lineNumber > 0) {
+      setRightAcuity(val);
+      let denominator;
+      switch(lineNumber){          
+        case 1:
+          denominator = 200;
+          break;
+        case 2:
+          denominator = 100;
+          break;
+        case 3:
+          denominator = 70;
+          break;
+        case 4:
+          denominator = 60;
+          break;
+        case 5:
+          denominator = 40;
+          break;
+        case 6:
+          denominator = 30;
+          break;
+        case 7:
+          denominator = 25;
+          break;
+        default:
+          denominator = 20;
+          break
+      }
+      setCalculatedRightAcuity(`20/${denominator}`);
+    } else {
+      setCalculatedRightAcuity("");
     }
   }
 
@@ -99,7 +141,8 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
       toast.error('Erro ao se conectar com servidor.', toastConfig);
     });
 
-    calcuteAcuity(acuity);
+    calculateLeftAcuity(leftAcuity);
+    calculateRightAcuity(rightAcuity);
   }, []);
 
   useEffect(() => {
@@ -133,25 +176,42 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
         <div className={styles.formContainer}>
           <h3>Olá, {aluno.nome}</h3>          
           <form className={styles.form} onSubmit={handleFormSubmit}>
-            <label htmlFor="line">Até qual linha você leu pelo menos metade?</label>
+            <label htmlFor="line">Até qual linha você leu pelo menos metade com seu olho esquerdo?</label>
             <div className="row">
               <input
                 type="number"
                 name="line"
                 id="line"
                 placeholder="Digite o número da linha"
-                value={acuity}
-                onChange={(e) => calcuteAcuity(e.target.value)}
+                value={leftAcuity}
+                onChange={(e) => calculateLeftAcuity(e.target.value)}
                 className={''}
                 min="1"
                 max="8"
                 step="1"
               />      
             
-              <p>Acuidade estimada: {calculatedAcuity}</p>            
+              <p>Acuidade estimada: {calculatedLeftAcuity}</p>            
+            </div>            
+            <label htmlFor="line">Até qual linha você leu pelo menos metade com seu olho direito?</label>
+            <div className="row">
+              <input
+                type="number"
+                name="line"
+                id="line"
+                placeholder="Digite o número da linha"
+                value={rightAcuity}
+                onChange={(e) => calculateRightAcuity(e.target.value)}
+                className={''}
+                min="1"
+                max="8"
+                step="1"
+              />                      
+              <p>Acuidade estimada: {calculatedRightAcuity}</p>            
             </div>
-            <button type="submit">Salvar atendimento</button>
-          </form>
+            <Loading loading={loading}></Loading>
+            <button type="submit">Salvar atendimento </button>          
+          </form>          
         </div>
       )}      
     </div>

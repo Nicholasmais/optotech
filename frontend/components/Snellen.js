@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Snellen.module.scss';
 import MatrixLetter from './MatrixLetter';
+import Loading from './Loading';
 import { toast } from 'react-toastify';
 import ChangeArrows from './ChangeArrows';
 import eye from '../assets/eye.png';
@@ -10,8 +11,9 @@ import { useAuth  } from '../contexts/AuthContext';
 const api = require('../services/api');
 
 const Snellen = () => {
-  const [activeRow, setActiveRow] = useState(3);
-  const [activeCustomRow, setActiveCustomRow] = useState(3); // Linha ativa na visualização "Personalize"
+  const [activeRow, setActiveRow] = useState(7);
+  const [activeCustomRow, setActiveCustomRow] = useState(7); // Linha ativa na visualização "Personalize"
+  const [loading, setLoading] = useState(true);
   const { dpi } = useAuth(); 
 
   const letterPx = (distance) => {
@@ -137,6 +139,7 @@ const Snellen = () => {
     const fetchAllLetters = async() => {
       await api.MatrixLetter().then((res) => {
         setAllLettersMatrix(res);
+        setLoading(false);
       }).catch((err) => {
         toast.error(err);
       })
@@ -158,32 +161,37 @@ const Snellen = () => {
           </span>
         </div>
       </div>
-      <div className={styles.snellen}>         
+      <div className={styles.snellen}>
           {
             isSnellen ? (
               <>
                 <div className={styles.row_to_read} style={{ fontSize: `${snellen_letters[activeRow].size}px` }}>          
+                  <Loading loading={loading}></Loading>    
                   {snellen_letters[activeRow].letters.map((letra, letraIndex) =>                   
                     <MatrixLetter letter={allLettersMatrix[letra]} fontSize={snellen_letters[activeRow].size} key={`${letraIndex}-matrixLetter`}></MatrixLetter>                  
                   )}
                 </div>
-                <label> Distância recomendada: {distanceToRead(letterPx(snellenTometers(20))).toFixed(1)}m</label>
               </>
             ) : (
               <>
                 <div className={styles.row_to_read} style={{ fontSize: `${customLetters[activeCustomRow].size}px` }}>          
+                  <Loading loading={loading}></Loading>    
                   {customLetters[activeCustomRow].letters.map((letra, letraIndex) => 
                     <MatrixLetter letter={allLettersMatrix[letra]} fontSize={customLetters[activeCustomRow].size} key={`${letraIndex}-matrixLetter`}></MatrixLetter>                  
                   )}    
                 </div>
-                <label> Distância: {distanceToRead(baseFont).toFixed(1)}m</label>
               </>
             )
           }
-        <div className={styles.base}>
-          <div className={`${styles["custom-container"]}`}  style={{flex:"1", visibility: isSnellen ? "hidden" : "visible"}}>
+        <div className={styles.base}>          
+          <div className={`${styles["custom-container"]}`}  style={{flex:"1"}}>        
+          <label style={{"borderBottom":"1px solid black"}}> Distância recomendada: { isSnellen ?
+            distanceToRead(letterPx(snellenTometers(20))).toFixed(1) :
+            distanceToRead(baseFont).toFixed(1)}
+            m
+          </label>
           {customLetters.map((row, index) => (
-            <div key={index} className={styles['custom-row']}>
+            <div key={index} className={styles['custom-row']} style={{visibility: isSnellen ? "hidden" : "visible"}}>
               <label className={styles['custom-label']}>
                 Linha {index + 1}:
                 <input
@@ -202,7 +210,7 @@ const Snellen = () => {
               </label>
             </div>
           ))}
-          <div className={styles['font-size-input']}>
+          <div className={styles['font-size-input']} style={{visibility: isSnellen ? "hidden" : "visible"}}>
             <label>
               Tamanho da fonte base (px):
             </label>
