@@ -59,14 +59,16 @@ $icon-scale: 0.2;
   border: $border solid black;
 
   .row_to_read{
+    padding: calc(5*$letter-spacing);
     width: 100%;
     min-height: 150px;    
     background-color: aliceblue;
     display: flex;
     flex-direction: row;
-    justify-content: center !important;
+    justify-content: space-around !important;
+    gap: calc(10*$letter-spacing);
     align-items: center;
-    letter-spacing: $letter-spacing;
+    flex-wrap: wrap;
   }
 
   .base{
@@ -128,10 +130,7 @@ $icon-scale: 0.2;
       justify-content: center;
       .change_active_row{
         position: relative;
-      }
-      
-  
-      
+      }              
     }
   }  
 }
