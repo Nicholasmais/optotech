@@ -23,7 +23,11 @@ const History = ({appointmentHistory, setCurrent}) => {
                 <tr key={index}>
                   <td>{appointment.aluno.nome}</td>
                   <td>{appointment.data_atendimento}</td>
-                  <td>{appointment.acuidade}</td>
+                    <td>
+                      Olho esquerdo {appointment.acuidade.slice(0,appointment.acuidade.indexOf("."))}
+                      <br></br>
+                      Olho direito {appointment.acuidade.slice(appointment.acuidade.indexOf(".")+1)}
+                    </td>                    
                 </tr>
               ))}
             </tbody>

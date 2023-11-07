@@ -57,15 +57,8 @@ class AlunoViewSet(viewsets.ModelViewSet):
         return Response({**serializer.data, "id":instance.id})
 
     def destroy(self, request, pk):
-        aluno_appointments_model = Appointment.objects.filter(aluno = pk)
-
-        if aluno_appointments_model:
-            for aluno_model in aluno_appointments_model:
-                aluno_dict = AppointmentSerializer(aluno_model).data
-                aluno_appointment_id = aluno_dict.get("id")
-                Appointment.objects.filter(appointment = aluno_appointment_id).delete()
-                aluno_appointments_model.delete()
-
+        Appointment.objects.filter(aluno = pk).delete()
+     
         UserAlunos.objects.filter(aluno = pk).delete()
         
         Aluno.objects.filter(id = pk).delete()

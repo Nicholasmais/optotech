@@ -4,7 +4,7 @@ import styles from '../styles/Login.module.scss';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
-
+import Loading from './Loading'
 const api = require('../services/api'); 
 
 function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj, setIsOpenForm, isOpenForm}) {
@@ -19,6 +19,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isConfirmedPasswordValid, setIsConfirmedPasswordValid] = useState(true); 
   const [showAuthMessage, setShowAuthMessage] = useState(false); // Novo estado para mostrar a mensagem de autenticação
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const toastConfig = {
@@ -59,6 +60,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
   };
 
   const handleFormSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     const isUserValid = validateUser(user);
@@ -80,7 +82,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             setShowAuthMessage(true);
             router.push(res.url);
           }).catch((err) => {
-            toast.error(err.response.data.detail, toastConfig);  
+            toast.error(err.response?.data.detail, toastConfig);  
           });
         } catch (error) {
           console.error(error);
@@ -125,6 +127,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
         }
       }
     }
+    setLoading(false);
   }
 
   const goTerms = () => {
@@ -196,6 +199,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
           null
         }
       </form>
+
       {
         isMeusDados ?
           null
@@ -209,6 +213,11 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
       }
       <button type="button" onClick={goTerms} >Ajuda</button>
 
+      <div className={styles.authMessage}>
+        <Loading loading={loading}></Loading>
+        <br></br>
+      </div>
+      
       {showAuthMessage && (
         <div className={styles.authMessage}>
           {isLogin ? 'Autenticado com sucesso!' : 'Registro realizado com sucesso!'}

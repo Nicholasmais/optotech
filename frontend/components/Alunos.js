@@ -3,6 +3,7 @@ import styles from '../styles/MeusDados.module.scss'; // Importe os estilos corr
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
+import Loading from './Loading'
 
 const api = require('../services/api'); 
 
@@ -10,6 +11,7 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
   const [nome, setNome] = useState('');
   const [nascimento, setNascimento] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const toastConfig = {
     position: "top-left",
@@ -22,6 +24,7 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     // Validações básicas
@@ -44,20 +47,23 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
       console.error(error);
       toast.error(error.response?.data?.detail || "Erro ao criar aluno", toastConfig);
     }
+    setLoading(false);
   };
 
   const handleDeleteAluno = async(id) => {
+    setLoading(true);
     try {
       await api.deleteAluno(id).then(() => {
         getAlunos();
         toast.success("Aluno excluído com sucesso", toastConfig);
       }).catch((err) => {
-        toast.error(err.response.data?.detail || "Erro ao deletar aluno", toastConfig);
+        toast.error(err.response?.data?.detail || "Erro ao deletar aluno", toastConfig);
       });
     } catch (error) {
       console.error(error);
       toast.error(error.response.data?.detail || "Erro ao deletar aluno", toastConfig);
     }
+    setLoading(false);
   }
 
   return (
@@ -65,7 +71,7 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
       <div className={styles['historico']}>
       <div className={styles['meus-dados-container']} style={{ marginTop: "-4rem", width: "60%" }}>
         <form onSubmit={handleSubmit}>
-        <div className={styles['form-row']}>
+          <div className={styles['form-row']}>          
             <div className={styles['form-column']}>
               <div className={styles['form-group']}>
                 <label style={{ textAlign: "left" }}>Nome:</label>
@@ -74,15 +80,15 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                 />
-              </div>
+              </div>              
               <div className={styles['form-group']}>
                 <label style={{ textAlign: "left" }}>Data de Nascimento:</label>
                 <input
                   type="date"
                   onChange={(e) => setNascimento(e.target.value)}
                 />
-              </div>
-            </div>
+              </div>              
+            </div>            
             <div className={styles['form-column']}>
               <div className={styles['form-group']}>
                 <label style={{ textAlign: "left" }}>Código:</label>
@@ -91,21 +97,21 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
                   value={codigo}
                   onChange={(e) => setCodigo(e.target.value)}
                 />              
-              </div>
-              <div className={styles['buttons']}>
-                <button className={styles['iniciar-button']} type="submit">Cadastrar</button>
-                <button className={styles['alunos']} onClick={() => { setCurrent("default") }}>Voltar</button>
-              </div>
-            </div>   
-          </div>    
+              </div>              
+              <div className={styles['buttons']}>              
+                <button className={styles['iniciar-button']} type="submit">Cadastrar</button>              
+                <button className={styles['alunos']} onClick={() => { setCurrent("default") }}>Voltar</button>                            
+              </div>              
+            </div>             
+          </div>        
         </form>
         <ToastContainer />
       </div>
-
-
-        <h2 className={styles.header}>Alunos</h2>
-        
-        <div className={styles['table-div']}>
+        <div style={{"display":"flex", "justifyContent":"center", "marginTop":"40px", "position":"absolute", "width":"80%"}}>
+          <Loading loading={loading}></Loading>
+        </div>
+        <h2 className={styles.header}>Alunos</h2>        
+        <div className={styles['table-div']}>          
           <table className={styles['appointment-table']}>
             <thead>
               <tr>
