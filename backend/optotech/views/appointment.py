@@ -21,7 +21,9 @@ class AppointmentView(viewsets.ModelViewSet):
 
             aluno_model = Aluno.objects.get(id = appointment_dict.get("aluno"))
             aluno_dict = AlunoSerializer(aluno_model).data
-
+            if not aluno_dict["ativo"]:
+                continue
+            
             appointment_dict["aluno"] = aluno_dict
 
             appointments_list.append(appointment_dict)

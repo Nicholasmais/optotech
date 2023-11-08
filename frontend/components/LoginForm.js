@@ -86,7 +86,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
           });
         } catch (error) {
           console.error(error);
-          toast.error(error.response.data.detail, toastConfig);  
+          toast.error(error.response?.data.detail || "Erro", toastConfig);  
         }
         setHasTriedToLogIn(true);            
       }
@@ -112,7 +112,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             toast.success("Registro realizado com sucesso.", toastConfig);  
           }).catch((error) => {
             console.error(error);  
-            toast.error(error.response.data.detail, toastConfig);  
+            toast.error(error.response?.data.detail || "Erro", toastConfig);  
           });
         }
         else{
@@ -122,7 +122,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             toast.success("Usuário atualizado com sucesso.", toastConfig);  
           }).catch((error) => {
             console.error(error);  
-            toast.error(error.response.data.detail, toastConfig);  
+            toast.error(error.response?.data.detail || "Erro", toastConfig);  
           });
         }
       }

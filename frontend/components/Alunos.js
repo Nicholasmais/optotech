@@ -4,10 +4,11 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import Loading from './Loading'
+import CheckBox from './CheckBox';
 
 const api = require('../services/api'); 
 
-const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
+const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory, getUserAppointment}) => {
   const [nome, setNome] = useState('');
   const [nascimento, setNascimento] = useState('');
   const [codigo, setCodigo] = useState('');
@@ -37,7 +38,7 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
       const body = { nome: nome, data_nascimento: nascimento, codigo: codigo };
       await api.createAluno(body).then((res) => {
         getAlunos();
-        setAppointmentHistory();        
+        setAppointmentHistory();                
         toast.success("Sucesso ao criar aluno", toastConfig);
       }).catch((err) => {
         console.log(err);
@@ -50,22 +51,28 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
     setLoading(false);
   };
 
-  const handleDeleteAluno = async(id) => {
+  const handleDeleteAluno = async(id, active) => {
     setLoading(true);
     try {
       await api.deleteAluno(id).then(() => {
         getAlunos();
-        toast.success("Aluno excluído com sucesso", toastConfig);
+        getUserAppointment();
+        if (active){
+          toast.success("Aluno ativado com sucesso", toastConfig);
+        }
+        else{
+          toast.success("Aluno inativado com sucesso", toastConfig);
+        }
+        
       }).catch((err) => {
-        toast.error(err.response?.data?.detail || "Erro ao deletar aluno", toastConfig);
+        toast.error(err.response?.data?.detail || "Erro ao inativar aluno", toastConfig);
       });
     } catch (error) {
       console.error(error);
-      toast.error(error.response.data?.detail || "Erro ao deletar aluno", toastConfig);
+      toast.error(error.response?.data?.detail || "Erro ao inativar aluno", toastConfig);
     }
     setLoading(false);
   }
-
   return (
     <>      
       <div className={styles['historico']}>
@@ -128,12 +135,18 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory}) => {
                   <td>{aluno.idade}</td>
                   <td>{aluno.codigo}</td>
                   <td>
-                    <div className={styles['row']}>
-                      <Link href={`/atendimento/${aluno.id}`}>
-                        <button className={styles["iniciar-button"]}>Iniciar atendimento</button>
-                      </Link>                      
-                      <button className={styles["voltar"]} onClick={() => handleDeleteAluno(aluno.id)}>Excluir</button>
-                    </div>
+                  <div className={styles['row']}>
+                    <Link href={`/atendimento/${aluno.id}`}>
+                      <button className={`${aluno.ativo ? styles["iniciar-button"] : styles["inativo-button"]}`} disabled={!aluno.ativo}>
+                        {aluno.ativo ? "Iniciar atendimento" : "Iniciar atendimento"}
+                      </button>
+                    </Link>
+                    <CheckBox
+                      id="cbx-3"
+                      checked={aluno.ativo}
+                      onChangeFunction={(e) =>handleDeleteAluno(aluno.id, e)}
+                    />     
+                  </div>
                   </td>
                 </tr>
               ))}

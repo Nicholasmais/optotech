@@ -50,6 +50,10 @@ $icon-scale: 0.2;
       width: 10rem;
       background-color: #df8621; /* Laranja */
     }
+    .estatisticas-btn{
+      width: 10rem;
+      background-color: rgba(57, 132, 20, 0.71)/* verde */
+    }
     .backButton {
       background-color: #dc3545; /* Vermelho */
     }    
@@ -191,17 +195,24 @@ $icon-scale: 0.2;
   .row{
     display: flex;
     flex-direction: row;
-
+    overflow-x: hidden;
     & button{
       padding: 4px 8px;
     }
     & .iniciar-button{
       background-color: #28a745; /* Verde */
-      width: auto;
+      width: auto;  
     }
+    & .inativo-button{
+      background-color: #a3a7a4; /* Cinza */
+      width: auto;  
+      &:hover{
+        cursor: not-allowed;
+      }
+    }    
     & .voltar{
       background-color: #dc3545; /* Verde */
-    }
+    }    
   }
 }
 

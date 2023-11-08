@@ -217,6 +217,19 @@ const MatrixLetter = async(letter) =>{
   }  
 }
 
+const reportComparison = async() => {
+  return await axios.get(`${baseApiUrl}/report/comparison`, {
+    withCredentials: true,
+    credentials: 'include'
+  })
+    .then((response) => {
+      return response.data; 
+    })
+    .catch((error) => {
+      throw error; 
+    });
+}
+
 module.exports = {
   getUsers: getUsers,
   login: login,
@@ -235,5 +248,6 @@ module.exports = {
   deleteAluno: deleteAluno,
   setItem: setItem,
   removeItem: removeItem,
-  MatrixLetter: MatrixLetter
+  MatrixLetter: MatrixLetter,
+  reportComparison: reportComparison
 };

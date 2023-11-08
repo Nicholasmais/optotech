@@ -16,7 +16,7 @@ export default function AuthToken() {
             isAuth: res.isAuth,
             user: res.user
           });
-          router.push("/snellen");
+          router.push("/meus-dados");
         });        
       } );
     }

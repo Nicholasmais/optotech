@@ -243,15 +243,25 @@ const Snellen = () => {
           <div className={styles.all_letters} style={{flex:"1"}}>
             {
               isSnellen ?
-                snellen_letters.map((row, index) => (
-                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeRow ? `red` : "black", filter: !isHiddenEye ? "blur(5px)" : "none"}}>
-                    {row.letters}
+                snellen_letters.map((row, index) => (                  
+                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeRow ? `red` : "black","display":"flex", "flexDirection":"row"}}>
+                    <div style={{"position":"absolute", "right":"0", "filter":"none !important"}}>
+                      {index+1}
+                    </div>
+                    <div style={{"display":"flex", "flexDirection":"column", filter: !isHiddenEye ? "blur(5px)" : "none"}}>
+                      {row.letters}
+                    </div>                    
                   </div>
                 ))
                 :
                 customLetters.map((row, index) => (
-                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeCustomRow ? `red` : "black", filter: !isHiddenEye ? "blur(5px)" : "none" }}>
-                    {row.letters}
+                  <div key={index} style={{ fontSize: `${40}px`, color: index == activeCustomRow ? `red` : "black","display":"flex", "flexDirection":"row"}}>
+                    <div style={{"position":"absolute", "right":"0", "filter":"none !important"}}>
+                      {index+1}
+                    </div>
+                    <div style={{"display":"flex", "flexDirection":"column", filter: !isHiddenEye ? "blur(5px)" : "none"}}>
+                      {row.letters}
+                    </div>                    
                   </div>
                 ))
             }
