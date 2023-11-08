@@ -68,7 +68,7 @@ export default function Home() {
 
   return (
     <>
-      <NavBar toggleLoginForm={toggleLoginForm} />
+      <NavBar toggleLoginForm={toggleLoginForm} patientInfo={aluno} />
 
       <div className={styles.contentContainer}>
         <Snellen />        

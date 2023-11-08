@@ -148,11 +148,11 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
   useEffect(() => {
     const fetchAluno = async(id) => {
       if (id === undefined) {return}
-      await api.aluno(id).then((res) => {        
-        setAluno(res);        
-      }).catch((err) => {
-        toast.error('Erro ao se conectar com servidor.', toastConfig);
-      });
+        await api.aluno(id).then((res) => {        
+          setAluno(res);        
+        }).catch((err) => {
+          toast.error('Erro ao se conectar com servidor.', toastConfig);
+        });
     }
     fetchAluno(alunoId);
   }, [alunoId]);
@@ -174,7 +174,6 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
       </div>
       {aluno.id && (
         <div className={styles.formContainer}>
-          <h3>Olá, {aluno.nome}</h3>          
           <form className={styles.form} onSubmit={handleFormSubmit}>
             <label htmlFor="line">Até qual linha você leu pelo menos metade com seu olho esquerdo?</label>
             <div className="row">

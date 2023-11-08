@@ -23,6 +23,8 @@ const MeusDadosComponent = ({setCurrent, isOpenForm, setIsOpenForm, user, email,
 
           <button className={styles['historico-btn']} onClick={() => {setCurrent("historico")}}>Histórico</button>
 
+          <button className={styles['estatisticas-btn']} onClick={() => {setCurrent("estatisticas")}}>Estatisticas</button>
+
           <Link href="/snellen">
             <button className={styles.backButton}>Voltar</button>
           </Link>

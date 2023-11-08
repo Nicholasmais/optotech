@@ -17,6 +17,14 @@ class AlunoViewSet(viewsets.ModelViewSet):
     queryset = Aluno.objects.all()
     serializer_class = AlunoSerializer
 
+    def retrieve(self, request, pk):        
+        aluno_user = Aluno.objects.get(id = pk)
+        aluno_user = AlunoSerializer(aluno_user)
+        aluno_user = aluno_user.data
+        aluno_user["idade"] = self.__calculate_idade__(aluno_user.get("data_nascimento"))
+
+        return Response(aluno_user)
+    
     def list(self, request):
         user_id = request.session.get("user")
         
@@ -57,11 +65,10 @@ class AlunoViewSet(viewsets.ModelViewSet):
         return Response({**serializer.data, "id":instance.id})
 
     def destroy(self, request, pk):
-        Appointment.objects.filter(aluno = pk).delete()
-     
-        UserAlunos.objects.filter(aluno = pk).delete()
-        
-        Aluno.objects.filter(id = pk).delete()
+        aluno = Aluno.objects.get(id=pk)
+
+        aluno.ativo = not aluno.ativo
+        aluno.save()
 
         return Response({})
 
@@ -73,7 +80,8 @@ class AlunoViewSet(viewsets.ModelViewSet):
         return relativedelta(data_atual, data_nascimento).years
     
     def __transform_date__(self, date_string):
-        year = int(date_string[:4])
-        month = int(date_string[6:7])
-        day = int(date_string[8:])
+        date_string_list = date_string.split("-")
+        year = int(date_string_list[0])
+        month = int(date_string_list[1])
+        day = int(date_string_list[2])
         return datetime(year, month, day)

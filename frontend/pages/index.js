@@ -96,7 +96,7 @@ const ResponsibilityComponent = () => {
         }
       }).catch((error) => {
         console.error(error);  
-        toast.error(error.response.data.detail, toastConfig);  
+        toast.error(error.response?.data.detail || "Erro", toastConfig);  
       });
           
     }
@@ -110,7 +110,7 @@ const ResponsibilityComponent = () => {
       <div className={styles.responsibilityContainer}>
         {section === 0 ? 
           <>
-            <h2 className={styles.title}>Bem-Vindo ao OptoTech</h2>
+            <div className={styles.title}>Aplicação Para Teste de Encaminhamento Oftalmológico Usando Técnica de Optotipo.</div>
             <p className={styles.description}>
               OptoTech é uma plataforma online que oferece um teste de acuidade visual com base na tabela Snellen. Nossa plataforma permite que você realize o teste de acuidade visual e mantenha um registro de seus atendimentos anteriores.
             </p>
@@ -171,18 +171,18 @@ const ResponsibilityComponent = () => {
           <>
             <h2 className={styles.title}>Responsabilidades e Limitações</h2>
             <p className={styles.description}>
-              O teste de optotipo Snellen Chart é uma ferramenta valiosa para avaliar a acuidade visual aproximada. No entanto, é fundamental lembrar que este teste online não substitui uma avaliação completa realizada por um oftalmologista ou profissional de saúde ocular licenciado. A acuidade visual é apenas um aspecto da saúde ocular, e muitos outros fatores podem influenciar a visão.
+              O teste de optotipo tabela Snellen é uma ferramenta valiosa para avaliar a acuidade visual aproximada. No entanto, é fundamental lembrar que este teste online não substitui uma avaliação completa realizada por um oftalmologista ou profissional de saúde ocular licenciado. A acuidade visual é apenas um aspecto da saúde ocular, e muitos outros fatores podem influenciar a visão.
             </p>
             <p className={styles.description}>
-              Ao utilizar este teste de optotipo Snellen Chart em nosso website, você concorda com as seguintes condições:
+              Ao utilizar este teste de optotipo tabela Snellen em nosso website, você concorda com as seguintes condições:
             </p>
             <ul className={styles.list}>
               <li>Limitações da Ferramenta: Este teste online é destinado apenas a fins informativos e não deve ser utilizado como uma substituição para um exame oftalmológico completo. Os resultados obtidos através deste teste podem não refletir com precisão o estado da sua visão e podem variar de acordo com diversos fatores, como iluminação, distância do dispositivo e qualidade do monitor.</li>
               <li>Recomendação para Consulta Profissional: Recomendamos enfaticamente que você consulte um oftalmologista ou um profissional de saúde ocular licenciado para uma avaliação completa e precisa da sua visão. Somente um profissional qualificado pode identificar problemas de visão, realizar testes especializados e fornecer orientação adequada com base no seu histórico de saúde ocular e outros fatores relevantes.</li>
-              <li>Isenção de Responsabilidade: Não nos responsabilizamos por quaisquer consequências adversas decorrentes do uso deste teste de optotipo Snellen Chart. Você concorda em utilizar esta ferramenta por sua própria conta e risco.</li>
+              <li>Isenção de Responsabilidade: Não nos responsabilizamos por quaisquer consequências adversas decorrentes do uso deste teste de optotipo tabela Snellen. Você concorda em utilizar esta ferramenta por sua própria conta e risco.</li>
             </ul>
             <p className={styles.description}>
-              Ao prosseguir com o uso deste teste de optotipo Snellen Chart, você reconhece ter lido, entendido e concordado com os termos e condições acima mencionados. Lembre-se sempre de que a sua saúde ocular é uma prioridade e que um profissional de saúde ocular qualificado é a melhor fonte de orientação e diagnóstico precisos.
+              Ao prosseguir com o uso deste teste de optotipo tabela Snellen, você reconhece ter lido, entendido e concordado com os termos e condições acima mencionados. Lembre-se sempre de que a sua saúde ocular é uma prioridade e que um profissional de saúde ocular qualificado é a melhor fonte de orientação e diagnóstico precisos.
             </p> 
           </>
           : section === 4 ? 
