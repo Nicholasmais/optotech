@@ -13,6 +13,7 @@ const History = ({appointmentHistory, setCurrent}) => {
           <table className={styles['appointment-table']}>
             <thead>
               <tr>
+                <th style={{width: "20%"}}>Código</th>
                 <th style={{width: "30%"}}>Aluno</th>
                 <th style={{width: "30%"}}>Data do atendimento</th>
                 <th style={{width: "20%"}}>Acuidade</th>
@@ -21,6 +22,7 @@ const History = ({appointmentHistory, setCurrent}) => {
             <tbody>
               {appointmentHistory.map((appointment, index) => (
                 <tr key={index}>
+                  <td>{appointment.aluno.codigo}</td>
                   <td>{appointment.aluno.nome}</td>
                   <td>{appointment.data_atendimento}</td>
                     <td>

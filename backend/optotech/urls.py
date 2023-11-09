@@ -23,7 +23,8 @@ from .views.login_view import LoginViewSet
 from .views.appointment import AppointmentView
 from .views.matrix_letter import MatrixLetterView
 from .views.aluno import AlunoViewSet
-from .views.report import ReportComparison
+from .views.report import ReportComparison, ReportActive, ReportDemographic
+
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'alunos', AlunoViewSet)
@@ -37,6 +38,8 @@ urlpatterns = [
     path('appointment/', AppointmentView.as_view({'get': 'user_appointments', 'post': 'create'}), name='appointment'),
     path('update-data/', UserViewSet.as_view({'put': 'update_data'}), name='update-data'),
     path('matrix-letter/', MatrixLetterView.as_view({'get': 'get_letra'}), name='matrix-letter'),
-    path('report/comparison', ReportComparison.as_view(), name='report-comparison'),
+    path('report/comparison/', ReportComparison.as_view(), name='report-comparison'),
+    path('report/active/', ReportActive.as_view(), name='report-active'),
+    path('report/demographic/', ReportDemographic.as_view(), name='report-demographic'),
     path('', include(router.urls)),
 ]

@@ -217,8 +217,34 @@ const MatrixLetter = async(letter) =>{
   }  
 }
 
-const reportComparison = async() => {
-  return await axios.get(`${baseApiUrl}/report/comparison`, {
+const reportComparison = async({isRight}) => {
+  return await axios.get(`${baseApiUrl}/report/comparison/?isRight=${isRight}`, {
+    withCredentials: true,
+    credentials: 'include'
+  })
+    .then((response) => {
+      return response.data; 
+    })
+    .catch((error) => {
+      throw error; 
+    });
+}
+
+const reportActive = async() => {
+  return await axios.get(`${baseApiUrl}/report/active`, {
+    withCredentials: true,
+    credentials: 'include'
+  })
+    .then((response) => {
+      return response.data; 
+    })
+    .catch((error) => {
+      throw error; 
+    });
+}
+
+const reportDemographic = async() => {
+  return await axios.get(`${baseApiUrl}/report/demographic`, {
     withCredentials: true,
     credentials: 'include'
   })
@@ -249,5 +275,7 @@ module.exports = {
   setItem: setItem,
   removeItem: removeItem,
   MatrixLetter: MatrixLetter,
-  reportComparison: reportComparison
+  reportComparison: reportComparison,
+  reportActive: reportActive,
+  reportDemographic: reportDemographic
 };

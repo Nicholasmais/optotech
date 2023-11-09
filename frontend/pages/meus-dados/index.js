@@ -32,6 +32,13 @@ export default function MeusDados() {
     "inferior" : null
   })
 
+  const [activeUnactive, setActiveUnactive] = useState({
+    "patient" : null,
+    "appointment" : null    
+  })
+
+  const [demographic, setDemographic] = useState([])
+
   const toastConfig = {
     position: "top-left", // Position of the toast
     autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
@@ -62,11 +69,23 @@ export default function MeusDados() {
     })
   }
   
+  const fetchReport = async(body) => {
+    await api.reportComparison(body).then((res) => {
+      setVisualAcuityComparison(res);
+    });
+    await api.reportActive().then((res) => {
+      setActiveUnactive(res);
+    });
+    await api.reportDemographic().then((res) => {
+      setDemographic(res);
+    });
+  }
+
   useEffect(() => {
     user = authData?.user?.user || '';
     email = authData?.user?.email || '';
   }, [authData])
-
+  
   useEffect(() =>{  
     const checkUser = async() => {
       await api.isAuth().then((res) => {
@@ -77,16 +96,9 @@ export default function MeusDados() {
       }).catch((err) => {
         toast.error('Erro ao se conectar com servidor.', toastConfig);
       });
-    }
+    }    
 
-    const fetchReportComparison = async() => {
-      await api.reportComparison().then((res) => {
-        setVisualAcuityComparison(res);
-      })
-    }
-
-    fetchReportComparison();
-    
+    fetchReport({});    
     checkUser();
     getAlunos();
     getUserAppointment();
@@ -112,7 +124,12 @@ export default function MeusDados() {
         return (<History appointmentHistory={appointmentHistory} setCurrent={setCurrent}/>);
       
       case 'estatisticas':
-        return (<Estatistics setCurrent={setCurrent} visualAcuityComparison={visualAcuityComparison}/>);
+        return (<Estatistics setCurrent={setCurrent} 
+                visualAcuityComparison={visualAcuityComparison}
+                activeUnactive={activeUnactive}
+                demographic={demographic}
+                fetchReport={fetchReport}
+                />);
     
       default:
         return (<></>);

@@ -10,7 +10,7 @@ const PieChart = ( { data }) => {
   const total = data.superior + data.igual + data.inferior;
   const datasets = [
     {
-      data: Object.values(data),
+      data: [data.igual, data.superior, data.inferior],
       backgroundColor: ['#6BFFB0', '#FF6B6B', '#6B92FF'],
     },
   ];
@@ -43,7 +43,7 @@ const PieChart = ( { data }) => {
             datalabels: {
               color: 'black',
               formatter: (value, context) => {
-                return `${value} (${value / total * 100}%)`;
+                return `${value} (${(value / total * 100).toFixed(1)}%)`;
               },
               anchor: 'center',
               align: 'center',

@@ -3,10 +3,6 @@ from rest_framework import viewsets
 from ..utils.custom_exception_handler import CustomAPIException
 from ..models.aluno import Aluno
 from ..serializers.aluno_serializer import AlunoSerializer
-from ..models.appointment import Appointment
-from ..serializers.appointment_serializer import AppointmentSerializer
-from ..models.aluno import Aluno
-from ..serializers.aluno_serializer import AlunoSerializer
 from ..models.user_alunos import UserAlunos
 from ..serializers.user_alunos_serializer import UserAlunosSerializer
 from rest_framework.response import Response
