@@ -6,80 +6,14 @@ import BarChart from './BarChart';
 import CheckBox from './CheckBox';
 const api = require('../services/api'); 
 
-const Estatistics = ({ setCurrent, visualAcuityComparison }) => {
+const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demographic, fetchReport }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isOldest, setIsOldest] = useState(false);
   const [isNewest, setIsNewest] = useState(false);
   const [isMeusAlunos, setIsMeusAlunos] = useState(true);
-  const [isRightEye, setIsRightEye] = useState(false);
-
-  const activeUnactive = {
-    "patient": {
-      "active": 40,
-      "unActive" : 20
-    },
-    "appointment": {
-      "active": 30,
-      "unActive" : 10
-    }  
-  };
-
-  const acuityAgeDemographic = [
-    // Pacientes com 20/200 de visão
-    { x: "20/200", y: 70, r: 3 },
-    { x: "20/200", y: 50, r: 2 },
-    { x: "20/200", y: 30, r: 1 },
+  const [isRightEye, setIsRightEye] = useState(true);
   
-    // Pacientes com 20/100 de visão
-    { x: "20/100", y: 65, r: 5 },
-    { x: "20/100", y: 45, r: 3 },
-    { x: "20/100", y: 20, r: 2 },
-  
-    // Pacientes com 20/70 de visão
-    { x: "20/70", y: 55, r: 8 },
-    { x: "20/70", y: 35, r: 6 },
-    { x: "20/70", y: 15, r: 1 },
-  
-    // Pacientes com 20/50 de visão
-    { x: "20/50", y: 40, r: 7 },
-    { x: "20/50", y: 25, r: 5 },
-    { x: "20/50", y: 10, r: 2 },
-  
-    // Pacientes com 20/40 de visão
-    { x: "20/40", y: 30, r: 10 },
-    { x: "20/40", y: 22, r: 9 },
-    { x: "20/40", y: 18, r: 4 },
-  
-    // Pacientes com 20/30 de visão
-    { x: "20/30", y: 20, r: 12 },
-    { x: "20/30", y: 10, r: 15 },
-  
-    // Pacientes com 20/25 de visão
-    { x: "20/25", y: 30, r: 20 },
-    { x: "20/25", y: 25, r: 18 },
-    { x: "20/25", y: 22, r: 5 },
-  
-    // Pacientes com 20/20 de visão
-    { x: "20/20", y: 25, r: 25 },
-    { x: "20/20", y: 35, r: 30 },
-    { x: "20/20", y: 18, r: 40 },
-    { x: "20/20", y: 10, r: 50 },
-  
-    // Pacientes com 20/15 de visão
-    { x: "20/15", y: 30, r: 5 },
-    { x: "20/15", y: 22, r: 2 },
-    { x: "20/15", y: 15, r: 1 },
-  
-    // Pacientes com 20/13 de visão
-    { x: "20/13", y: 27, r: 2 },
-    { x: "20/13", y: 19, r: 1 },
-  
-    // Pacientes com 20/10 de visão
-    { x: "20/10", y: 25, r: 1 },
-    { x: "20/10", y: 18, r: 1 },
-  ];
-
   // Função para aplicar os filtros aos gráficos
   const applyFilters = () => {
     // Registre os valores dos filtros no estado do componente
@@ -90,6 +24,8 @@ const Estatistics = ({ setCurrent, visualAcuityComparison }) => {
     setIsMeusAlunos(isMeusAlunos);
 
     // Aplique os filtros aos gráficos aqui
+        
+    fetchReport({isRight : isRightEye});
   };
 
   return (
@@ -160,12 +96,12 @@ const Estatistics = ({ setCurrent, visualAcuityComparison }) => {
           <PieChart data = {visualAcuityComparison}/>
         </div>
         <div className={styles['grid-item']}>
-          <BubbleChart data = {acuityAgeDemographic}/>
+          <BubbleChart data = {demographic}/>
         </div>
         <div className={styles['grid-item']}>
           <BarChart data = {activeUnactive} />
         </div>
-      </div>
+      </div>      
     </div>
   );
 };
