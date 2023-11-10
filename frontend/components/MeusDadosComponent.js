@@ -19,7 +19,7 @@ const MeusDadosComponent = ({setCurrent, isOpenForm, setIsOpenForm, user, email,
         <div className={styles['button-container']}>
           <button className={styles['alterar-button']} onClick={() => setIsOpenForm(!isOpenForm)}>Alterar Dados</button>
 
-          <button className={styles['alunos']} onClick={() => {setCurrent("alunos")}}>Alunos</button>
+          <button className={styles['pacientes']} onClick={() => {setCurrent("pacientes")}}>Pacientes</button>
 
           <button className={styles['historico-btn']} onClick={() => {setCurrent("historico")}}>Histórico</button>
 

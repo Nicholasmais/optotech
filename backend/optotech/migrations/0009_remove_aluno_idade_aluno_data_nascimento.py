@@ -12,11 +12,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='aluno',
+            model_name='paciente',
             name='idade',
         ),
         migrations.AddField(
-            model_name='aluno',
+            model_name='paciente',
             name='data_nascimento',
             field=models.DateTimeField(default=datetime.date(2013, 1, 1)),
             preserve_default=False,

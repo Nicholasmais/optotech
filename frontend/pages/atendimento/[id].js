@@ -30,8 +30,8 @@ export default function Home() {
   };
 
   const router = useRouter();
-  const alunoId = router.query.id;
-  const [aluno, setAluno] = useState({});
+  const pacienteId = router.query.id;
+  const [paciente, setPaciente] = useState({});
 
   const toggleLoginForm = () => {
     setIsLoggedFormOpen(!isLoggedFormOpen);
@@ -55,20 +55,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const fetchAluno = async(id) => {
+    const fetchPaciente = async(id) => {
       if (id === undefined) {return}
-      await api.aluno(id).then((res) => {        
-        setAluno(res);        
+      await api.paciente(id).then((res) => {        
+        setPaciente(res);        
       }).catch((err) => {
         toast.error('Erro ao se conectar com servidor.', toastConfig);
       });
     }
-    fetchAluno(alunoId);
-  }, [alunoId]);
+    fetchPaciente(pacienteId);
+  }, [pacienteId]);
 
   return (
     <>
-      <NavBar toggleLoginForm={toggleLoginForm} patientInfo={aluno} />
+      <NavBar toggleLoginForm={toggleLoginForm} patientInfo={paciente} />
 
       <div className={styles.contentContainer}>
         <Snellen />        

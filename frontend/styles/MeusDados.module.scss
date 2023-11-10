@@ -42,7 +42,7 @@ $icon-scale: 0.2;
     .iniciar-button {
       background-color: #28a745; /* Verde */
     }
-    .alunos {
+    .pacientes {
       width: 10rem;
       background-color: #ddc515; /* Amarelo */
     }
@@ -102,7 +102,7 @@ $icon-scale: 0.2;
     background-color: #28a745; /* Verde */
   }
 
-  .alunos {
+  .pacientes {
     width: 5rem;
     background-color: #ddc515; /* Amarelo */
   }
@@ -195,7 +195,9 @@ $icon-scale: 0.2;
   .row{
     display: flex;
     flex-direction: row;
-    overflow-x: hidden;
+    align-items: center;    
+    justify-content: center;
+    overflow: hidden;
     & button{
       padding: 4px 8px;
     }

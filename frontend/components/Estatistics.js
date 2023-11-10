@@ -6,12 +6,12 @@ import BarChart from './BarChart';
 import CheckBox from './CheckBox';
 const api = require('../services/api'); 
 
-const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demographic, fetchReport }) => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [isOldest, setIsOldest] = useState(false);
-  const [isNewest, setIsNewest] = useState(false);
-  const [isMeusAlunos, setIsMeusAlunos] = useState(true);
+const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demographic,mostDate, fetchReport }) => {
+  const [startDate, setStartDate] = useState(mostDate.leastRecent);
+  const [endDate, setEndDate] = useState(mostDate.mostRecent);
+  const [isOldest, setIsOldest] = useState(true);
+  const [isNewest, setIsNewest] = useState(true);
+  const [isMeusPacientes, setIsMeusPacientes] = useState(true);
   const [isRightEye, setIsRightEye] = useState(true);
   
   // Função para aplicar os filtros aos gráficos
@@ -21,17 +21,17 @@ const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demog
     setEndDate(endDate);
     setIsOldest(isOldest);
     setIsNewest(isNewest);
-    setIsMeusAlunos(isMeusAlunos);
+    setIsMeusPacientes(isMeusPacientes);
 
     // Aplique os filtros aos gráficos aqui
         
-    fetchReport({isRight : isRightEye});
+    fetchReport({isRight : isRightEye, isAllPatients: isMeusPacientes});
   };
 
   return (
     <div>
       <div className={styles['button-container']}>
-        <button className={styles['alunos']} onClick={() => { setCurrent("default") }}>
+        <button className={styles['pacientes']} onClick={() => { setCurrent("default") }}>
           Voltar
         </button>
       </div>
@@ -63,7 +63,7 @@ const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demog
               <label>
                 <input
                   type="checkbox"
-                  checked={!isNewest}
+                  checked={isNewest}
                   onChange={() => setIsNewest(!isNewest)}
                 />
                 Mais Recente
@@ -73,8 +73,8 @@ const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demog
               <span>Meus pacientes</span>
               <CheckBox
                 id="cbx-3"
-                checked={isMeusAlunos}
-                onChangeFunction={() => setIsMeusAlunos(!isMeusAlunos)}
+                checked={isMeusPacientes}
+                onChangeFunction={() => setIsMeusPacientes(!isMeusPacientes)}
                 notCheckedColor='#007bff'
               />
               <span>Todos pacientes</span>

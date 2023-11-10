@@ -71,6 +71,11 @@ const Snellen = () => {
       snellen: 20,
       size: letterPx(snellenTometers(20)),
     },
+    {
+      letters: ["L", "E", "F", "O", "B", "F", "C", "T"],
+      snellen: 15,
+      size: letterPx(snellenTometers(20)),
+    },
   ]);
   
   const [isSnellen, setIsSnellen] = useState(true);
@@ -113,6 +118,11 @@ const Snellen = () => {
     {
       letters: ["D", "E", "F", "P", "O", "T", "E", "C"],
       snellen: 20,
+      size: letterPx(snellenTometers(20)),
+    },
+    {
+      letters: ["L", "E", "F", "O", "B", "F", "C", "T"],
+      snellen: 15,
       size: letterPx(snellenTometers(20)),
     },
   ];
@@ -238,7 +248,7 @@ const Snellen = () => {
           </div>
           </div>
           
-          <ChangeArrows changeFunction={changeActiveRow}></ChangeArrows>
+          <ChangeArrows changeFunction={changeActiveRow} maxInput={snellen_letters.length}></ChangeArrows>
           
           <div className={styles.all_letters} style={{flex:"1"}}>
             {

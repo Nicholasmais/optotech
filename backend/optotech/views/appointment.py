@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from ..models.appointment import Appointment
 from ..serializers.appointment_serializer import AppointmentSerializer
 from ..utils.custom_exception_handler import CustomAPIException
-from .aluno import Aluno
-from ..serializers.aluno_serializer import AlunoSerializer
+from .paciente import Paciente
+from ..serializers.paciente_serializer import PacienteSerializer
 
 class AppointmentView(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
@@ -19,12 +19,10 @@ class AppointmentView(viewsets.ModelViewSet):
             appointment_model = Appointment.objects.get(id = str(appointment.id))
             appointment_dict = AppointmentSerializer(appointment_model).data
 
-            aluno_model = Aluno.objects.get(id = appointment_dict.get("aluno"))
-            aluno_dict = AlunoSerializer(aluno_model).data
-            if not aluno_dict["ativo"]:
-                continue
+            paciente_model = Paciente.objects.get(id = appointment_dict.get("paciente"))
+            paciente_dict = PacienteSerializer(paciente_model).data            
             
-            appointment_dict["aluno"] = aluno_dict
+            appointment_dict["paciente"] = paciente_dict
 
             appointments_list.append(appointment_dict)
 

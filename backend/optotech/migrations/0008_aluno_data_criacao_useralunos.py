@@ -14,20 +14,20 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='aluno',
+            model_name='paciente',
             name='data_criacao',
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
             preserve_default=False,
         ),
         migrations.CreateModel(
-            name='UserAlunos',
+            name='UserPacientes',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('aluno', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='optotech.aluno')),
+                ('paciente', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='optotech.paciente')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='optotech.user')),
             ],
             options={
-                'db_table': 'user_alunos',
+                'db_table': 'user_pacientes',
             },
         ),
     ]
