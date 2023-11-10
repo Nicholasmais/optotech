@@ -132,9 +132,9 @@ const updateData = async(body) => {
   }
 }
 
-const alunos = async() => {
+const pacientes = async() => {
   try {
-    const res = await axios.get(`${baseApiUrl}/alunos/`, {
+    const res = await axios.get(`${baseApiUrl}/pacientes/`, {
       withCredentials: true,
       credentials: 'include'
     });
@@ -144,9 +144,9 @@ const alunos = async() => {
   }
 }
 
-const aluno = async(id) => {
+const paciente = async(id) => {
   try {
-    const res = await axios.get(`${baseApiUrl}/alunos/${id}/`, {
+    const res = await axios.get(`${baseApiUrl}/pacientes/${id}/`, {
       withCredentials: true,
       credentials: 'include'
     });
@@ -156,9 +156,9 @@ const aluno = async(id) => {
   }
 }
 
-const createAluno = async(body) => {
+const createPaciente = async(body) => {
   try {
-    const res = await axios.post(`${baseApiUrl}/alunos/`, body, {
+    const res = await axios.post(`${baseApiUrl}/pacientes/`, body, {
       withCredentials: true,
       credentials: 'include'
     });
@@ -168,9 +168,9 @@ const createAluno = async(body) => {
   }
 }
 
-const updateAluno = async(body) => {
+const updatePaciente = async(body) => {
   try{
-    const res = await axios.put(`${baseApiUrl}/alunos/`, body,  {
+    const res = await axios.put(`${baseApiUrl}/pacientes/`, body,  {
       withCredentials: true,
       credentials: 'include'
     })    
@@ -180,9 +180,9 @@ const updateAluno = async(body) => {
   }
 }
 
-const deleteAluno = async(id) => {
+const deletePaciente = async(id) => {
   try{
-    const res = await axios.delete(`${baseApiUrl}/alunos/${id}`,  {
+    const res = await axios.delete(`${baseApiUrl}/pacientes/${id}`,  {
       withCredentials: true,
       credentials: 'include'
     })    
@@ -217,8 +217,13 @@ const MatrixLetter = async(letter) =>{
   }  
 }
 
-const reportComparison = async({isRight}) => {
-  return await axios.get(`${baseApiUrl}/report/comparison/?isRight=${isRight}`, {
+const reportComparison = async({isRight, isAllPatients}) => {
+
+  const right = `${isRight === undefined ? "?isRight=true" : "?isRight=" + isRight}`;
+  const allPatients = `${isAllPatients === undefined ? "isAllPatients=true" : "isAllPatients=" + isAllPatients}`;
+  const params = `${right}${allPatients !== "" ? "&"  + allPatients : ""}`;
+
+  return await axios.get(`${baseApiUrl}/report/comparison/${params}`, {
     withCredentials: true,
     credentials: 'include'
   })
@@ -256,6 +261,19 @@ const reportDemographic = async() => {
     });
 }
 
+const reportMaxMinDate = async() => {
+  return await axios.get(`${baseApiUrl}/report/max-min-date/`, {
+    withCredentials: true,
+    credentials: 'include'
+  })
+    .then((response) => {
+      return response.data; 
+    })
+    .catch((error) => {
+      throw error; 
+    });
+}
+
 module.exports = {
   getUsers: getUsers,
   login: login,
@@ -267,15 +285,16 @@ module.exports = {
   appointment: appointment,
   createAppointment: createAppointment,
   updateData: updateData,
-  alunos: alunos,
-  aluno: aluno,
-  createAluno: createAluno,
-  updateAluno: updateAluno,
-  deleteAluno: deleteAluno,
+  pacientes: pacientes,
+  paciente: paciente,
+  createPaciente: createPaciente,
+  updatePaciente: updatePaciente,
+  deletePaciente: deletePaciente,
   setItem: setItem,
   removeItem: removeItem,
   MatrixLetter: MatrixLetter,
   reportComparison: reportComparison,
   reportActive: reportActive,
-  reportDemographic: reportDemographic
+  reportDemographic: reportDemographic,
+  reportMaxMinDate: reportMaxMinDate
 };

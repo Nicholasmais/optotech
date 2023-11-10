@@ -5,7 +5,7 @@ import NavBar from '../../components/NavBar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
-import Alunos from '../../components/Alunos';
+import Pacientes from '../../components/Pacientes';
 import History from '../../components/History';
 import MeusDadosComponent from '../../components/MeusDadosComponent';
 import Loading from '../../components/Loading';
@@ -21,7 +21,7 @@ export default function MeusDados() {
   let email = authData?.user?.email || '';
 
   const [appointmentHistory, setAppointmentHistory] = useState([]);
-  const [alunos, setAlunos] = useState([]);
+  const [pacientes, setPacientes] = useState([]);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState("default");  
@@ -38,6 +38,7 @@ export default function MeusDados() {
   })
 
   const [demographic, setDemographic] = useState([])
+  const [mostDate, setMostDate] = useState({})
 
   const toastConfig = {
     position: "top-left", // Position of the toast
@@ -51,10 +52,10 @@ export default function MeusDados() {
 
   const router = useRouter();
 
-  const getAlunos = async() => {
+  const getPacientes = async() => {
     setLoading(true);
-    await api.alunos().then((res) => {
-      setAlunos(res);
+    await api.pacientes().then((res) => {
+      setPacientes(res);
     }).catch((err) => {
       toast.error(err.response?.data.detail, toastConfig);  
     })
@@ -79,6 +80,9 @@ export default function MeusDados() {
     await api.reportDemographic().then((res) => {
       setDemographic(res);
     });
+    await api.reportMaxMinDate().then((res) => {
+      setMostDate(res);
+    });
   }
 
   useEffect(() => {
@@ -100,7 +104,7 @@ export default function MeusDados() {
 
     fetchReport({});    
     checkUser();
-    getAlunos();
+    getPacientes();
     getUserAppointment();
 
   }, []);
@@ -117,8 +121,8 @@ export default function MeusDados() {
           loading={loading}
           />);
       
-      case 'alunos':
-        return (<Alunos alunos={alunos} setCurrent={setCurrent} getAlunos={getAlunos} setAppointmentHistory={setAppointmentHistory} getUserAppointment={getUserAppointment}/>);
+      case 'pacientes':
+        return (<Pacientes pacientes={pacientes} setCurrent={setCurrent} getPacientes={getPacientes} setAppointmentHistory={setAppointmentHistory} getUserAppointment={getUserAppointment} fetchReport={fetchReport}/>);
       
       case 'historico':
         return (<History appointmentHistory={appointmentHistory} setCurrent={setCurrent}/>);
@@ -128,6 +132,7 @@ export default function MeusDados() {
                 visualAcuityComparison={visualAcuityComparison}
                 activeUnactive={activeUnactive}
                 demographic={demographic}
+                mostDate={mostDate}
                 fetchReport={fetchReport}
                 />);
     

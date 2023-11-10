@@ -4,6 +4,9 @@ from ..serializers.user_serializer import UserSerializer
 from rest_framework.response import Response
 import bcrypt
 from ..utils.custom_exception_handler import CustomAPIException
+from ..models.user_pacientes import UserPacientes
+from ..models.paciente import Paciente
+from ..models.appointment import Appointment
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -63,3 +66,17 @@ class UserViewSet(viewsets.ModelViewSet):
                 })
             raise CustomAPIException(user_serializer.errors, 400)
         return CustomAPIException("Erro ao atualizar usuário", 400)
+    
+    def delete_pacientes(self, request, pk):
+        user_id = pk
+        user = User.objects.get(id = user_id)
+        user = UserSerializer(user)
+        user_obj = user.data
+        all_pacientes = UserPacientes.objects.filter(user = user_id).values_list("paciente_id")
+
+        for paciente_id in all_pacientes:  
+            Appointment.objects.filter(paciente = str(paciente_id[0])).delete()
+            UserPacientes.objects.filter(paciente_id = paciente_id).delete()
+            Paciente.objects.get(id = str(paciente_id[0])).delete()        
+
+        return Response({"user":user_obj})

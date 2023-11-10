@@ -8,7 +8,7 @@ import CheckBox from './CheckBox';
 
 const api = require('../services/api'); 
 
-const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory, getUserAppointment}) => {
+const Pacientes = ({pacientes, setCurrent, getPacientes, setAppointmentHistory, getUserAppointment, fetchReport}) => {
   const [nome, setNome] = useState('');
   const [nascimento, setNascimento] = useState('');
   const [codigo, setCodigo] = useState('');
@@ -36,40 +36,42 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory, getUserAp
 
     try {
       const body = { nome: nome, data_nascimento: nascimento, codigo: codigo };
-      await api.createAluno(body).then((res) => {
-        getAlunos();
-        setAppointmentHistory();                
-        toast.success("Sucesso ao criar aluno", toastConfig);
+      await api.createPaciente(body).then((res) => {
+        getPacientes();
+        setAppointmentHistory();  
+        fetchReport({});
+        toast.success("Sucesso ao criar paciente", toastConfig);
       }).catch((err) => {
         console.log(err);
-        toast.error(err.response?.data?.detail || "Erro ao criar aluno", toastConfig);
+        toast.error(err.response?.data?.detail || "Erro ao criar paciente", toastConfig);
       });
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.detail || "Erro ao criar aluno", toastConfig);
+      toast.error(error.response?.data?.detail || "Erro ao criar paciente", toastConfig);
     }
     setLoading(false);
   };
 
-  const handleDeleteAluno = async(id, active) => {
+  const handleDeletePaciente = async(id, active) => {
     setLoading(true);
     try {
-      await api.deleteAluno(id).then(() => {
-        getAlunos();
+      await api.deletePaciente(id).then(() => {
+        getPacientes();
         getUserAppointment();
+        fetchReport({});
         if (active){
-          toast.success("Aluno ativado com sucesso", toastConfig);
+          toast.success("Paciente ativado com sucesso", toastConfig);
         }
         else{
-          toast.success("Aluno inativado com sucesso", toastConfig);
+          toast.success("Paciente inativado com sucesso", toastConfig);
         }
         
       }).catch((err) => {
-        toast.error(err.response?.data?.detail || "Erro ao inativar aluno", toastConfig);
+        toast.error(err.response?.data?.detail || "Erro ao inativar paciente", toastConfig);
       });
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.detail || "Erro ao inativar aluno", toastConfig);
+      toast.error(error.response?.data?.detail || "Erro ao inativar paciente", toastConfig);
     }
     setLoading(false);
   }
@@ -107,7 +109,7 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory, getUserAp
               </div>              
               <div className={styles['buttons']}>              
                 <button className={styles['iniciar-button']} type="submit">Cadastrar</button>              
-                <button className={styles['alunos']} onClick={() => { setCurrent("default") }}>Voltar</button>                            
+                <button className={styles['pacientes']} onClick={() => { setCurrent("default") }}>Voltar</button>                            
               </div>              
             </div>             
           </div>        
@@ -117,34 +119,34 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory, getUserAp
         <div style={{"display":"flex", "justifyContent":"center", "marginTop":"40px", "position":"absolute", "width":"80%"}}>
           <Loading loading={loading}></Loading>
         </div>
-        <h2 className={styles.header}>Alunos</h2>        
+        <h2 className={styles.header}>Pacientes</h2>        
         <div className={styles['table-div']}>          
           <table className={styles['appointment-table']}>
             <thead>
               <tr>
-                <th style={{width: "30%"}}>Aluno</th>
+                <th style={{width: "30%"}}>Paciente</th>
                 <th style={{width: "20%"}}>Idade</th>
                 <th style={{width: "30%"}}>Código</th>
                 <th style={{width: "20%"}}>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {alunos.map((aluno, index) => (
+              {pacientes.map((paciente, index) => (
                 <tr key={index}>
-                  <td>{aluno.nome}</td>
-                  <td>{aluno.idade}</td>
-                  <td>{aluno.codigo}</td>
+                  <td>{paciente.nome}</td>
+                  <td>{paciente.idade}</td>
+                  <td>{paciente.codigo}</td>
                   <td>
                   <div className={styles['row']}>
-                    <Link href={`/atendimento/${aluno.id}`}>
-                      <button className={`${aluno.ativo ? styles["iniciar-button"] : styles["inativo-button"]}`} disabled={!aluno.ativo}>
-                        {aluno.ativo ? "Iniciar atendimento" : "Iniciar atendimento"}
+                    <Link href={`/atendimento/${paciente.id}`}>
+                      <button className={`${paciente.ativo ? styles["iniciar-button"] : styles["inativo-button"]}`} disabled={!paciente.ativo}>
+                        {paciente.ativo ? "Iniciar atendimento" : "Iniciar atendimento"}
                       </button>
                     </Link>
                     <CheckBox
-                      id="cbx-3"
-                      checked={aluno.ativo}
-                      onChangeFunction={(e) =>handleDeleteAluno(aluno.id, e)}
+                      id={`paciente-${index}`}
+                      checked={paciente.ativo}
+                      onChangeFunction={(e) =>handleDeletePaciente(paciente.id, e)}
                     />     
                   </div>
                   </td>
@@ -158,4 +160,4 @@ const Alunos = ({alunos, setCurrent, getAlunos, setAppointmentHistory, getUserAp
   )
 }
 
-export default Alunos
+export default Pacientes

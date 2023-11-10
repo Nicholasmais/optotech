@@ -11,7 +11,7 @@ const BubbleChart = ( {data}) => {
       {
         label: 'Distribuição de Acuidade Visual por Idade',
         data:data,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',        
       },
     ],
   };
@@ -20,7 +20,7 @@ const BubbleChart = ( {data}) => {
     maintainAspectRatio: true, // Definido para false para preencher todo o espaço
     responsive: true, // Definido para true para ser responsivo ao tamanho do container
     layout: {
-      padding: 0 // Remova ou ajuste o padding se necessário
+      padding: 0,      
     },
     scales: {
       y: {
@@ -28,10 +28,16 @@ const BubbleChart = ( {data}) => {
         max: 100,
         ticks: {
           stepSize: 5,
+          font:{
+            size:18
+          }          
         },        
         title: {
           display: true,
           text: 'Idade',
+          font: {
+            size: 18 // Ajuste para o tamanho desejado
+          }
         },
       },
       x: {
@@ -40,7 +46,15 @@ const BubbleChart = ( {data}) => {
         title: {
           display: true,
           text: 'Acuidade Visual',
+          font: {
+            size: 18 // Ajuste para o tamanho desejado
+          }
         },
+        ticks: {          
+          font:{
+            size:18
+          }          
+        }, 
       },
     },
     plugins: {
@@ -63,13 +77,28 @@ const BubbleChart = ( {data}) => {
             backgroundColor: 'rgba(0, 255, 0, 0.1)',
             borderWidth: 0,
             label:{
-              content:"Acuidade recomendada",
+              content:["Acuidade" ,"recomendada"],
               display:true,
-              position:"start"
+              position:"start",
+              font:{
+                size:18
+              }
             }
           },
         },
       },
+      legend: {
+        labels: {
+          font: {
+            size: 18
+          }
+        }
+      },
+      datalabels:{
+        font:{
+          size:18
+        }
+      }
     },
   };
 

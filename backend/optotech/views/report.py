@@ -3,17 +3,25 @@ from rest_framework.response import Response
 
 from ..models.appointment import Appointment
 from ..serializers.appointment_serializer import AppointmentSerializer
-from ..models.aluno import Aluno
-from ..serializers.aluno_serializer import AlunoSerializer
+from ..models.paciente import Paciente
+from ..serializers.paciente_serializer import PacienteSerializer
 from django.db import connection
+from datetime import datetime
 
 class ReportComparison(APIView):
     def get(self, request):        
-        self.olho_direito = self.__treat_bool__(request.GET.get("isRight"))
+        self.olho_direito = self.__treat_bool__(request.GET.get("isRight", "true"))
+        self.all_patients = self.__treat_bool__(request.GET.get("isAllPatients", "true"))
+        
+        self.user_id = None
+        if not self.all_patients:
+            try:
+                self.user_id = request.session.get("user")
+            except Exception as e:
+                self.user_id = None
 
         resultados = self.__raw_query__()
-        resultados = self.__serializer__(resultados)
-        
+
         num_equal = self.__count_equal__(resultados)
         num_lower = self.__count_lower__(resultados)
         num_greater = self.__count_greater__(resultados)
@@ -28,15 +36,14 @@ class ReportComparison(APIView):
         return bool_string == "true"
 
     def __raw_query__(self):
-        consulta_sql = """
-        SELECT a.acuidade, a.user_id, a.aluno_id, a.data_atendimento
-        FROM appointments a
-        INNER JOIN (
-            SELECT user_id, aluno_id, MAX(data_atendimento) AS MaxData
-            FROM appointments
-            GROUP BY user_id, aluno_id
-        ) AS b ON a.user_id = b.user_id AND a.aluno_id = b.aluno_id AND a.data_atendimento = b.MaxData
-        ORDER BY a.data_atendimento DESC;
+        consulta_sql = f"""
+        select a.acuidade, al.nome, al.ativo, a.data_atendimento, u.id
+          from appointments a
+          inner join pacientes al on a.paciente_id = al.id
+          inner join user_pacientes ua on ua.paciente_id = al.id
+          inner join users u on u.id = ua.user_id
+          {"where u.id ='" + self.user_id + "'" if self.user_id else ""}
+	      order by al.nome, a.data_atendimento desc;
         """
 
         resultados = []
@@ -48,62 +55,123 @@ class ReportComparison(APIView):
                 resultados.append(dict(zip(colunas, row)))
         
         return resultados
-
-    def __serializer__(self, array_querySet):
-        for query_set in array_querySet:
-            aluno = Aluno.objects.get(id = query_set.get("aluno_id"))
-            aluno_obj = AlunoSerializer(aluno).data            
-            query_set["aluno"] = aluno_obj            
-        return array_querySet
     
     def __count_equal__(self, array_querySet):
         equal = 0
-        for query_set in array_querySet:
+        for query_set in array_querySet:            
+            if not query_set.get("ativo"):
+                continue
+
             if not self.olho_direito:
                 if query_set.get("acuidade")[:query_set.get("acuidade").index(".")] == "20/20":
                     equal += 1
             else:
                 if query_set.get("acuidade")[query_set.get("acuidade").index(".")+1:] == "20/20":
                     equal += 1
+        
         return equal
 
     def __count_lower__(self, array_querySet):
         lower = 0
         for query_set in array_querySet:
+            if not query_set.get("ativo"):
+                continue
+            print(query_set.get("acuidade"))
+            print(self.olho_direito)
             if not self.olho_direito:                   
                 if int(query_set.get("acuidade")[query_set.get("acuidade").index("/")+1:query_set.get("acuidade").index(".")]) < 20:
                     lower += 1
             else:                
                 if int(query_set.get("acuidade")[query_set.get("acuidade").rindex("/")+1:]) < 20:
                     lower += 1
+        
         return lower
     
     def __count_greater__(self, array_querySet):
-            greater = 0
-            for query_set in array_querySet:
-                if not self.olho_direito:                   
-                    if int(query_set.get("acuidade")[query_set.get("acuidade").index("/")+1:query_set.get("acuidade").index(".")]) > 20:
-                        greater += 1
-                else:                
-                    if int(query_set.get("acuidade")[query_set.get("acuidade").rindex("/")+1:]) > 20:
-                        greater += 1
-            return greater
+        greater = 0
+        for query_set in array_querySet:
+            if not query_set.get("ativo"):
+                continue
+
+            if not self.olho_direito:                   
+                if int(query_set.get("acuidade")[query_set.get("acuidade").index("/")+1:query_set.get("acuidade").index(".")]) > 20:
+                    greater += 1
+            else:                
+                if int(query_set.get("acuidade")[query_set.get("acuidade").rindex("/")+1:]) > 20:
+                    greater += 1
+        
+        return greater
         
 class ReportActive(APIView):
     def get(self, request):
+        all_patients = Paciente.objects.all()
+        all_appointments = Appointment.objects.all()
+
+        count_patient_active, count_patient_unactive = self.__count_patient__(all_patients)
+        count_appointment_active, count_appointment_unactive = self.__count_appointment__(all_appointments)
+
         return Response({
             "patient": {
-                "active": 40,
-                "unActive" : 20
+                "active": count_patient_active,
+                "unActive" : count_patient_unactive
             },
             "appointment": {
-                "active": 30,
-                "unActive" : 10
+                "active": count_appointment_active,
+                "unActive" : count_appointment_unactive
             } 
         })
+    
+    def __count_patient__(self, patients):
+        ativo, inativo = 0, 0
+        for patient in patients:
+            if patient.ativo:
+                ativo += 1
+            else:
+                inativo += 1
+        return ativo, inativo
+    
+    def __count_appointment__(self, appointments):
+        ativo, inativo = 0, 0
+        for appointment in appointments:
+            paciente = Paciente.objects.get(id = appointment.paciente_id)
+            if paciente.ativo:
+                ativo += 1
+            else:
+                inativo += 1
+        return ativo, inativo
 
 class ReportDemographic(APIView):
     def get(self, request):
+        self.olho_direito = self.__treat_bool__(request.GET.get("isRight", "true"))
+
+        most_recent_date = self.__raw_query__("select MAX(data_atendimento) from appointments a ;")
+        least_recent_date = self.__raw_query__("select MIN(data_atendimento) from appointments a ;")
+
+        acuity_values = [
+            {"20/200":{}},
+            {"20/100":{}},
+            {"20/70":{}},
+            {"20/50":{}},
+            {"20/40":{}},
+            {"20/30":{}},
+            {"20/25":{}}, 
+            {"20/20":{}},
+            {"20/15":{}},
+            {"20/13":{}},
+            {"20/10":{}}
+        ]
+        fist_obj = self.__raw_query__("select a.acuidade, a.data_atendimento , al.nome , al.data_nascimento  from appointments a inner join pacientes al on a.paciente_id = al.id ;")
+
+        for snellen in acuity_values:
+            for query_set in fist_obj:
+                if not self.olho_direito:
+                    if query_set.get("acuidade")[:query_set.get("acuidade").index(".")] == snellen:
+                            equal += 1
+                    else:
+                        if query_set.get("acuidade")[query_set.get("acuidade").index(".")+1:] == snellen:
+                            equal += 1
+        
+        
         return Response([
             # Pacientes com 20/200 de visão
             { "x": "20/200", "y": 70, "r": 3 },
@@ -158,3 +226,38 @@ class ReportDemographic(APIView):
             { "x": "20/10", "y": 25, "r": 1 },
             { "x": "20/10", "y": 18, "r": 1 },
         ])
+    
+    def __raw_query__(self, query):
+        with connection.cursor() as cursor:
+            cursor.execute(query) 
+            res =  cursor.fetchall()
+            if len(res) == 1:
+                return res[0]
+            return res
+        
+    def __treat_bool__(self, bool_string):
+        return bool_string == "true"
+
+class ReportMaxMinDate(APIView):
+    def get(self, request):
+        most_recent_date = self.__raw_query__("select MAX(data_atendimento) from (select * from appointments a inner join pacientes al on a.paciente_id = al.id where al.ativo is true) ;")
+        least_recent_date = self.__raw_query__("select MIN(data_atendimento) from (select * from appointments a inner join pacientes al on a.paciente_id = al.id where al.ativo is true) ;")
+        default_most_recent = datetime(1970, 1, 1)
+        default_least_recent = datetime.now()
+
+        # Use the query result if it's not None, otherwise use the default value
+        most_recent_date = most_recent_date[0] if most_recent_date and most_recent_date[0] else default_most_recent
+        least_recent_date = least_recent_date[0] if least_recent_date and least_recent_date[0] else default_least_recent
+
+        return Response({
+            "mostRecent": most_recent_date.strftime('%Y-%m-%d'), 
+            "leastRecent": least_recent_date.strftime('%Y-%m-%d')
+        })
+    
+    def __raw_query__(self, query):
+        with connection.cursor() as cursor:
+            cursor.execute(query) 
+            res =  cursor.fetchall()          
+            if len(res) == 1:            
+                return res[0]
+            return res

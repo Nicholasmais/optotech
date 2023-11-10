@@ -11,7 +11,7 @@ const PieChart = ( { data }) => {
   const datasets = [
     {
       data: [data.igual, data.superior, data.inferior],
-      backgroundColor: ['#6BFFB0', '#FF6B6B', '#6B92FF'],
+      backgroundColor: ['#6B92FF', '#FF6B6B', '#6BFFB0'],
     },
   ];
 
@@ -32,12 +32,18 @@ const PieChart = ( { data }) => {
             title: {
               display: true, // Enable title display
               text: 'Comparaçao da acuidade visual dos pacientes', // Set title text
+              font: {
+                size: 18 // Ajuste para o tamanho desejado
+              }
             },
             legend: {
               display: true, // Enable legend display
               position: 'right', // Set legend position
               labels: {
                 usePointStyle: true, // Use point style instead of square
+                font: {
+                  size: 18 // Ajuste para o tamanho desejado
+                }
               },
             },
             datalabels: {
@@ -46,7 +52,10 @@ const PieChart = ( { data }) => {
                 return `${value} (${(value / total * 100).toFixed(1)}%)`;
               },
               anchor: 'center',
-              align: 'center',
+              align: 'end',
+              font:{
+                size:18
+              }
             },
           },
         }}

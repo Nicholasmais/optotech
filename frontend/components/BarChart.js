@@ -17,7 +17,8 @@ ChartJS.register(
 const BarChart = ({data}) => {
   const activeData = [data.patient.active, data.appointment.active];
   const unActiveData = [data.patient.unActive, data.appointment.unActive];
-
+  const totalActiveUnactive = [data.patient.active + data.patient.unActive, data.appointment.active + data.appointment.unActive];  
+  
   const data2 = {
     labels: ['Pacientes', 'Atendimentos'],
     datasets: [
@@ -34,7 +35,7 @@ const BarChart = ({data}) => {
       {
         // This will be our 'Total' label dataset
         label: '',
-        data: [data.patient.active + data.patient.unActive, data.appointment.active + data.appointment.unActive], // Our calculated totals
+        data: totalActiveUnactive, // Our calculated totals
         backgroundColor: 'rgba(0, 0, 0, 0)', // Make this dataset invisible
       }
     ],
@@ -47,6 +48,9 @@ const BarChart = ({data}) => {
       title: {
         display: true,
         text: 'Pacientes e atendimentos ativos/inativos',
+        font: {
+          size: 18 // Ajuste para o tamanho desejado
+        }
       },
       datalabels: {
         color: 'black',
@@ -59,20 +63,40 @@ const BarChart = ({data}) => {
           // Otherwise, return the value
           return value;
         },
-        anchor: 'center',
-        align: 'center',
-      },
+        anchor: 'start',
+        align: 'end',
+        font:{
+          size:18
+        }
+      },      
       legend: {
-        display: true
+        display: true,
+        labels: {
+          usePointStyle: true, // Use point style instead of square
+          font: {
+            size: 18 // Ajuste para o tamanho desejado
+          },
+        }
       }
     },
     scales: {
       x: {
         stacked: true,
+        ticks: {
+          font: {
+            size: 16 // Ajuste para o tamanho desejado
+          }
+        },
       },
       y: {
         stacked: true,
         beginAtZero: true,
+        max: ~~(Math.max(...totalActiveUnactive)/10)*10 + 10,
+        ticks: {
+          font: {
+            size: 16 // Ajuste para o tamanho desejado
+          }
+        },
       },
     },
     hover: {

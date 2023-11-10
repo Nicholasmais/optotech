@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import Loading from './Loading';
 const api = require('../services/api');
 
-const ChangeArrows = ({changeFunction, elementId = null}) => {
+const ChangeArrows = ({changeFunction, maxInput, elementId = null}) => {
   const { authData, setAuthData } = useAuth();
   const [loading, setLoading] = useState(false);
   const [hasLoggedIn, setHasLoggedIn] = useState(false);
@@ -28,15 +28,15 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
   };
 
   const router = useRouter();
-  const alunoId = router.query.id;
-  const [aluno, setAluno] = useState({});
+  const pacienteId = router.query.id;
+  const [paciente, setPaciente] = useState({});
 
   const handleFormSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
     
     const obj = {
-      aluno: alunoId,
+      paciente: pacienteId,
       acuidade: `${calculatedLeftAcuity}.${calculatedRightAcuity}`,        
     }
 
@@ -76,7 +76,13 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
         case 7:
           denominator = 25;
           break;
-        default:
+        case 8:
+          denominator = 20;
+          break
+      case 9:
+        denominator = 15;
+          break
+        default :
           denominator = 20;
           break
       }
@@ -113,7 +119,13 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
         case 7:
           denominator = 25;
           break;
-        default:
+        case 8:
+          denominator = 20;
+          break
+      case 9:
+        denominator = 15;
+          break
+        default :
           denominator = 20;
           break
       }
@@ -146,16 +158,16 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
   }, []);
 
   useEffect(() => {
-    const fetchAluno = async(id) => {
+    const fetchPaciente = async(id) => {
       if (id === undefined) {return}
-        await api.aluno(id).then((res) => {        
-          setAluno(res);        
+        await api.paciente(id).then((res) => {        
+          setPaciente(res);        
         }).catch((err) => {
           toast.error('Erro ao se conectar com servidor.', toastConfig);
         });
     }
-    fetchAluno(alunoId);
-  }, [alunoId]);
+    fetchPaciente(pacienteId);
+  }, [pacienteId]);
 
   return (
     <div className={styles.preview} style={{flex:"1"}}>
@@ -172,7 +184,7 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
         }}>
         </div>
       </div>
-      {aluno.id && (
+      {paciente.id && (
         <div className={styles.formContainer}>
           <form className={styles.form} onSubmit={handleFormSubmit}>
             <label htmlFor="line">Até qual linha você leu pelo menos metade com seu olho esquerdo?</label>
@@ -186,7 +198,7 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
                 onChange={(e) => calculateLeftAcuity(e.target.value)}
                 className={''}
                 min="1"
-                max="8"
+                max={maxInput}
                 step="1"
               />      
             
@@ -203,7 +215,7 @@ const ChangeArrows = ({changeFunction, elementId = null}) => {
                 onChange={(e) => calculateRightAcuity(e.target.value)}
                 className={''}
                 min="1"
-                max="8"
+                max={maxInput}
                 step="1"
               />                      
               <p>Acuidade estimada: {calculatedRightAcuity}</p>            

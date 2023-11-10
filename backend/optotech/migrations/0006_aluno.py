@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Aluno',
+            name='Paciente',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('codigo', models.CharField(default=None, max_length=40)),
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('idade', models.IntegerField()),
             ],
             options={
-                'db_table': 'alunos',
+                'db_table': 'pacientes',
             },
         ),
     ]

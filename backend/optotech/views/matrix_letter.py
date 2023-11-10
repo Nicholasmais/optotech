@@ -34,3 +34,4 @@ class MatrixLetterView(viewsets.ModelViewSet):
         letra_matrix_list = [[int(letter) for letter in row[letra]] for row in letra_matrix]        
         
         return Response(letra_matrix_list)
+    

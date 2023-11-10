@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name='aluno',
+            model_name='paciente',
             old_name='paciente',
             new_name='nome',
         ),
@@ -26,8 +26,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='appointment',
-            name='aluno',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.PROTECT, to='optotech.aluno'),
+            name='paciente',
+            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.PROTECT, to='optotech.paciente'),
             preserve_default=False,
         ),
     ]
