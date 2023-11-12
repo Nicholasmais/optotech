@@ -29,14 +29,14 @@ const BubbleChart = ( {data}) => {
         ticks: {
           stepSize: 5,
           font:{
-            size:18
+            size:20
           }          
         },        
         title: {
           display: true,
           text: 'Idade',
           font: {
-            size: 18 // Ajuste para o tamanho desejado
+            size: 20 // Ajuste para o tamanho desejado
           }
         },
       },
@@ -47,12 +47,12 @@ const BubbleChart = ( {data}) => {
           display: true,
           text: 'Acuidade Visual',
           font: {
-            size: 18 // Ajuste para o tamanho desejado
+            size: 20 // Ajuste para o tamanho desejado
           }
         },
         ticks: {          
           font:{
-            size:18
+            size:20
           }          
         }, 
       },
@@ -81,7 +81,7 @@ const BubbleChart = ( {data}) => {
               display:true,
               position:"start",
               font:{
-                size:18
+                size:20
               }
             }
           },
@@ -90,20 +90,21 @@ const BubbleChart = ( {data}) => {
       legend: {
         labels: {
           font: {
-            size: 18
+            size: 20,
+            weight: "bold"
           }
         }
       },
       datalabels:{
         font:{
-          size:18
+          size:20
         }
       }
     },
   };
 
   return (
-    <div style={{ width: '100%' , height:"100%"}}>
+    <div style={{ width: '100%' , height:"100%", backgroundColor:"none"}}>
       <Bubble data={data2} options={options} />
     </div>
   );

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BubbleChart from './BubbleChart';
 import styles from '../styles/Estatistics.module.scss'; // Importe os estilos corretos
 import PieChart from './PieChart';
 import BarChart from './BarChart';
-import CheckBox from './CheckBox';
-const api = require('../services/api'); 
+import Filter from './Filter';
 
 const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demographic,mostDate, fetchReport }) => {
   const [startDate, setStartDate] = useState(mostDate.leastRecent);
@@ -34,63 +33,26 @@ const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demog
         <button className={styles['pacientes']} onClick={() => { setCurrent("default") }}>
           Voltar
         </button>
+        <Filter 
+            applyFilters={applyFilters}
+            endDate={endDate}
+            startDate={startDate}
+            isMeusPacientes={isMeusPacientes}
+            isNewest={isNewest}
+            isOldest={isOldest}
+            isRightEye={isRightEye}
+            setEndDate={setEndDate}
+            setIsMeusPacientes={setIsMeusPacientes}
+            setIsNewest={setIsNewest}
+            setIsOldest={setIsOldest}
+            setIsRightEye={setIsRightEye}
+            setStartDate={setStartDate}            
+            >            
+          </Filter>
       </div>
       <div className={styles['grid-container']}>
         <div className={styles['grid-item']}>
-          <div className={styles['filters']}>
-            <h3>Filtros</h3>
-            <div className={styles['filter-row']}>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isOldest}
-                  onChange={() => setIsOldest(!isOldest)}
-                />
-                Mais Antiga
-              </label>
-            </div>
-            <div className={styles['filter-row']}>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isNewest}
-                  onChange={() => setIsNewest(!isNewest)}
-                />
-                Mais Recente
-              </label>
-            </div>
-            <div className={styles['filter-row']}>
-              <span>Meus pacientes</span>
-              <CheckBox
-                id="cbx-3"
-                checked={isMeusPacientes}
-                onChangeFunction={() => setIsMeusPacientes(!isMeusPacientes)}
-                notCheckedColor='#007bff'
-              />
-              <span>Todos pacientes</span>
-            </div>
-            <div className={styles['filter-row']}>
-              <span>Olho esquerdo</span>
-              <CheckBox
-                id="cbx-4"
-                checked={isRightEye}
-                onChangeFunction={() => setIsRightEye(!isRightEye)}
-                notCheckedColor='#007bff'
-              />
-              <span>Olho direito</span>
-            </div>
-            <button onClick={applyFilters}>Aplicar Filtros</button>
-          </div>
+        
         </div>
         <div className={styles['grid-item']}>
           <PieChart data = {visualAcuityComparison}/>

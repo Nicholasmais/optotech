@@ -49,7 +49,7 @@ const BarChart = ({data}) => {
         display: true,
         text: 'Pacientes e atendimentos ativos/inativos',
         font: {
-          size: 18 // Ajuste para o tamanho desejado
+          size: 20 // Ajuste para o tamanho desejado
         }
       },
       datalabels: {
@@ -66,7 +66,7 @@ const BarChart = ({data}) => {
         anchor: 'start',
         align: 'end',
         font:{
-          size:18
+          size:20
         }
       },      
       legend: {
@@ -74,7 +74,7 @@ const BarChart = ({data}) => {
         labels: {
           usePointStyle: true, // Use point style instead of square
           font: {
-            size: 18 // Ajuste para o tamanho desejado
+            size: 20 // Ajuste para o tamanho desejado
           },
         }
       }
@@ -106,7 +106,7 @@ const BarChart = ({data}) => {
   };
 
   return (
-    <div style={{ width: '100%', height: '80%' }}> {/* Adjust height as needed */}
+    <div style={{ width: '100%', height: '100%' }}> {/* Adjust height as needed */}
       <Bar data={data2} options={options} />
     </div>
   );

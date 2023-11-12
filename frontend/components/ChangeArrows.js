@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import Loading from './Loading';
 const api = require('../services/api');
 
-const ChangeArrows = ({changeFunction, maxInput, elementId = null}) => {
+const ChangeArrows = ({changeFunction, maxInput, isArrowFirst = false, isArrowLast = false, elementId = null}) => {
   const { authData, setAuthData } = useAuth();
   const [loading, setLoading] = useState(false);
   const [hasLoggedIn, setHasLoggedIn] = useState(false);
@@ -176,12 +176,12 @@ const ChangeArrows = ({changeFunction, maxInput, elementId = null}) => {
         <div onClick={() => {
           changeFunction(-1);
           scrollIntoViewOnClick();
-        }}>
+        }} style={{opacity : isArrowFirst ? "0.5" : "1"}}>
         </div>
         <div onClick={() => {
           changeFunction(1);
           scrollIntoViewOnClick();
-        }}>
+        }} style={{opacity : isArrowLast ? "0.5" : "1"}}>
         </div>
       </div>
       {paciente.id && (

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAuth  } from '../contexts/AuthContext';
 
 const Calibration = () => {
-  const { dpi, setDpi } = useAuth(); 
 
   const [mmSize, setmmSize] = useState(0);
   const [hasCalculatedDPI, setHasCalculatedDPI] = useState(false);

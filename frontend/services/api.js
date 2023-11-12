@@ -1,6 +1,5 @@
 const axios = require('axios');
 import Cookies from 'js-cookie'
-
 const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'http://localhost:8000';
 
 const getUsers = async() => {
@@ -274,6 +273,20 @@ const reportMaxMinDate = async() => {
     });
 }
 
+const downloadFile = async() => {
+  return await axios.get(`${baseApiUrl}/generate-dpi-script/`, {
+    responseType: 'arraybuffer',
+    withCredentials: true,
+    credentials: 'include'
+  })
+    .then((response) => {      
+      return response; 
+    })
+    .catch((error) => {
+      throw error; 
+    });
+}
+
 module.exports = {
   getUsers: getUsers,
   login: login,
@@ -296,5 +309,6 @@ module.exports = {
   reportComparison: reportComparison,
   reportActive: reportActive,
   reportDemographic: reportDemographic,
-  reportMaxMinDate: reportMaxMinDate
+  reportMaxMinDate: reportMaxMinDate,
+  downloadFile:downloadFile
 };

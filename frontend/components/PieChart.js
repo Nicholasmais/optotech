@@ -11,7 +11,7 @@ const PieChart = ( { data }) => {
   const datasets = [
     {
       data: [data.igual, data.superior, data.inferior],
-      backgroundColor: ['#6B92FF', '#FF6B6B', '#6BFFB0'],
+      backgroundColor: ['#6B92FF', 'rgba(255, 99, 132, 0.5)', '#6BFFB0'],
     },
   ];
 
@@ -19,7 +19,7 @@ const PieChart = ( { data }) => {
   const labels = ["Igual a 20/20", "Superior a 20/20", "Inferior a 20/20"];
  
   return (
-    <div style={{ width: '100%', height: '80%' }}>
+    <div style={{ width: '100%', height: '100%' }}>
       <Pie
         data={{
           labels: labels,
@@ -31,9 +31,9 @@ const PieChart = ( { data }) => {
           plugins: {
             title: {
               display: true, // Enable title display
-              text: 'Comparaçao da acuidade visual dos pacientes', // Set title text
+              text: 'Comparação da acuidade visual dos pacientes', // Set title text
               font: {
-                size: 18 // Ajuste para o tamanho desejado
+                size: 20 // Ajuste para o tamanho desejado
               }
             },
             legend: {
@@ -42,7 +42,8 @@ const PieChart = ( { data }) => {
               labels: {
                 usePointStyle: true, // Use point style instead of square
                 font: {
-                  size: 18 // Ajuste para o tamanho desejado
+                  size: 20, // Ajuste para o tamanho desejado
+                  weight:"bold"
                 }
               },
             },
@@ -54,7 +55,9 @@ const PieChart = ( { data }) => {
               anchor: 'center',
               align: 'end',
               font:{
-                size:18
+                size:20,
+                weight:"bold"
+
               }
             },
           },

@@ -1,0 +1,56 @@
+.filters {
+  position: fixed;
+  float: right;
+  top: 0;
+  right: 10px;
+  width: 600px;  
+  padding: 20px;
+  padding-top: 0px;
+  border-radius: 5px;
+  margin-top:10px;
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  input[type=date] {
+    width: 40%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    
+    input[type=checkbox] {
+      margin-right: 5px;
+    }
+  }
+
+  .filter-row {
+    display: flex;
+    align-items: center;
+    span {
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
+
