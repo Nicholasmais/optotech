@@ -12,12 +12,12 @@ export const AuthContextProvider = ({ children }) => {
       user: '',
       email: '',
       expirationDate: '',
+      dpi: 96
     },
   });
-  const [dpi, setDpi] = useState(96);
 
   return (
-    <AuthContext.Provider value={{ authData, setAuthData, dpi, setDpi }}>
+    <AuthContext.Provider value={{ authData, setAuthData }}>
       {children}
     </AuthContext.Provider>
   );

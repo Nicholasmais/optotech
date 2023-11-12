@@ -80,3 +80,18 @@ class UserViewSet(viewsets.ModelViewSet):
             Paciente.objects.get(id = str(paciente_id[0])).delete()        
 
         return Response({"user":user_obj})
+
+    def partial_update(self, request, email):
+        body = request.data
+
+        if not User.objects.filter(email = email):
+            raise CustomAPIException("E-mail não cadastrado.", 404)
+        user = User.objects.get(email = email)
+
+        serializer = self.serializer_class(user, data = body, partial = True)
+        if serializer.is_valid():
+            serializer.save(partial=True)
+            return Response(serializer.data)
+       
+        raise CustomAPIException(str(serializer.errors), 400)
+

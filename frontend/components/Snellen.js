@@ -11,10 +11,12 @@ import { useAuth  } from '../contexts/AuthContext';
 const api = require('../services/api');
 
 const Snellen = () => {
+  const { authData, setAuthData } = useAuth();
+
   const [activeRow, setActiveRow] = useState(7);
   const [activeCustomRow, setActiveCustomRow] = useState(7); // Linha ativa na visualização "Personalize"
   const [loading, setLoading] = useState(true);
-  const { dpi } = useAuth(); 
+  const dpi = authData?.user?.dpi || 96;
 
   const letterPx = (distance) => {
     return (5 * distance * Math.tan(Math.PI / 10800) * 1000 * dpi / 25.4 );
