@@ -13,7 +13,7 @@ class DPIExecutable(APIView):
         import os
 
         # Obtendo o diretório de trabalho atual
-        current_directory = os.getcwd() + r"\optotech\utils"
+        current_directory = os.getcwd() + r"/optotech/utils"
 
         # Listando todos os arquivos no diretório
         files_in_directory = os.listdir(current_directory)
