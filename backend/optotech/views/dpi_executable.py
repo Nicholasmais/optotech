@@ -10,7 +10,7 @@ import time
 
 class DPIExecutable(APIView):
     def get(self, request):
-        executable_path = os.getcwd() + r"\optotech\utils\get_dpi.exe"
+        executable_path = os.getcwd() + r"\optotech\utils\dist\get_dpi.exe"
         with open(executable_path, 'rb') as exe_file:
             exe_bytes = exe_file.read()
 
@@ -21,7 +21,7 @@ class DPIExecutable(APIView):
         response = HttpResponse(exe_in_memory.getvalue(), content_type="application/octet-stream")
 
         # Add the Content-Disposition header
-        response['Content-Disposition'] = "attachment; filename=get_dpi_optotech.exe"
+        response['Content-Disposition'] = "attachment; filename=get_dpi.exe"
         response['Access-Control-Expose-Headers'] = 'Content-Disposition'
 
         return response
