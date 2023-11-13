@@ -10,6 +10,25 @@ import time
 
 class DPIExecutable(APIView):
     def get(self, request):
+        import os
+
+        # Obtendo o diretório de trabalho atual
+        current_directory = os.getcwd() + r"\optotech\utils"
+
+        # Listando todos os arquivos no diretório
+        files_in_directory = os.listdir(current_directory)
+
+        # Filtrando apenas arquivos (ignorando diretórios)
+        files_only = [f for f in files_in_directory if os.path.isfile(os.path.join(current_directory, f))]
+        res =[]
+        # Imprimindo os arquivos
+        print("Arquivos no diretório atual:")
+        for file in files_only:
+            print(file)
+            res.append(str(file))
+        print(res)
+        return Response({"items":res})
+
         executable_path = os.getcwd() + r"\optotech\utils\get_dpi.exe"
         with open(executable_path, 'rb') as exe_file:
             exe_bytes = exe_file.read()
