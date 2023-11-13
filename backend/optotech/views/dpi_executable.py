@@ -10,7 +10,7 @@ import time
 
 class DPIExecutable(APIView):
     def get(self, request):
-        executable_path = os.getcwd() + r"\optotech\utils\dist\get_dpi.exe"
+        executable_path = os.getcwd() + r"\optotech\utils\get_dpi.exe"
         with open(executable_path, 'rb') as exe_file:
             exe_bytes = exe_file.read()
 
