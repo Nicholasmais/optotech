@@ -5,6 +5,7 @@ from ..models.appointment import Appointment
 from ..serializers.appointment_serializer import AppointmentSerializer
 from ..models.paciente import Paciente
 from ..serializers.paciente_serializer import PacienteSerializer
+from ..models.user_pacientes import UserPacientes
 from django.db import connection
 from datetime import datetime
 
@@ -37,13 +38,13 @@ class ReportComparison(APIView):
 
     def __raw_query__(self):
         consulta_sql = f"""
-        select a.acuidade, al.nome, al.ativo, a.data_atendimento, u.id
-          from appointments a
-          inner join pacientes al on a.paciente_id = al.id
-          inner join user_pacientes ua on ua.paciente_id = al.id
-          inner join users u on u.id = ua.user_id
+        select a.acuidade, p.nome, p.ativo, a.data_atendimento, u.id
+          from atendimentos a
+          inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id
+          inner join usuarios u on u.id = pu.user_id
+          inner join pacientes p on p.id = pu.paciente_id
           {"where u.id ='" + self.user_id + "'" if self.user_id else ""}
-	      order by al.nome, a.data_atendimento desc;
+	      order by p.nome, a.data_atendimento desc;
         """
 
         resultados = []
@@ -76,8 +77,6 @@ class ReportComparison(APIView):
         for query_set in array_querySet:
             if not query_set.get("ativo"):
                 continue
-            print(query_set.get("acuidade"))
-            print(self.olho_direito)
             if not self.olho_direito:                   
                 if int(query_set.get("acuidade")[query_set.get("acuidade").index("/")+1:query_set.get("acuidade").index(".")]) < 20:
                     lower += 1
@@ -133,7 +132,8 @@ class ReportActive(APIView):
     def __count_appointment__(self, appointments):
         ativo, inativo = 0, 0
         for appointment in appointments:
-            paciente = Paciente.objects.get(id = appointment.paciente_id)
+            paciente_obj = UserPacientes.objects.get(id = appointment.paciente_usuario_id)
+            paciente = Paciente.objects.get(id = paciente_obj.paciente_id)
             if paciente.ativo:
                 ativo += 1
             else:
@@ -143,9 +143,6 @@ class ReportActive(APIView):
 class ReportDemographic(APIView):
     def get(self, request):
         self.olho_direito = self.__treat_bool__(request.GET.get("isRight", "true"))
-
-        most_recent_date = self.__raw_query__("select MAX(data_atendimento) from appointments a ;")
-        least_recent_date = self.__raw_query__("select MIN(data_atendimento) from appointments a ;")
 
         acuity_values = [
             {"20/200":{}},
@@ -160,8 +157,12 @@ class ReportDemographic(APIView):
             {"20/13":{}},
             {"20/10":{}}
         ]
-        fist_obj = self.__raw_query__("select a.acuidade, a.data_atendimento , al.nome , al.data_nascimento  from appointments a inner join pacientes al on a.paciente_id = al.id ;")
-
+        fist_obj = self.__raw_query__("""
+            select a.acuidade, a.data_atendimento , p.nome , p.data_nascimento
+            from atendimentos a
+            inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id 
+            inner join pacientes p on a.id = pu.paciente_id ;
+        """)
         for snellen in acuity_values:
             for query_set in fist_obj:
                 if not self.olho_direito:
@@ -240,8 +241,20 @@ class ReportDemographic(APIView):
 
 class ReportMaxMinDate(APIView):
     def get(self, request):
-        most_recent_date = self.__raw_query__("select MAX(data_atendimento) from (select * from appointments a inner join pacientes al on a.paciente_id = al.id where al.ativo is true) ;")
-        least_recent_date = self.__raw_query__("select MIN(data_atendimento) from (select * from appointments a inner join pacientes al on a.paciente_id = al.id where al.ativo is true) ;")
+        most_recent_date = self.__raw_query__("""
+            select MAX(data_atendimento) from
+            (select * from atendimentos a
+                inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id
+                inner join pacientes p on p.id = pu.paciente_id
+                where p.ativo is true) ;
+            """)
+        least_recent_date = self.__raw_query__("""
+            select MIN(data_atendimento) from
+            (select * from atendimentos a
+                inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id
+                inner join pacientes p on p.id = pu.paciente_id
+                where p.ativo is true) ;
+            """)
         default_most_recent = datetime(1970, 1, 1)
         default_least_recent = datetime.now()
 

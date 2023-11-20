@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'optotech',
     'rest_framework',
     'corsheaders',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,7 @@ load_dotenv(dotenv_path)
 ALLOWED_HOSTS = [".vercel.app", "localhost"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "https://localhost:3000",
     os.environ.get("BASE_API")
 ]
 CORS_ALLOW_CREDENTIALS = True

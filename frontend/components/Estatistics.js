@@ -4,6 +4,7 @@ import styles from '../styles/Estatistics.module.scss'; // Importe os estilos co
 import PieChart from './PieChart';
 import BarChart from './BarChart';
 import Filter from './Filter';
+import LineChart from './LineChart';
 
 const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demographic,mostDate, fetchReport }) => {
   const [startDate, setStartDate] = useState(mostDate.leastRecent);
@@ -52,7 +53,7 @@ const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demog
       </div>
       <div className={styles['grid-container']}>
         <div className={styles['grid-item']}>
-        
+          <LineChart></LineChart>
         </div>
         <div className={styles['grid-item']}>
           <PieChart data = {visualAcuityComparison}/>

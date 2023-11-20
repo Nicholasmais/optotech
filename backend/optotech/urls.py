@@ -44,7 +44,7 @@ urlpatterns = [
     path('report/demographic/', ReportDemographic.as_view(), name='report-demographic'),
     path('report/max-min-date/', ReportMaxMinDate.as_view(), name='report-max-min-date'),
     path('users/delete-pacientes/<str:pk>/', UserViewSet.as_view({'delete': 'delete_pacientes'}), name='users-delete-pacientes'),
-    path('users/<str:email>/', UserViewSet.as_view({'patch': 'partial_update'}), name='patch-user'),
+    path('users/', UserViewSet.as_view({'patch': 'partial_update'}), name='patch-user'),
     path('generate-dpi-script/', DPIExecutable.as_view(), name='generate-dpi-script'),
     path('', include(router.urls)),
 ]

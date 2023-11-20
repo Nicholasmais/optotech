@@ -17,33 +17,32 @@ conn = psycopg2.connect(
     host=os.environ.get("DB_HOST")
 )
 conn.autocommit = True
-
 # Cria um cursor para executar operações no banco de dados
 cur = conn.cursor()
 
 # Número de usuários a serem criados
 num_users = 0
+max_atendimentos = 5
+num_patients = 100
+
+acuidades = ['20/200', '20/100', '20/70', '20/50', '20/40', '20/30', '20/25', '20/20', '20/15', '20/13', '20/10']
 
 # Criar e inserir usuários
 for _ in range(num_users):
     username = fake.user_name()  # Gera um nome de usuário
     user_email = fake.email()
     user_password = fake.password()
-
+    dpi = random.randint(80, 200)
     sql_user = '''
-        INSERT INTO users ("user", "email", "password") 
-        VALUES (%s, %s, %s) RETURNING id;
+        INSERT INTO usuarios ("user", "email", "password", "dpi") 
+        VALUES (%s, %s, %s, %s) RETURNING id;
     '''
 
-    cur.execute(sql_user, (username, user_email, user_password))
+    cur.execute(sql_user, (username, user_email, user_password, dpi))
 
 # Obter IDs dos usuários criados
-cur.execute("SELECT id FROM users")
+cur.execute("SELECT id FROM usuarios")
 id_usuarios = [row[0] for row in cur.fetchall()]
-
-acuidades = ['20/200', '20/100', '20/70', '20/50', '20/40', '20/30', '20/25', '20/20', '20/15', '20/13', '20/10']
-max_atendimentos = 4
-num_patients = 10
 
 def random_date():
     start_date = datetime(2020, 1, 1)
@@ -78,10 +77,11 @@ for _ in range(num_patients):
 
     # Comando SQL para inserir o registro na tabela user_pacientes
     sql_user_pacientes = """
-        INSERT INTO user_pacientes (user_id, paciente_id) 
-        VALUES (%s, %s);
+        INSERT INTO pacientes_usuarios (user_id, paciente_id) 
+        VALUES (%s, %s) RETURNING id;
     """
     cur.execute(sql_user_pacientes, (id_usuario_aleatorio, id_paciente))
+    user_patient_id = cur.fetchone()[0]
 
     num_atendimentos = random.randint(0, max_atendimentos)
     for _ in range(num_atendimentos):
@@ -91,12 +91,13 @@ for _ in range(num_patients):
         data_atendimento = random_date()
 
         sql_appointments = """
-            INSERT INTO appointments (paciente_id, user_id, acuidade, data_atendimento) 
-            VALUES (%s, %s, %s, %s);
+            INSERT INTO atendimentos (paciente_usuario_id, acuidade, data_atendimento) 
+            VALUES (%s, %s, %s);
         """
-        cur.execute(sql_appointments, (id_paciente, id_usuario_aleatorio, acuidade, data_atendimento))
+        cur.execute(sql_appointments, (user_patient_id, acuidade, data_atendimento))
 
 
 # Fecha o cursor e a conexão
 cur.close()
 conn.close()
+print("SUCESSO")

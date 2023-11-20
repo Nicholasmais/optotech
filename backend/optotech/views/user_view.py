@@ -17,20 +17,17 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if User.objects.filter(email=body.get("email")):
           raise CustomAPIException("Email já cadastrado.", 409)
-      
-        if User.objects.filter(user=body.get("user")):
-          raise CustomAPIException("Usuário já cadastrado.", 409)
-      
+       
         serializer = self.serializer_class(data = request.data)
         
         if serializer.is_valid():
 
             salt = bcrypt.gensalt()
-            password_bytes = body["password"].encode("ascii")
+
+            password_bytes = body["password"].encode("utf-8")
             password_hashed = bcrypt.hashpw(password_bytes, salt)
             
-            body["password"]  = password_hashed.decode("utf-8")
-   
+            body["password"]  = password_hashed.decode("utf-8")   
             serializer = self.serializer_class(data = body)
 
             if serializer.is_valid():
@@ -81,12 +78,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response({"user":user_obj})
 
-    def partial_update(self, request, email):
+    def partial_update(self, request):
+        user_id = request.session.get("user")
         body = request.data
 
-        if not User.objects.filter(email = email):
-            raise CustomAPIException("E-mail não cadastrado.", 404)
-        user = User.objects.get(email = email)
+        if not User.objects.filter(id = user_id):
+            raise CustomAPIException("Usuário não cadastrado.", 404)
+        user = User.objects.get(id = user_id)
 
         serializer = self.serializer_class(user, data = body, partial = True)
         if serializer.is_valid():

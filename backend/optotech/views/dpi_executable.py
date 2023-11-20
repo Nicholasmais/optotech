@@ -57,7 +57,6 @@ class DPIExecutable(APIView):
         # Run pyinstaller command
         command = f'pyinstaller --onefile --noconsole --distpath "{dist_path}" --workpath "{workpath}" "{script_path}"'
         subprocess.run(command, shell=True)
-        print(time.time() - inicio)
 
         # Clean up after pyinstaller
         shutil.rmtree(workpath, ignore_errors=True)

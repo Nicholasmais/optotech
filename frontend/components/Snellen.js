@@ -17,7 +17,7 @@ const Snellen = () => {
   const [activeCustomRow, setActiveCustomRow] = useState(7); // Linha ativa na visualização "Personalize"
   const [loading, setLoading] = useState(true);
   const dpi = authData?.user?.dpi || 96;
-
+  console.log(dpi)
   const letterPx = (distance) => {
     return (5 * distance * Math.tan(Math.PI / 10800) * 1000 * dpi / 25.4 );
   }
@@ -242,7 +242,7 @@ const Snellen = () => {
                 });
                 setCustomLetters(newLetters);
               }}
-              min="11"
+              min="1"
               max="55"
               step={`1`}
               className={styles['custom-input']}

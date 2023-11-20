@@ -15,9 +15,9 @@ ChartJS.register(
 );
 
 const BarChart = ({data}) => {
-  const activeData = [data.patient.active, data.appointment.active];
-  const unActiveData = [data.patient.unActive, data.appointment.unActive];
-  const totalActiveUnactive = [data.patient.active + data.patient.unActive, data.appointment.active + data.appointment.unActive];  
+  const activeData = [data?.patient?.active, data?.appointment?.active];
+  const unActiveData = [data?.patient?.unActive, data?.appointment?.unActive];
+  const totalActiveUnactive = [data?.patient?.active + data?.patient?.unActive, data?.appointment?.active + data?.appointment?.unActive];  
   
   const data2 = {
     labels: ['Pacientes', 'Atendimentos'],

@@ -47,12 +47,12 @@ const ResponsibilityComponent = () => {
         }
         ).catch((err) => {
           console.error(err);
-          toast.error(err.response?.data.detail || "Erro", toastConfig);  
+          toast.error(err.response?.data?.detail || "Erro", toastConfig);  
         });
       } 
       catch (error) {
         console.error(error);
-        toast.error(error.response?.data.detail || "Erro", toastConfig);  
+        toast.error(error.response?.data?.detail || "Erro", toastConfig);  
       }
     }
     else{
@@ -113,7 +113,7 @@ const ResponsibilityComponent = () => {
         });
       }).catch((error) => {
         console.error(error);  
-        toast.error(error.response?.data.detail || "Erro", toastConfig);  
+        toast.error(error.response?.data?.detail || "Erro", toastConfig);  
       });
           
     }

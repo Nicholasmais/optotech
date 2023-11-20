@@ -7,10 +7,10 @@ ChartJS.register(CategoryScale, Tooltip, PieController, ArcElement, ChartDataLab
 
 const PieChart = ( { data }) => {
 
-  const total = data.superior + data.igual + data.inferior;
+  const total = data?.superior + data?.igual + data?.inferior;
   const datasets = [
     {
-      data: [data.igual, data.superior, data.inferior],
+      data: [data?.igual, data?.superior, data?.inferior],
       backgroundColor: ['#6B92FF', 'rgba(255, 99, 132, 0.5)', '#6BFFB0'],
     },
   ];

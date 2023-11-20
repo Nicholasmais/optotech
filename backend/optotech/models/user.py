@@ -9,4 +9,4 @@ class User(models.Model):
     dpi = models.IntegerField(default=96)
 
     class Meta:
-        db_table = 'users'
+        db_table = 'usuarios'
