@@ -37,6 +37,36 @@
       flex: 1;
       text-align: center;
     }
+    .select-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      position: relative;
+      width: 100%;
+      select {
+        margin: 0 auto;
+        width: 300px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+        color: #333;
+        cursor: pointer;
+    
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+    
+        option {
+          padding: 10px;
+        }
+      }
+    }    
   }
 
   button {

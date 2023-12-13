@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import ChangeArrows from '../components/ChangeArrows';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import DownloadButton from '../components/DownloadButton';
 
 const api = require('../services/api');
 
@@ -23,10 +22,15 @@ const ResponsibilityComponent = () => {
   const [isArrowFirst, setIsArrowFirst] = useState(true);
   const [isArrowLast, setIsArrowLast] = useState(false);
   const [bodyLogin, setBodyLogin] = useState({});
+  const [isCadastro, setIsCadastro] = useState(true);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [isLoginEmailValid, setIsLoginEmailValid] = useState(true);
+  const [isLoginPasswordValid, setIsLoginPasswordValid] = useState(true);
   
   const setIsTerm = (increment) => {    
     const newRow = section + increment;
-    if (newRow >= 0 && newRow < 5) {
+    if (newRow >= 0 && newRow < 3) {
       setSection(newRow);
       setIsArrowFirst(false);
       setIsArrowLast(false);
@@ -34,7 +38,7 @@ const ResponsibilityComponent = () => {
     if (newRow <= 0){
       setIsArrowFirst(true);
     }
-    if (newRow >= 4){
+    if (newRow >= 2){
       setIsArrowLast(true);
     }
   }
@@ -43,20 +47,20 @@ const ResponsibilityComponent = () => {
     if (Object.keys(bodyLogin).length > 0){
       try {
         await api.login(bodyLogin).then((res) => {
-          router.push(res.url);
+          router.push('auth/' + res.token.split(' ')[1]);
         }
         ).catch((err) => {
           console.error(err);
-          toast.error(err.response?.data.detail || "Erro", toastConfig);  
+          toast.error(err.response?.data?.detail || "Erro", toastConfig);  
         });
       } 
       catch (error) {
         console.error(error);
-        toast.error(error.response?.data.detail || "Erro", toastConfig);  
+        toast.error(error.response?.data?.detail || "Erro", toastConfig);  
       }
     }
     else{
-      router.push("/snellen")
+      router.push("/")
     }
   }
 
@@ -113,153 +117,231 @@ const ResponsibilityComponent = () => {
         });
       }).catch((error) => {
         console.error(error);  
-        toast.error(error.response?.data.detail || "Erro", toastConfig);  
+        toast.error(error.response?.data?.detail || "Erro", toastConfig);  
       });
           
     }
     
   }
 
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+
+    const isEmailLoginValid = validateEmail(loginEmail);
+    const isPasswordLoginValid = validatePassword(loginPassword);
+
+    setIsLoginEmailValid(isEmailLoginValid);
+    setIsLoginPasswordValid(isPasswordLoginValid);
+
+
+    if (isEmailValid && isPasswordValid) {
+        const body = {
+          email: loginEmail,
+          password: loginPassword
+        };   
+        try {
+          await api.login(body).then((res) => {
+            router.push('auth/' + res.token.split(' ')[1]);
+          }).catch((err) => {
+            toast.error(err.response?.data?.detail, toastConfig);  
+          });
+        } catch (error) {
+          console.error(error);
+          toast.error(error.response?.data?.detail || "Erro", toastConfig);  
+        }
+      }                  
+  }
+
+  const content = {
+    0: {
+      title: "Aplicação Para Teste de Encaminhamento Oftalmológico Usando Técnica de Optotipo.",
+      description: [
+        "OptoTech é uma plataforma online que oferece um teste de acuidade visual com base na tabela Snellen. Nossa plataforma permite que você realize o teste de acuidade visual e mantenha um registro de seus atendimentos anteriores.",
+        "Antes de começar, é importante lembrar que o teste de acuidade visual online fornecido pelo OptoTech não substitui uma avaliação completa realizada por um oftalmologista ou profissional de saúde ocular licenciado. É uma ferramenta valiosa para obter uma noção geral da sua acuidade visual, mas outros fatores podem influenciar sua visão.",
+        "Primeiramente, crie uma conta OptoTech a seguir:"
+      ]
+    },
+    2: {
+      form:{
+        cadastro: {
+          form: {
+            onSubmit: handleFormSubmit,
+            fields: [
+              {
+                label: "Nome:",
+                type: "text",
+                value: user,
+                onChange: (e) => setUser(e.target.value),
+                className: !isUserValid && isCadastro ? styles.invalid : "",
+                errorMessage: !isUserValid && isCadastro
+                  ? "Nome deve ter pelo menos 1 caractere"
+                  : null,
+              },
+              {
+                label: "Email:",
+                type: "email",
+                value: email,
+                onChange: (e) => setEmail(e.target.value),
+                className: !isEmailValid && isCadastro ? styles.invalid : "",
+                errorMessage: !isEmailValid && isCadastro
+                  ? "Email inválido"
+                  : null,
+              },
+              {
+                label: "Senha:",
+                type: "password",
+                value: password,
+                onChange: (e) => setPassword(e.target.value),
+                className: !isPasswordValid && isCadastro ? styles.invalid : "",
+                errorMessage: !isPasswordValid && isCadastro
+                  ? "Senha deve ter pelo menos 6 caracteres"
+                  : null,
+              },
+              {
+                label: "Confirmar Senha:",
+                type: "password",
+                value: confirmPassword,
+                onChange: (e) => setConfirmPassword(e.target.value),
+                className: !isConfirmedPasswordValid && isCadastro ? styles.invalid : "",
+                errorMessage: !isConfirmedPasswordValid && isCadastro
+                  ? "As senhas não coincidem"
+                  : null,
+              },
+            ],
+          },
+        },
+        login: {
+          form: {
+            onSubmit: handleLoginSubmit,
+            fields: [
+              {
+                label: "Email:",
+                type: "email",
+                value: loginEmail,
+                onChange: (e) => setLoginEmail(e.target.value),
+                className: !isLoginEmailValid && !isCadastro ? styles.invalid : "",
+                errorMessage: !isLoginEmailValid && !isCadastro
+                  ? "Email inválido"
+                  : null,
+              },
+              {
+                label: "Senha:",
+                type: "password",
+                value: loginPassword,
+                onChange: (e) => setLoginPassword(e.target.value),
+                className: !isLoginPasswordValid && !isCadastro ? styles.invalid : "",
+                errorMessage: !isLoginPasswordValid && !isCadastro
+                  ? "Senha deve ter pelo menos 6 caracteres"
+                  : null,
+              },
+            ],
+          },
+        },
+      }
+    },
+    1: {
+      title: "Responsabilidades e Limitações",
+      description: [
+        "O teste de optotipo tabela Snellen é uma ferramenta valiosa para avaliar a acuidade visual aproximada. No entanto, é fundamental lembrar que este teste online não substitui uma avaliação completa realizada por um oftalmologista ou profissional de saúde ocular licenciado. A acuidade visual é apenas um aspecto da saúde ocular, e muitos outros fatores podem influenciar a visão.",
+        "Ao utilizar este teste de optotipo tabela Snellen em nosso website, você concorda com as seguintes condições:"
+      ],
+      list: [
+        "Limitações da Ferramenta: Este teste online é destinado apenas a fins informativos e não deve ser utilizado como uma substituição para um exame oftalmológico completo. Os resultados obtidos através deste teste podem não refletir com precisão o estado da sua visão e podem variar de acordo com diversos fatores, como iluminação, distância do dispositivo e qualidade do monitor.",
+        "Recomendação para Consulta Profissional: Recomendamos enfaticamente que você consulte um oftalmologista ou um profissional de saúde ocular licenciado para uma avaliação completa e precisa da sua visão. Somente um profissional qualificado pode identificar problemas de visão, realizar testes especializados e fornecer orientação adequada com base no seu histórico de saúde ocular e outros fatores relevantes.",
+        "Isenção de Responsabilidade: Não nos responsabilizamos por quaisquer consequências adversas decorrentes do uso deste teste de optotipo tabela Snellen. Você concorda em utilizar esta ferramenta por sua própria conta e risco.",
+        "Ao prosseguir com o uso deste teste de optotipo tabela Snellen, você reconhece ter lido, entendido e concordado com os termos e condições acima mencionados. Lembre-se sempre de que a sua saúde ocular é uma prioridade e que um profissional de saúde ocular qualificado é a melhor fonte de orientação e diagnóstico precisos."
+      ]
+    }
+  };
+
+  const currentSectionContent = content[section];
+
   return (
     <>
       <ToastContainer />
       <NavBar goBack={goBack}></NavBar>      
       <div className={styles.responsibilityContainer}>
-        {section === 0 ? 
+        {currentSectionContent && (
           <>
-            <div className={styles.title}>Aplicação Para Teste de Encaminhamento Oftalmológico Usando Técnica de Optotipo.</div>
-            <p className={styles.description}>
-              OptoTech é uma plataforma online que oferece um teste de acuidade visual com base na tabela Snellen. Nossa plataforma permite que você realize o teste de acuidade visual e mantenha um registro de seus atendimentos anteriores.
-            </p>
-            <p className={styles.description}>
-              Antes de começar, é importante lembrar que o teste de acuidade visual online fornecido pelo OptoTech não substitui uma avaliação completa realizada por um oftalmologista ou profissional de saúde ocular licenciado. É uma ferramenta valiosa para obter uma noção geral da sua acuidade visual, mas outros fatores podem influenciar sua visão.
-            </p>
-            <p className={styles.description}>
-              Primeiramente, crie uma conta OptoTech a seguir:
-            </p>
-          </> : 
-          section === 1 ? 
-          <>
-            <form onSubmit={handleFormSubmit} className={styles.form}>
-              <div style={{"backgroundColor":"white", "padding":"2rem", "border":" 2px solid black"}}>
-                <div>
-                  <label>Nome:</label>
-                  <input
-                    type="text"
-                    value={user}
-                    onChange={(e) => setUser(e.target.value)}
-                    className={!isUserValid ? styles.invalid : ''}
-                  />
-                  {!isUserValid && (
-                    <div className={styles.error}>Nome deve ter pelo menos 1 caractere</div>
+            {currentSectionContent.title && (
+              <div className={styles.title}>{currentSectionContent.title}</div>
+            )}
+            {Array.isArray(currentSectionContent.description) && (
+              currentSectionContent.description.map((paragraph, index) => (
+                <p key={index} className={styles.description}>
+                  {paragraph}
+                </p>
+              ))
+            )}
+            {currentSectionContent.form && (
+              <form onSubmit={isCadastro ? currentSectionContent.form.cadastro.form.onSubmit : currentSectionContent.form.login.form.onSubmit} className={styles.form}>
+                <div style={{"backgroundColor":"white", "padding":"2rem", "border":" 2px solid black"}}>
+                  {isCadastro ? (
+                    <>
+                      {currentSectionContent.form.cadastro.form.fields.map((field, index) => (
+                        <div key={index}>
+                          <label>{field.label}</label>
+                          <input
+                            type={field.type}
+                            value={field.value}
+                            onChange={field.onChange}
+                            className={field.className}
+                          />
+                          {field.errorMessage && (
+                            <div className={styles.error}>{field.errorMessage}</div>
+                          )}
+                        </div>
+                      ))}
+                      <button type="submit">Cadastrar</button>
+                      <button onClick={(e) => {setIsCadastro(false); e.preventDefault();}}>Já possui uma conta? Entrar</button>
+                    </>
+                  ) : (
+                    <>
+                      {currentSectionContent.form.login.form.fields.map((field, index) => (
+                        <div key={index}>
+                          <label>{field.label}</label>
+                          <input
+                            type={field.type}
+                            value={field.value}
+                            onChange={field.onChange}
+                            className={field.className}
+                          />
+                          {field.errorMessage && (
+                            <div className={styles.error}>{field.errorMessage}</div>
+                          )}
+                        </div>
+                      ))}
+                      <button type="submit">Entrar</button>
+                      <button onClick={(e) => {setIsCadastro(true);e.preventDefault();}}>Criar uma conta</button>
+                    </>
                   )}
                 </div>
-                <div>
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={!isEmailValid ? styles.invalid : ''}
-                  />
-                  {!isEmailValid && (
-                    <div className={styles.error}>Email inválido</div>
-                  )}
-                </div>
-                <div>
-                  <label>Senha:</label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={!isPasswordValid ? styles.invalid : ''}
-                  />
-                  {!isPasswordValid && (
-                    <div className={styles.error}>Senha deve ter pelo menos 6 caracteres</div>
-                  )}
-                </div>
-                <div>
-                  <label>Confirmar Senha:</label>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={!isConfirmedPasswordValid ? styles.invalid : ''}
-                  />
-                  {!isConfirmedPasswordValid && (
-                    <div className={styles.error}>As senhas não coincidem</div>
-                  )}
-                </div>
-                <button type="submit">Cadastrar</button>
-              </div>
-            </form>
+              </form>
+            )}
+            {currentSectionContent.list && (
+              <>
+                <ol className={styles.list}>
+                  {currentSectionContent.list.map((item, index) => (
+                    <li key={index}>
+                      {Array.isArray(item) ? (
+                        <ul>
+                          {item.map((subItem, subIndex) => (
+                            <li key={subIndex}>{subItem}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        item
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+            {currentSectionContent.downloadButton && (
+              currentSectionContent.downloadButton
+            )}
           </>
-          : section === 2 ? 
-          <>
-            <h2 className={styles.title}>Instruções para Utilização do OptoTech (1 de 2)</h2>  
-            <ol className={styles.list}>
-              <li>Preparação:
-                <ul>
-                  <li>Para a distância padrão do sistema, posicione-se a uma distância de aproximadamente 6 metros (20 pés) da tela do dispositivo. Isso é devido ao tamanho padrão da fonte (33 px).</li>
-                </ul>
-              </li>
-              <li>Posicionamento:
-                <ul>
-                  <li>Mantenha-se em uma posição reta e com a coluna ereta.</li>
-                </ul>
-              </li>         
-              <li>Leitura dos Optotipos:
-                <ul>
-                  <li>Na tela, você verá uma série de letras em diferentes linhas. Começando pela linha inferior, tente ler as letras com atenção, e caso necessário, leia as linhas superiores até conseguir pelo menos metade das letras.</li>
-                  <li>Comece com o olho esquerdo, se for o caso, e depois repita o teste com o olho direito.</li>
-                </ul>
-              </li>
-              <li>Interpretação dos Resultados:
-                <ul>
-                  <li>O teste é baseado na notação "20/XX", onde o número superior (20) representa a distância padrão de 20 pés, que é usada para testar a visão.</li>
-                  <li>O número inferior (XX) indica a menor linha que você conseguiu ler corretamente. Por exemplo, se você conseguiu ler a linha que corresponde ao "20/40", isso significa que, à distância padrão de 20 pés (6 metros), você conseguiu ler letras que normalmente são lidas por pessoas com visão normal a 40 pés (12 metros).</li>
-                  <li>Quanto menor for o número após a barra, melhor é a sua acuidade visual. Se você conseguiu ler a linha "20/20", isso indica uma visão considerada normal.</li>
-                </ul>
-              </li>
-            </ol>
-            <p className={styles.description}>
-              Se você não conseguir se posicionar a 6 metros de distância da tela do dispositivo, o OptoTech oferece uma opção de personalização. Você pode ajustar o tamanho da fonte para uma distância possível e até mesmo mudar as letras para evitar memorização. Esta personalização permite que você faça o teste de acuidade visual de forma mais conveniente, adequando-o às suas necessidades.
-            </p>
-          </>       
-          : section === 3 ? 
-          <>
-            <h2 className={styles.title}>Instruções para Utilização do OptoTech (2 de 2)</h2>  
-            <p className={styles.description}>
-              A precisão do teste OptoTech depende da calibração correta da DPI (dots per inch) do seu monitor. O usuário deve baixar um arquivo executável que irá realizar as medidas de seu monitor e registrará no OptoTech.
-            </p>
-            <ol className={styles.list}>
-              <li>Baixe o arquivo de calibração fornecido pelo OptoTech.</li>
-              <li>Execute o arquivo baixado em seu computador.</li>
-              <li>No programa de calibração, selecione a DPI desejada dentre as opções disponíveis, que são baseadas nas especificações do seu monitor.</li>
-              <li>Insira o email cadastrado no OptoTech. Esta etapa é essencial para sincronizar os resultados da calibração com o seu perfil de usuário.</li>
-            </ol>
-            <DownloadButton></DownloadButton>      
-          </>
-          : section === 4 ? 
-          <>
-            <h2 className={styles.title}>Responsabilidades e Limitações</h2>
-            <p className={styles.description}>
-              O teste de optotipo tabela Snellen é uma ferramenta valiosa para avaliar a acuidade visual aproximada. No entanto, é fundamental lembrar que este teste online não substitui uma avaliação completa realizada por um oftalmologista ou profissional de saúde ocular licenciado. A acuidade visual é apenas um aspecto da saúde ocular, e muitos outros fatores podem influenciar a visão.
-            </p>
-            <p className={styles.description}>
-              Ao utilizar este teste de optotipo tabela Snellen em nosso website, você concorda com as seguintes condições:
-            </p>
-            <ul className={styles.list}>
-              <li>Limitações da Ferramenta: Este teste online é destinado apenas a fins informativos e não deve ser utilizado como uma substituição para um exame oftalmológico completo. Os resultados obtidos através deste teste podem não refletir com precisão o estado da sua visão e podem variar de acordo com diversos fatores, como iluminação, distância do dispositivo e qualidade do monitor.</li>
-              <li>Recomendação para Consulta Profissional: Recomendamos enfaticamente que você consulte um oftalmologista ou um profissional de saúde ocular licenciado para uma avaliação completa e precisa da sua visão. Somente um profissional qualificado pode identificar problemas de visão, realizar testes especializados e fornecer orientação adequada com base no seu histórico de saúde ocular e outros fatores relevantes.</li>
-              <li>Isenção de Responsabilidade: Não nos responsabilizamos por quaisquer consequências adversas decorrentes do uso deste teste de optotipo tabela Snellen. Você concorda em utilizar esta ferramenta por sua própria conta e risco.</li>
-            </ul>
-            <p className={styles.description}>
-              Ao prosseguir com o uso deste teste de optotipo tabela Snellen, você reconhece ter lido, entendido e concordado com os termos e condições acima mencionados. Lembre-se sempre de que a sua saúde ocular é uma prioridade e que um profissional de saúde ocular qualificado é a melhor fonte de orientação e diagnóstico precisos.
-            </p> 
-          </>          
-          : null
-        }
+        )}
         <ChangeArrows changeFunction={setIsTerm} isArrowFirst={isArrowFirst} isArrowLast={isArrowLast} elementId={"top-view"}></ChangeArrows>                                
       </div>
       <br></br>

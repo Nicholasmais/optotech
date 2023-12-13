@@ -43,7 +43,7 @@ export default function Home() {
     setHasLoggedIn(isLoggedIn);
 
     if (!isLoggedIn) {
-      router.push('/snellen');
+      router.push('/');
     }
 
     api.isAuth().then((res) => {

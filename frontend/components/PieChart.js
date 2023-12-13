@@ -7,10 +7,10 @@ ChartJS.register(CategoryScale, Tooltip, PieController, ArcElement, ChartDataLab
 
 const PieChart = ( { data }) => {
 
-  const total = data.superior + data.igual + data.inferior;
+  const total = data?.superior + data?.igual + data?.inferior;
   const datasets = [
     {
-      data: [data.igual, data.superior, data.inferior],
+      data: [data?.igual, data?.superior, data?.inferior],
       backgroundColor: ['#6B92FF', 'rgba(255, 99, 132, 0.5)', '#6BFFB0'],
     },
   ];
@@ -33,9 +33,10 @@ const PieChart = ( { data }) => {
               display: true, // Enable title display
               text: 'Comparação da acuidade visual dos pacientes', // Set title text
               font: {
-                size: 20 // Ajuste para o tamanho desejado
+                size: 25 // Ajuste para o tamanho desejado
               }
             },
+            
             legend: {
               display: true, // Enable legend display
               position: 'right', // Set legend position

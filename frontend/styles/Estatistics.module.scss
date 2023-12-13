@@ -62,7 +62,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr); // 2 colunas com largura igual
   grid-template-rows: repeat(2, 1fr);    // 2 linhas com altura igual
-  width: 95vw;                           // Largura de 80% da largura do contêiner pai
+  width: 90vw;                           // Largura de 80% da largura do contêiner pai
   gap: 10px;                             // Espaçamento entre os quadrantes
   margin: 0 auto;                     // Aumente a margem para criar um espaço ao redor
   padding-bottom: 50px;

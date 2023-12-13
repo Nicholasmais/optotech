@@ -197,31 +197,11 @@ const Snellen = () => {
           }
         <div className={styles.base}>          
           <div className={`${styles["custom-container"]}`}  style={{flex:"1"}}>        
-          <label style={{"borderBottom":"1px solid black"}}> Distância recomendada: { isSnellen ?
+          <label style={{"borderBottom":"1px solid black", "fontSize":"20px"}}> Distância recomendada: { isSnellen ?
             distanceToRead(letterPx(snellenTometers(20))).toFixed(1) :
             distanceToRead(baseFont).toFixed(1)}
             m
           </label>
-          {customLetters.map((row, index) => (
-            <div key={index} className={styles['custom-row']} style={{visibility: isSnellen ? "hidden" : "visible"}}>
-              <label className={styles['custom-label']}>
-                Linha {index + 1}:
-                <input
-                  type="text"
-                  value={row.letters.join('')}
-                  onChange={(e) => {
-                    const newLetters = [...customLetters];
-                    newLetters[index] = {
-                      letters: e.target.value.toUpperCase().split(''),
-                      size: customLetters[index].size,
-                    };
-                    setCustomLetters(newLetters);
-                  }}
-                  className={styles['custom-input']}
-                />
-              </label>
-            </div>
-          ))}
           <div className={styles['font-size-input']} style={{visibility: isSnellen ? "hidden" : "visible"}}>
             <label>
               Tamanho da fonte base (px):
@@ -242,12 +222,32 @@ const Snellen = () => {
                 });
                 setCustomLetters(newLetters);
               }}
-              min="11"
+              min="12"
               max="55"
               step={`1`}
               className={styles['custom-input']}
             />
           </div>
+          {customLetters.map((row, index) => (
+            <div key={index} className={styles['custom-row']} style={{visibility: isSnellen ? "hidden" : "visible"}}>
+              <label className={styles['custom-label']}>
+                Linha {index + 1}:
+                <input
+                  type="text"
+                  value={row.letters.join('')}
+                  onChange={(e) => {
+                    const newLetters = [...customLetters];
+                    newLetters[index] = {
+                      letters: e.target.value.toUpperCase().split(''),
+                      size: customLetters[index].size,
+                    };
+                    setCustomLetters(newLetters);
+                  }}
+                  className={styles['custom-input']}
+                />
+              </label>
+            </div>
+          ))}          
           </div>
           
           <ChangeArrows changeFunction={changeActiveRow} maxInput={snellen_letters.length}></ChangeArrows>

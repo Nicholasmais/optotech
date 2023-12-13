@@ -6,7 +6,17 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-top: 3%;
-  padding-bottom: 100px;  
+  padding-bottom: 100px;
+
+  .formContainer {    
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  }  
+  
 }
 
 .title {
@@ -16,14 +26,14 @@
 }
 
 .description {
-  font-size: 1.2rem; /* Aumentando o valor do rem */
+  font-size: 1.5rem; /* Aumentando o valor do rem */
   margin-bottom: 1.2rem;
 }
 
 .list {
   list-style-type: disc;
   margin-left: 1.2rem;
-  font-size: 1.2rem; /* Aumentando o valor do rem */
+  font-size: 1.5rem; /* Aumentando o valor do rem */
 }
 
 .note {

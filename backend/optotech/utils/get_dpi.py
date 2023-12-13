@@ -48,7 +48,7 @@ def display_monitor_info(root, email_entry, result_label):
 
         checkvar = tk.BooleanVar()
         checkbox_vars.append(checkvar)
-        checkbox = ttk.Checkbutton(root, text=f"Escolher DPI ({round(dpi)}) do monitor {i}", 
+        checkbox = ttk.Checkbutton(root, text=f"Escolher DPI ({zz(dpi)}) do monitor {i}", 
                                    command=lambda dpi=dpi, checkvar=checkvar, i=i-1: on_checkbox_select(checkvar, i, dpi),
                                    variable=checkvar, style="TCheckbutton")
         

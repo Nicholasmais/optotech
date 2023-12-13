@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../../styles/MeusDados.module.scss'; // Importe os estilos corretos
 import { useAuth } from '../../contexts/AuthContext';
 import NavBar from '../../components/NavBar';
 import { toast, ToastContainer } from 'react-toastify';
@@ -8,8 +7,6 @@ import { useRouter } from 'next/router';
 import Pacientes from '../../components/Pacientes';
 import History from '../../components/History';
 import MeusDadosComponent from '../../components/MeusDadosComponent';
-import Loading from '../../components/Loading';
-import BubbleChart from '../../components/BubbleChart';
 import Estatistics from '../../components/Estatistics';
 
 const api = require('../../services/api');
@@ -19,6 +16,7 @@ export default function MeusDados() {
 
   let user = authData?.user?.user || '';
   let email = authData?.user?.email || '';
+  let dpi = authData?.user?.dpi || 96;
 
   const [appointmentHistory, setAppointmentHistory] = useState([]);
   const [pacientes, setPacientes] = useState([]);
@@ -38,6 +36,7 @@ export default function MeusDados() {
   })
 
   const [demographic, setDemographic] = useState([])
+  const [patientAppointments, setPatientAppointments] = useState([])
   const [mostDate, setMostDate] = useState({})
 
   const toastConfig = {
@@ -57,7 +56,7 @@ export default function MeusDados() {
     await api.pacientes().then((res) => {
       setPacientes(res);
     }).catch((err) => {
-      toast.error(err.response?.data.detail, toastConfig);  
+      toast.error(err.response?.data?.detail, toastConfig);  
     })
     setLoading(false);
   }
@@ -66,7 +65,7 @@ export default function MeusDados() {
     await api.appointment().then((res) => {
       setAppointmentHistory(res);
     }).catch((err) => {
-      toast.error(err.response?.data.detail, toastConfig);  
+      toast.error(err.response?.data?.detail, toastConfig);  
     })
   }
   
@@ -74,20 +73,24 @@ export default function MeusDados() {
     await api.reportComparison(body).then((res) => {
       setVisualAcuityComparison(res);
     });
-    await api.reportActive().then((res) => {
+    await api.reportActive(body).then((res) => {
       setActiveUnactive(res);
     });
-    await api.reportDemographic().then((res) => {
+    await api.reportDemographic(body).then((res) => {
       setDemographic(res);
+    });
+    await api.reportPatientAppointments(body).then((res) => {
+      setPatientAppointments(res);
     });
     await api.reportMaxMinDate().then((res) => {
       setMostDate(res);
     });
-  }
+  }  
 
   useEffect(() => {
     user = authData?.user?.user || '';
     email = authData?.user?.email || '';
+    dpi = authData?.user?.dpi || '';
   }, [authData])
   
   useEffect(() =>{  
@@ -95,7 +98,7 @@ export default function MeusDados() {
       await api.isAuth().then((res) => {
         setAuthData(res);
         if (!res.isAuth){
-          router.push("/snellen");
+          router.push("/");
         }
       }).catch((err) => {
         toast.error('Erro ao se conectar com servidor.', toastConfig);
@@ -117,6 +120,7 @@ export default function MeusDados() {
           setIsOpenForm={setIsOpenForm}
           user={user}
           email={email}
+          dpi={dpi}
           setCurrent={setCurrent}
           loading={loading}
           />);
@@ -134,6 +138,8 @@ export default function MeusDados() {
                 demographic={demographic}
                 mostDate={mostDate}
                 fetchReport={fetchReport}
+                userPatients={pacientes}
+                patientAppointments={patientAppointments}
                 />);
     
       default:

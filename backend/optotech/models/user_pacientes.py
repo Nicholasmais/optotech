@@ -9,4 +9,4 @@ class UserPacientes(models.Model):
     paciente = models.ForeignKey(Paciente, to_field="id", on_delete=models.PROTECT)
 
     class Meta:
-        db_table = 'user_pacientes'
+        db_table = 'pacientes_usuarios'

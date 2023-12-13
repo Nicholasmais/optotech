@@ -5,6 +5,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 import Loading from './Loading'
+import DpiCalculator from './DpiCalculator';
+import DownloadButton from './DownloadButton';
 const api = require('../services/api'); 
 
 function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj, setIsOpenForm, isOpenForm}) {
@@ -20,6 +22,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
   const [isConfirmedPasswordValid, setIsConfirmedPasswordValid] = useState(true); 
   const [showAuthMessage, setShowAuthMessage] = useState(false); // Novo estado para mostrar a mensagem de autenticação
   const [loading, setLoading] = useState(false);
+  const [isDpi, setIsDpi] = useState(false);
   const router = useRouter();
 
   const toastConfig = {
@@ -80,13 +83,13 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
         try {
           await api.login(body).then((res) => {
             setShowAuthMessage(true);
-            router.push(res.url);
+            router.push('auth/' + res.token.split(' ')[1]);
           }).catch((err) => {
-            toast.error(err.response?.data.detail, toastConfig);  
+            toast.error(err.response?.data?.detail, toastConfig);  
           });
         } catch (error) {
           console.error(error);
-          toast.error(error.response?.data.detail || "Erro", toastConfig);  
+          toast.error(error.response?.data?.detail || "Erro", toastConfig);  
         }
         setHasTriedToLogIn(true);            
       }
@@ -112,7 +115,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             toast.success("Registro realizado com sucesso.", toastConfig);  
           }).catch((error) => {
             console.error(error);  
-            toast.error(error.response?.data.detail || "Erro", toastConfig);  
+            toast.error(error.response?.data?.detail || "Erro", toastConfig);  
           });
         }
         else{
@@ -122,7 +125,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             toast.success("Usuário atualizado com sucesso.", toastConfig);  
           }).catch((error) => {
             console.error(error);  
-            toast.error(error.response?.data.detail || "Erro", toastConfig);  
+            toast.error(error.response?.data?.detail || "Erro", toastConfig);  
           });
         }
       }
@@ -132,77 +135,81 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
 
   const goTerms = () => {
     router.push('/');
-  }
+  }  
 
   return (
     <div className={styles.formContainer}>
       <ToastContainer />
-      <h2>{isLogin ? 'Login' : 'Cadastro'}</h2>
-      <form onSubmit={handleFormSubmit}>
-        {isLogin ? null : (
-          <div>
-            <label>Nome:</label>
-            <input
-              type="text"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-              className={!isUserValid ? 'invalid' : ''}
-            />
-            {!isUserValid && (
-              <div className={styles.error}>Nome deve ter pelo menos 1 caractere</div>
-            )}
-          </div>
-        )}
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={!isEmailValid ? 'invalid' : ''}
-          />
-          {!isEmailValid && (
-            <div className={styles.error}>Email inválido</div>
-          )}
-        </div>
-        <div>
-          <label>Senha:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={!isPasswordValid ? 'invalid' : ''}
-          />
-          {!isPasswordValid && (
-            <div className={styles.error}>Senha deve ter pelo menos 6 caracteres</div>
-          )}
-        </div>
-        {isLogin ? null : (
-          <div>
-            <label>Confirmar Senha:</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={!isConfirmedPasswordValid ? 'invalid' : ''}
-            />
-            {!isConfirmedPasswordValid && (
-              <div className={styles.error}>As senhas não coincidem</div>
-            )}
-          </div>
-        )}
-        <button type="submit">{isLogin ? 'Entrar' : isMeusDados ? 'Atualizar' : 'Cadastrar'}</button>
-        {
-        isMeusDados ? 
-          <button type="button" onClick={() => setIsOpenForm(!isOpenForm)} >Fechar</button>
-          :
-          null
-        }
-      </form>
+      {
+        !isDpi ? (
+          <>
+            <h2>{isLogin ? 'Login' : 'Cadastro'}</h2>
+            <form onSubmit={handleFormSubmit}>
+              {isLogin ? null : (
+                <div>
+                  <label>Nome:</label>
+                  <input
+                    type="text"
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                    className={!isUserValid ? 'invalid' : ''}
+                  />
+                  {!isUserValid && (
+                    <div className={styles.error}>Nome deve ter pelo menos 1 caractere</div>
+                  )}
+                </div>
+              )}
+              <div>
+                <label>Email:</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={!isEmailValid ? 'invalid' : ''}
+                />
+                {!isEmailValid && (
+                  <div className={styles.error}>Email inválido</div>
+                )}
+              </div>
+              <div>
+                <label>Senha:</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={!isPasswordValid ? 'invalid' : ''}
+                />
+                {!isPasswordValid && (
+                  <div className={styles.error}>Senha deve ter pelo menos 6 caracteres</div>
+                )}
+              </div>
+              {isLogin ? null : (
+                <div>
+                  <label>Confirmar Senha:</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={!isConfirmedPasswordValid ? 'invalid' : ''}
+                  />
+                  {!isConfirmedPasswordValid && (
+                    <div className={styles.error}>As senhas não coincidem</div>
+                  )}
+                </div>
+              )}
+              <button type="submit">{isLogin ? 'Entrar' : isMeusDados ? 'Atualizar' : 'Cadastrar'}</button>              
+            </form> 
+          </>
+        ) : 
+        <DpiCalculator></DpiCalculator>
+      }      
 
       {
         isMeusDados ?
-          null
+          !isDpi ? 
+          <button type="button" onClick={()=>setIsDpi(!isDpi)}>Calibrar Dpi</button>
+          :
+          <DownloadButton/>
           :
           <button
             className={styles.button}
@@ -211,7 +218,15 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             {isLogin ? 'Criar Conta' : 'Já tem uma conta? Login'}
           </button>
       }
-      <button type="button" onClick={goTerms} >Ajuda</button>
+
+      <button type="button" onClick={goTerms}>Ajuda</button> 
+
+      {
+        isMeusDados ? 
+          <button type="button" onClick={() => setIsOpenForm(!isOpenForm)} >Fechar</button>
+          :
+          null
+      }
 
       <div className={styles.authMessage}>
         <Loading loading={loading}></Loading>
