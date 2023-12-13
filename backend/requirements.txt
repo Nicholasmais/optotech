@@ -8,7 +8,6 @@ charset-normalizer==3.3.2
 cryptography==41.0.7
 Django==4.2.5
 django-cors-headers==4.2.0
-django-sslserver==0.22
 djangorestframework==3.14.0
 Faker==19.13.0
 idna==3.4
