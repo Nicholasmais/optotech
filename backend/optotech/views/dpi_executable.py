@@ -7,10 +7,11 @@ import subprocess
 import shutil
 import io
 import time
+from ..decorator.is_auth import authentication_required
 
 class DPIExecutable(APIView):
     def get(self, request):
-        executable_path = os.getcwd() + r"/optotech/utils/get_dpi.exe"
+        executable_path = os.getcwd() + r"/optotech/utils/dist/retrieve_dpi.exe"
         with open(executable_path, 'rb') as exe_file:
             exe_bytes = exe_file.read()
 
@@ -25,9 +26,9 @@ class DPIExecutable(APIView):
         response['Access-Control-Expose-Headers'] = 'Content-Disposition'
 
         return response
-
-    def post(self, request):
-        user_id = request.session.get("user", None)
+    
+    @authentication_required
+    def post(self, request, user_id = None):
         if not User.objects.filter(id=user_id) or not user_id:
             return Response({"status": "no user found"})
 

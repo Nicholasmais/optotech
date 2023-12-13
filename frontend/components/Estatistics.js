@@ -6,14 +6,20 @@ import BarChart from './BarChart';
 import Filter from './Filter';
 import LineChart from './LineChart';
 
-const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demographic,mostDate, fetchReport }) => {
-  const [startDate, setStartDate] = useState(mostDate.leastRecent);
-  const [endDate, setEndDate] = useState(mostDate.mostRecent);
+const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demographic,mostDate, fetchReport, userPatients, patientAppointments }) => {
+  const [startDate, setStartDate] = useState(mostDate?.leastRecent || null);
+  const [endDate, setEndDate] = useState(mostDate?.mostRecent || null);
   const [isOldest, setIsOldest] = useState(true);
   const [isNewest, setIsNewest] = useState(true);
   const [isMeusPacientes, setIsMeusPacientes] = useState(true);
   const [isRightEye, setIsRightEye] = useState(true);
+  const [selectedPatient, setSelectedPatient] = useState(''); // Estado para o paciente selecionado
   
+  // Função para lidar com a mudança no <select>
+  const handlePatientChange = (event) => {
+    setSelectedPatient(event.target.value);
+  };
+
   // Função para aplicar os filtros aos gráficos
   const applyFilters = () => {
     // Registre os valores dos filtros no estado do componente
@@ -24,8 +30,7 @@ const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demog
     setIsMeusPacientes(isMeusPacientes);
 
     // Aplique os filtros aos gráficos aqui
-        
-    fetchReport({isRight : isRightEye, isAllPatients: isMeusPacientes});
+    fetchReport({isRight : isRightEye, isAllPatients: isMeusPacientes, initialDate:startDate, finalDate:endDate, patient:selectedPatient});
   };
 
   return (
@@ -47,13 +52,17 @@ const Estatistics = ({ setCurrent, visualAcuityComparison, activeUnactive, demog
             setIsNewest={setIsNewest}
             setIsOldest={setIsOldest}
             setIsRightEye={setIsRightEye}
-            setStartDate={setStartDate}            
+            setStartDate={setStartDate}
+            selectedPatient={selectedPatient}
+            setSelectedPatient={setSelectedPatient}
+            handlePatientChange={handlePatientChange}
+            userPatients={userPatients || []} 
             >            
           </Filter>
       </div>
       <div className={styles['grid-container']}>
-        <div className={styles['grid-item']}>
-          <LineChart></LineChart>
+        <div className={styles['grid-item']}>              
+          <LineChart data={patientAppointments} />
         </div>
         <div className={styles['grid-item']}>
           <PieChart data = {visualAcuityComparison}/>

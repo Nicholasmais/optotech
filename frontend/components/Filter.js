@@ -3,9 +3,8 @@ import styles from '../styles/Filter.module.scss';
 import FilterIcon  from '../assets/filter.png';
 import React, { useState } from 'react';
 
-const Filter = ({ startDate, setStartDate, isOldest, setIsOldest, endDate, setEndDate, isNewest, setIsNewest, isMeusPacientes, setIsMeusPacientes, isRightEye, setIsRightEye, applyFilters }) => {
+const Filter = ({ startDate, setStartDate, isOldest, setIsOldest, endDate, setEndDate, isNewest, setIsNewest, isMeusPacientes, setIsMeusPacientes, isRightEye, setIsRightEye, applyFilters, userPatients, handlePatientChange, selectedPatient, setSelectedPatient }) => {
   const [showFilters, setShowFilters] = useState(false);
-
   const toggleFilters = () => {
     setShowFilters(!showFilters);
   };
@@ -67,6 +66,18 @@ const Filter = ({ startDate, setStartDate, isOldest, setIsOldest, endDate, setEn
                   notCheckedColor='#007bff'
               />
               <span>Olho direito</span>
+          </div>
+          <div className={styles['filter-row']}> 
+            <div className={styles["select-container"]}>
+            <select onChange={handlePatientChange} value={selectedPatient}>
+              <option value="">Selecione um Paciente</option>
+              {userPatients.map((patient) => (
+                <option key={patient.id} value={patient.id}>
+                  {patient.nome} {/* Exibe o nome do paciente */}
+                </option>
+              ))}
+            </select>
+            </div>
           </div>
           <button onClick={applyFilters}>Aplicar Filtros</button>
         </>

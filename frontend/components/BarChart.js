@@ -49,7 +49,7 @@ const BarChart = ({data}) => {
         display: true,
         text: 'Pacientes e atendimentos ativos/inativos',
         font: {
-          size: 20 // Ajuste para o tamanho desejado
+          size: 30 // Ajuste para o tamanho desejado
         }
       },
       datalabels: {
@@ -66,7 +66,7 @@ const BarChart = ({data}) => {
         anchor: 'start',
         align: 'end',
         font:{
-          size:20
+          size:30
         }
       },      
       legend: {
@@ -84,7 +84,7 @@ const BarChart = ({data}) => {
         stacked: true,
         ticks: {
           font: {
-            size: 16 // Ajuste para o tamanho desejado
+            size: 30 // Ajuste para o tamanho desejado
           }
         },
       },
@@ -94,7 +94,7 @@ const BarChart = ({data}) => {
         max: ~~(Math.max(...totalActiveUnactive)/10)*10 + 10,
         ticks: {
           font: {
-            size: 16 // Ajuste para o tamanho desejado
+            size: 25 // Ajuste para o tamanho desejado
           }
         },
       },

@@ -4,7 +4,7 @@ $altura-minima-switch: 20vh;
 $altura-minima-snellen: 70vh;
 $altura-margin-top-switch: calc(100vh - (#{$altura-minima-switch} + #{$altura-minima-snellen}));
 $border: 5px;
-$font-size: 20px;
+$font-size: 30px;
 $letter-spacing: 10px;
 $user-icon-size: 40px;
 $icon-scale: 0.2;
@@ -18,6 +18,7 @@ $icon-scale: 0.2;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   background-color: $cor-de-fundo-bege;
+  font-size: $font-size;
   button {    
     color: white;
 

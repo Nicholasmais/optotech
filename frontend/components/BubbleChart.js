@@ -47,7 +47,7 @@ const BubbleChart = ( {data}) => {
           display: true,
           text: 'Acuidade Visual',
           font: {
-            size: 20 // Ajuste para o tamanho desejado
+            size: 25 // Ajuste para o tamanho desejado
           }
         },
         ticks: {          
@@ -81,7 +81,7 @@ const BubbleChart = ( {data}) => {
               display:true,
               position:"start",
               font:{
-                size:20
+                size:25
               }
             }
           },
@@ -90,14 +90,14 @@ const BubbleChart = ( {data}) => {
       legend: {
         labels: {
           font: {
-            size: 20,
+            size: 25,
             weight: "bold"
           }
         }
       },
       datalabels:{
         font:{
-          size:20
+          size:25
         }
       }
     },

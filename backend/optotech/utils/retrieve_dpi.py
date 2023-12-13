@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from screeninfo import get_monitors
+from math import floor
 
 def mm_to_inches(val):
     return val / 25.4
@@ -41,7 +42,7 @@ def display_monitor_info(root):
         label = ttk.Label(root, text=text, font=("Segoe UI", font_size), background="#f0f0f0",borderwidth=2, relief="groove", wraplength=screen_width//2, anchor="center")
         label.grid(row=i, column=0, sticky="ew", padx=50, pady=0, ipadx=50, ipady=50)
         
-        label_dpi = ttk.Label(root, text=f"DPI do monitor {i}: ({round(dpi)})",  font=("Segoe UI", font_size), background="#f0f0f0",borderwidth=2, relief="groove", wraplength=screen_width//2)
+        label_dpi = ttk.Label(root, text=f"DPI do monitor {i}: ({floor(dpi)})",  font=("Segoe UI", font_size), background="#f0f0f0",borderwidth=2, relief="groove", wraplength=screen_width//2)
         label_dpi.grid(row=i, column=1, sticky="ew", padx=10, pady=0)
 
 root = tk.Tk()

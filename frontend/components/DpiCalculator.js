@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../contexts/AuthContext';
-
+import styles from '../styles/Dpi.module.scss'
 const api = require('../services/api');
+import { useRouter } from 'next/router';
 
 function DpiCalculator() {
   const { authData, setAuthData } = useAuth();
@@ -11,7 +12,8 @@ function DpiCalculator() {
   const [width, setWidth] = useState('');
   const [height, setHeight] = useState('');
   const [diagonal, setDiagonal] = useState('');
-  const [dpi, setDpi] = useState(authdata?.user.dpi);
+  const [dpi, setDpi] = useState(authData?.user?.dpi || "");
+  const router = useRouter();
 
   const toastConfig = {
     position: "top-left", // Position of the toast
@@ -41,18 +43,21 @@ function DpiCalculator() {
       {
         dpi:dpi
       }).then((res)=>{
-        console.log(res);                                                   
+        toast.success('Sucesso ao registrar DPI.', toastConfig);
+
       }).catch((e)=>{
         console.log(e);
+        toast.error('Erro ao salvar DPI.', toastConfig);
       });
     await api.isAuth().then((res) => {
       setAuthData(res);
       if (!res.isAuth){
-        router.push("/snellen");
+        router.push("/");
       }
     }).catch((err) => {
       console.log(err);
       toast.error('Erro ao se conectar com servidor.', toastConfig);
+      router.push("/");
     });  
   }
 
@@ -61,8 +66,8 @@ function DpiCalculator() {
   }, [width, height, diagonal])
 
   return (    
-    <form onSubmit={saveDpi}>
-      <ToastContainer/>
+    <form onSubmit={saveDpi} className={styles.form} style={{fontSize:"20px"}}>
+      {/* <ToastContainer/> */}
       <div>
         <label>Largura (px):</label>
         <input type="number" value={width} onChange={(e) => setWidth(e.target.value)} />

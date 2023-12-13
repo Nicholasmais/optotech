@@ -8,21 +8,23 @@ from ..serializers.paciente_serializer import PacienteSerializer
 from ..models.user_pacientes import UserPacientes
 from django.db import connection
 from datetime import datetime
+from ..decorator.is_auth import authentication_required
 
 class ReportComparison(APIView):
-    def get(self, request):        
+    
+    @authentication_required
+    def get(self, request, user_id = None):        
         self.olho_direito = self.__treat_bool__(request.GET.get("isRight", "true"))
         self.all_patients = self.__treat_bool__(request.GET.get("isAllPatients", "true"))
+        self.initial_date = request.GET.get("initialDate", None)
+        self.final_date = request.GET.get("finalDate", None)        
         
         self.user_id = None
         if not self.all_patients:
-            try:
-                self.user_id = request.session.get("user")
-            except Exception as e:
-                self.user_id = None
+            self.user_id = user_id
 
         resultados = self.__raw_query__()
-
+        
         num_equal = self.__count_equal__(resultados)
         num_lower = self.__count_lower__(resultados)
         num_greater = self.__count_greater__(resultados)
@@ -39,14 +41,16 @@ class ReportComparison(APIView):
     def __raw_query__(self):
         consulta_sql = f"""
         select a.acuidade, p.nome, p.ativo, a.data_atendimento, u.id
-          from atendimentos a
-          inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id
-          inner join usuarios u on u.id = pu.user_id
-          inner join pacientes p on p.id = pu.paciente_id
-          {"where u.id ='" + self.user_id + "'" if self.user_id else ""}
+            from atendimentos a
+            inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id
+            inner join usuarios u on u.id = pu.user_id
+            inner join pacientes p on p.id = pu.paciente_id
+            {"where u.id ='" + self.user_id + "'" if self.user_id else ""}
+            {"and a.data_atendimento >= '" + self.initial_date + "'"  if self.initial_date and not self.final_date else ''}
+            {"and a.data_atendimento <= '" + self.final_date + "'"  if self.final_date and not self.initial_date else ''}
+            {"and a.data_atendimento between '" + self.initial_date + "'" + "and" + f"'{self.final_date}'" if self.initial_date and self.final_date else ''}
 	      order by p.nome, a.data_atendimento desc;
         """
-
         resultados = []
 
         with connection.cursor() as cursor:
@@ -102,9 +106,19 @@ class ReportComparison(APIView):
         return greater
         
 class ReportActive(APIView):
-    def get(self, request):
-        all_patients = Paciente.objects.all()
-        all_appointments = Appointment.objects.all()
+
+    @authentication_required
+    def get(self, request, user_id = None):
+        self.all_patients = self.__treat_bool__(request.GET.get("isAllPatients", "true"))
+        self.initial_date = request.GET.get("initialDate", None)
+        self.final_date = request.GET.get("finalDate", None)
+
+        self.user_id = None
+        if not self.all_patients:
+            self.user_id = user_id
+
+        all_patients = self.__raw_query__(True)
+        all_appointments = self.__raw_query__(False)
 
         count_patient_active, count_patient_unactive = self.__count_patient__(all_patients)
         count_appointment_active, count_appointment_unactive = self.__count_appointment__(all_appointments)
@@ -120,10 +134,40 @@ class ReportActive(APIView):
             } 
         })
     
+    def __raw_query__(self, paciente = True):        
+        consulta_sql = f"""
+        select p.* from pacientes p 
+            inner join pacientes_usuarios pu 
+            on p.id = pu.paciente_id 
+            {"where pu.user_id ='" + self.user_id + "'" if self.user_id else ""}            
+        ;
+        """
+        if not paciente:
+           consulta_sql = f"""
+            select a.* from atendimentos a
+                inner join pacientes_usuarios pu
+                on a.paciente_usuario_id = pu.id 
+                {"where pu.user_id ='" + self.user_id + "'" if self.user_id else ""}
+                {"and a.data_atendimento >= '" + self.initial_date + "'"  if self.initial_date and not self.final_date else ''}
+                {"and a.data_atendimento <= '" + self.final_date + " 23:59:59'"  if self.final_date and not self.initial_date else ''}
+                {"and a.data_atendimento between '" + self.initial_date + "'" + "and" + f"'{self.final_date} 23:59:59'" if self.initial_date and self.final_date else ''} 
+            ;
+            """ 
+        
+        resultados = []
+
+        with connection.cursor() as cursor:
+            cursor.execute(consulta_sql)
+            colunas = [col[0] for col in cursor.description]  # Obtém os nomes das colunas
+            for row in cursor.fetchall():
+                resultados.append(dict(zip(colunas, row)))
+        
+        return resultados
+
     def __count_patient__(self, patients):
         ativo, inativo = 0, 0
         for patient in patients:
-            if patient.ativo:
+            if patient.get("ativo"):
                 ativo += 1
             else:
                 inativo += 1
@@ -132,7 +176,7 @@ class ReportActive(APIView):
     def __count_appointment__(self, appointments):
         ativo, inativo = 0, 0
         for appointment in appointments:
-            paciente_obj = UserPacientes.objects.get(id = appointment.paciente_usuario_id)
+            paciente_obj = UserPacientes.objects.get(id = appointment.get("paciente_usuario_id"))
             paciente = Paciente.objects.get(id = paciente_obj.paciente_id)
             if paciente.ativo:
                 ativo += 1
@@ -140,101 +184,65 @@ class ReportActive(APIView):
                 inativo += 1
         return ativo, inativo
 
-class ReportDemographic(APIView):
-    def get(self, request):
-        self.olho_direito = self.__treat_bool__(request.GET.get("isRight", "true"))
+    def __treat_bool__(self, bool_string):
+        return bool_string == "true"
 
-        acuity_values = [
-            {"20/200":{}},
-            {"20/100":{}},
-            {"20/70":{}},
-            {"20/50":{}},
-            {"20/40":{}},
-            {"20/30":{}},
-            {"20/25":{}}, 
-            {"20/20":{}},
-            {"20/15":{}},
-            {"20/13":{}},
-            {"20/10":{}}
-        ]
-        fist_obj = self.__raw_query__("""
-            select a.acuidade, a.data_atendimento , p.nome , p.data_nascimento
-            from atendimentos a
-            inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id 
-            inner join pacientes p on a.id = pu.paciente_id ;
+class ReportDemographic(APIView):
+
+    @authentication_required
+    def get(self, request, user_id = None):
+        self.all_patients = self.__treat_bool__(request.GET.get("isAllPatients", "true"))
+        self.initial_date = request.GET.get("initialDate", None)
+        self.final_date = request.GET.get("finalDate", None)
+        self.olho_direito = self.__treat_bool__(request.GET.get("isRight", "true"))
+        self.user_id = None
+        
+        if not self.all_patients:
+            self.user_id = user_id
+              
+        resultados_sql = self.__raw_query__(f"""
+            SELECT 
+                {"SPLIT_PART(a.acuidade, '.', 1) AS direito" if self.olho_direito else "SPLIT_PART(a.acuidade, '.', 2) AS esquerdo"},
+                FLOOR(EXTRACT(YEAR FROM AGE(a.data_atendimento, p.data_nascimento)) / 10) * 10 AS faixa_etaria,
+                COUNT(*) AS quantidade
+            FROM 
+                atendimentos a
+                INNER JOIN pacientes_usuarios pu ON pu.id = a.paciente_usuario_id 
+                INNER JOIN pacientes p ON p.id = pu.paciente_id 
+            {f"where pu.user_id = '{self.user_id}'" if self.user_id else ''}
+            {"and a.data_atendimento >= '" + self.initial_date + "'"  if self.initial_date and not self.final_date else ''}
+            {"and a.data_atendimento <= '" + self.final_date + " 23:59:59'"  if self.final_date and not self.initial_date else ''}
+            {"and a.data_atendimento between '" + self.initial_date + "'" + "and" + f"'{self.final_date} 23:59:59'" if self.initial_date and self.final_date else ''} 
+            GROUP BY 
+                {"SPLIT_PART(a.acuidade, '.', 1)" if self.olho_direito else "SPLIT_PART(a.acuidade, '.', 2)"},
+                FLOOR(EXTRACT(YEAR FROM AGE(a.data_atendimento, p.data_nascimento)) / 10)
         """)
-        for snellen in acuity_values:
-            for query_set in fist_obj:
-                if not self.olho_direito:
-                    if query_set.get("acuidade")[:query_set.get("acuidade").index(".")] == snellen:
-                            equal += 1
-                    else:
-                        if query_set.get("acuidade")[query_set.get("acuidade").index(".")+1:] == snellen:
-                            equal += 1
-        
-        
-        return Response([
-            # Pacientes com 20/200 de visão
-            { "x": "20/200", "y": 70, "r": 3 },
-            { "x": "20/200", "y": 50, "r": 2 },
-            { "x": "20/200", "y": 30, "r": 1 },
-        
-            # Pacientes com 20/100 de visão
-            { "x": "20/100", "y": 65, "r": 5 },
-            { "x": "20/100", "y": 45, "r": 3 },
-            { "x": "20/100", "y": 20, "r": 2 },
-        
-            # Pacientes com 20/70 de visão
-            { "x": "20/70", "y": 55, "r": 8 },
-            { "x": "20/70", "y": 35, "r": 6 },
-            { "x": "20/70", "y": 15, "r": 1 },
-        
-            # Pacientes com 20/50 de visão
-            { "x": "20/50", "y": 40, "r": 7 },
-            { "x": "20/50", "y": 25, "r": 5 },
-            { "x": "20/50", "y": 10, "r": 2 },
-        
-            # Pacientes com 20/40 de visão
-            { "x": "20/40", "y": 30, "r": 10 },
-            { "x": "20/40", "y": 22, "r": 9 },
-            { "x": "20/40", "y": 18, "r": 4 },
-        
-            # Pacientes com 20/30 de visão
-            { "x": "20/30", "y": 20, "r": 12 },
-            { "x": "20/30", "y": 10, "r": 15 },
-        
-            # Pacientes com 20/25 de visão
-            { "x": "20/25", "y": 30, "r": 20 },
-            { "x": "20/25", "y": 25, "r": 18 },
-            { "x": "20/25", "y": 22, "r": 5 },
-        
-            # Pacientes com 20/20 de visão
-            { "x": "20/20", "y": 25, "r": 25 },
-            { "x": "20/20", "y": 35, "r": 30 },
-            { "x": "20/20", "y": 18, "r": 40 },
-            { "x": "20/20", "y": 10, "r": 50 },
-        
-            # Pacientes com 20/15 de visão
-            { "x": "20/15", "y": 30, "r": 5 },
-            { "x": "20/15", "y": 22, "r": 2 },
-            { "x": "20/15", "y": 15, "r": 1 },
-        
-            # Pacientes com 20/13 de visão
-            { "x": "20/13", "y": 27, "r": 2 },
-            { "x": "20/13", "y": 19, "r": 1 },
-        
-            # Pacientes com 20/10 de visão
-            { "x": "20/10", "y": 25, "r": 1 },
-            { "x": "20/10", "y": 18, "r": 1 },
-        ])
+
+        lista_resultados = []
+
+        for resultado in resultados_sql:
+            acuidade = resultado.get("direito") if self.olho_direito else resultado.get("esquerdo")  # valor da coluna 'direito'
+            faixa_etaria = int(resultado.get("faixa_etaria"))  # valor da faixa etária
+            quantidade = resultado.get("quantidade")  # quantidade de atendimentos
+
+            lista_resultados.append({
+                "x": acuidade,
+                "y": faixa_etaria,
+                "r": quantidade
+            })
+
+        return Response(lista_resultados)
     
     def __raw_query__(self, query):
+        resultados = []
+
         with connection.cursor() as cursor:
-            cursor.execute(query) 
-            res =  cursor.fetchall()
-            if len(res) == 1:
-                return res[0]
-            return res
+            cursor.execute(query)
+            colunas = [col[0] for col in cursor.description]  # Obtém os nomes das colunas
+            for row in cursor.fetchall():
+                resultados.append(dict(zip(colunas, row)))
+        
+        return resultados
         
     def __treat_bool__(self, bool_string):
         return bool_string == "true"
@@ -274,3 +282,51 @@ class ReportMaxMinDate(APIView):
             if len(res) == 1:            
                 return res[0]
             return res
+
+class ReportPatientAppointments(APIView):
+    def get(self, request):
+        self.patient = request.GET.get("patient", None)
+
+        self.olho_direito = self.__treat_bool__(request.GET.get("isRight", "true"))
+
+        if not self.patient:
+            return Response([])
+        
+        self.initial_date = request.GET.get("initialDate", None)
+
+        self.final_date = request.GET.get("finalDate", None)
+
+        query = f"""
+        SELECT 
+            TO_CHAR(a.data_atendimento, 'YYYY-MM-DD') AS time,
+            {"SPLIT_PART(a.acuidade, '.', 1) AS acuity" if self.olho_direito else "SPLIT_PART(a.acuidade, '.', 2) AS acuity"}
+        FROM 
+            atendimentos a
+            INNER JOIN pacientes_usuarios pu ON pu.id = a.paciente_usuario_id 
+            INNER JOIN pacientes p ON p.id = pu.paciente_id
+        WHERE 
+            p.id = '{self.patient}'
+            {"and a.data_atendimento >= '" + self.initial_date + "'"  if self.initial_date and not self.final_date else ''}
+            {"and a.data_atendimento <= '" + self.final_date + " 23:59:59'"  if self.final_date and not self.initial_date else ''}
+            {"and a.data_atendimento between '" + self.initial_date + "'" + "and" + f"'{self.final_date} 23:59:59'" if self.initial_date and self.final_date else ''} 
+        ORDER BY 
+            a.data_atendimento;
+        """
+
+        lista_resultados = self.__raw_query__(query)
+        
+        return Response(lista_resultados)
+    
+    def __raw_query__(self, query):
+        resultados = []
+
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            colunas = [col[0] for col in cursor.description]  # Obtém os nomes das colunas
+            for row in cursor.fetchall():
+                resultados.append(dict(zip(colunas, row)))
+        
+        return resultados      
+
+    def __treat_bool__(self, bool_string):
+        return bool_string == "true"

@@ -1,9 +1,11 @@
 import psycopg2
 import random
 import os
+import numpy as np  # Adicionando numpy para seleção ponderada
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from faker import Faker  # Biblioteca para gerar dados falsos
+
 fake = Faker()
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -17,19 +19,23 @@ conn = psycopg2.connect(
     host=os.environ.get("DB_HOST")
 )
 conn.autocommit = True
-# Cria um cursor para executar operações no banco de dados
 cur = conn.cursor()
 
 # Número de usuários a serem criados
-num_users = 0
+num_users = 2
 max_atendimentos = 5
 num_patients = 100
 
-acuidades = ['20/200', '20/100', '20/70', '20/50', '20/40', '20/30', '20/25', '20/20', '20/15', '20/13', '20/10']
+# Acuidades e suas ponderações
+acuidades = [
+    '20/200', '20/100', '20/70', '20/50', '20/40', '20/30', '20/25', '20/20', '20/15', '20/13', '20/10'
+]
+pesos = [0.01, 0.01, 0.02, 0.02, 0.2, 0.25, 0.26, 0.20, 0.01, 0.01, 0.01]
+
 
 # Criar e inserir usuários
 for _ in range(num_users):
-    username = fake.user_name()  # Gera um nome de usuário
+    username = fake.user_name()
     user_email = fake.email()
     user_password = fake.password()
     dpi = random.randint(80, 200)
@@ -37,7 +43,6 @@ for _ in range(num_users):
         INSERT INTO usuarios ("user", "email", "password", "dpi") 
         VALUES (%s, %s, %s, %s) RETURNING id;
     '''
-
     cur.execute(sql_user, (username, user_email, user_password, dpi))
 
 # Obter IDs dos usuários criados
@@ -54,28 +59,23 @@ def random_date():
     random_minute = random.randint(0, 59)
     return random_date.replace(hour=random_hour, minute=random_minute)
 
-
 for _ in range(num_patients):
-    # Gerando dados aleatórios
     id_usuario_aleatorio = random.choice(id_usuarios)
-    nome_paciente = fake.first_name() + " " + fake.last_name()  # Nome e sobrenome aleatórios
+    nome_paciente = fake.first_name() + " " + fake.last_name()
     ano = random.randint(1950, 2010)
     mes = random.randint(1, 12)
-    dia = random.randint(1, 28)  # Para simplificar, evita verificar o último dia de cada mês
+    dia = random.randint(1, 28)
     data_nascimento = f"{ano}-{mes:02d}-{dia:02d}"
     codigo = str(random.randint(1000, 9999))
-    ativo = random.choice([True, False])  # Valor booleano aleatório
+    ativo = random.choice([True, False])
 
-    # Comando SQL para inserir o novo paciente e retornar o ID gerado
     sql_paciente = """
         INSERT INTO pacientes (nome, data_nascimento, codigo, ativo) 
         VALUES (%s, %s, %s, %s) RETURNING id;
     """
-
     cur.execute(sql_paciente, (nome_paciente, data_nascimento, codigo, ativo))
     id_paciente = cur.fetchone()[0]
 
-    # Comando SQL para inserir o registro na tabela user_pacientes
     sql_user_pacientes = """
         INSERT INTO pacientes_usuarios (user_id, paciente_id) 
         VALUES (%s, %s) RETURNING id;
@@ -85,8 +85,8 @@ for _ in range(num_patients):
 
     num_atendimentos = random.randint(0, max_atendimentos)
     for _ in range(num_atendimentos):
-        acuidade_1 = random.choice(acuidades)
-        acuidade_2 = random.choice(acuidades)
+        acuidade_1 = np.random.choice(acuidades, p=pesos)
+        acuidade_2 = np.random.choice(acuidades, p=pesos)
         acuidade = f"{acuidade_1}.{acuidade_2}"
         data_atendimento = random_date()
 
@@ -95,7 +95,6 @@ for _ in range(num_patients):
             VALUES (%s, %s, %s);
         """
         cur.execute(sql_appointments, (user_patient_id, acuidade, data_atendimento))
-
 
 # Fecha o cursor e a conexão
 cur.close()

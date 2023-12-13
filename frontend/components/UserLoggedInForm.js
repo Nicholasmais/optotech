@@ -54,7 +54,7 @@ function UserLoggedInForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOp
       setHasLoggedIn(false);
       setIsLoggedFormOpen(false);
       setHasTriedToLogIn(false);
-      location.reload();
+      goTerms();
     })
   }
 

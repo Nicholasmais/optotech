@@ -23,7 +23,7 @@ from .views.login_view import LoginViewSet
 from .views.appointment import AppointmentView
 from .views.matrix_letter import MatrixLetterView
 from .views.paciente import PacienteViewSet
-from .views.report import ReportComparison, ReportActive, ReportDemographic, ReportMaxMinDate
+from .views.report import ReportComparison, ReportActive, ReportDemographic, ReportMaxMinDate, ReportPatientAppointments
 from .views.dpi_executable import DPIExecutable
 
 router = DefaultRouter()
@@ -43,8 +43,10 @@ urlpatterns = [
     path('report/active/', ReportActive.as_view(), name='report-active'),
     path('report/demographic/', ReportDemographic.as_view(), name='report-demographic'),
     path('report/max-min-date/', ReportMaxMinDate.as_view(), name='report-max-min-date'),
+    path('report/patient/', ReportPatientAppointments.as_view(), name='report-patient'),
     path('users/delete-pacientes/<str:pk>/', UserViewSet.as_view({'delete': 'delete_pacientes'}), name='users-delete-pacientes'),
-    path('users/', UserViewSet.as_view({'patch': 'partial_update'}), name='patch-user'),
+    path('users/', UserViewSet.as_view({'patch': 'partial_update', 'get':'list'}), name='patch-user'),
+    path('delete-user/<str:pk>/', UserViewSet.as_view({'delete':'delete_user'}), name='delete-user'),
     path('generate-dpi-script/', DPIExecutable.as_view(), name='generate-dpi-script'),
     path('', include(router.urls)),
 ]

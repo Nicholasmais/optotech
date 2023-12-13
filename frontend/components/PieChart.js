@@ -33,9 +33,10 @@ const PieChart = ( { data }) => {
               display: true, // Enable title display
               text: 'Comparação da acuidade visual dos pacientes', // Set title text
               font: {
-                size: 20 // Ajuste para o tamanho desejado
+                size: 25 // Ajuste para o tamanho desejado
               }
             },
+            
             legend: {
               display: true, // Enable legend display
               position: 'right', // Set legend position

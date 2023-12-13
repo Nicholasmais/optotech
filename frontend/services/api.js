@@ -85,7 +85,7 @@ function checkCookie(name) {
 }
 
 function checkSessionCookie() {
-  const sessionCookie = checkCookie('sessionid');
+  const sessionCookie = checkCookie('token');
   const csrfToken = checkCookie('csrftoken');
   const isSession = sessionCookie !== null && sessionCookie !== '';
   const isCsrf = csrfToken !== null && csrfToken !== ''
@@ -192,7 +192,6 @@ const deletePaciente = async(id) => {
   }
 }
 
-
 const MatrixLetter = async(letter) =>{
   try{
     let res;
@@ -217,11 +216,22 @@ const MatrixLetter = async(letter) =>{
   }  
 }
 
-const reportComparison = async({isRight, isAllPatients}) => {
+const reportComparison = async({isRight, isAllPatients, initialDate, finalDate}) => {
 
   const right = `${isRight === undefined ? "?isRight=true" : "?isRight=" + isRight}`;
   const allPatients = `${isAllPatients === undefined ? "isAllPatients=true" : "isAllPatients=" + isAllPatients}`;
-  const params = `${right}${allPatients !== "" ? "&"  + allPatients : ""}`;
+  const initialDateParam = initialDate ? `initialDate=${initialDate}` : null
+  const finalDateParam = finalDate ? `finalDate=${finalDate}` : null
+
+  const mandatoryParams = `${right}${allPatients !== "" ? "&"  + allPatients : ""}`;
+  
+  let params = mandatoryParams;
+  if (initialDate){
+    params += "&" + initialDateParam;
+  }
+  if (finalDate){
+    params += "&" + finalDateParam;
+  }
 
   return await axios.get(`${baseApiUrl}/report/comparison/${params}`, {
     withCredentials: true,
@@ -235,8 +245,22 @@ const reportComparison = async({isRight, isAllPatients}) => {
     });
 }
 
-const reportActive = async() => {
-  return await axios.get(`${baseApiUrl}/report/active`, {
+const reportActive = async({isAllPatients, initialDate, finalDate}) => {
+  const allPatients = `?${isAllPatients === undefined ? "isAllPatients=true" : "isAllPatients=" + isAllPatients}`;
+  const initialDateParam = initialDate ? `initialDate=${initialDate}` : null
+  const finalDateParam = finalDate ? `finalDate=${finalDate}` : null
+
+  const mandatoryParams = `${allPatients !== "" ? allPatients : ""}`;
+  
+  let params = mandatoryParams;
+  if (initialDate){
+    params += "&" + initialDateParam;
+  }
+  if (finalDate){
+    params += "&" + finalDateParam;
+  }
+
+  return await axios.get(`${baseApiUrl}/report/active/${params}`, {
     withCredentials: true,
     credentials: 'include'
   })
@@ -248,10 +272,58 @@ const reportActive = async() => {
     });
 }
 
-const reportDemographic = async() => {
-  return await axios.get(`${baseApiUrl}/report/demographic`, {
+const reportDemographic = async({isRight, isAllPatients, initialDate, finalDate}) => {
+  
+  const right = `${isRight === undefined ? "?isRight=true" : "?isRight=" + isRight}`;
+  const allPatients = `${isAllPatients === undefined ? "isAllPatients=true" : "isAllPatients=" + isAllPatients}`;
+  const initialDateParam = initialDate ? `initialDate=${initialDate}` : null
+  const finalDateParam = finalDate ? `finalDate=${finalDate}` : null
+
+  const mandatoryParams = `${right}${allPatients !== "" ? "&"  + allPatients : ""}`;
+  
+  let params = mandatoryParams;
+  if (initialDate){
+    params += "&" + initialDateParam;
+  }
+  if (finalDate){
+    params += "&" + finalDateParam;
+  }
+
+  return await axios.get(`${baseApiUrl}/report/demographic/${params}`, {
     withCredentials: true,
     credentials: 'include'
+  })
+    .then((response) => {
+      return response.data; 
+    })
+    .catch((error) => {
+      throw error; 
+    });
+}
+
+const reportPatientAppointments = async({patient, initialDate, finalDate, isRight}) => {
+  const params = new URLSearchParams();
+
+  if (initialDate) {
+    params.append("initialDate", initialDate);
+  }
+  if (finalDate) {
+    params.append("finalDate", finalDate);
+  }
+  if (patient) {
+    params.append("patient", patient);
+  }
+
+  // Adiciona o parâmetro `isRight` com o valor apropriado
+  params.append("isRight", isRight === undefined ? true : isRight);
+
+  // Construa a URL final
+  const url = `${baseApiUrl}/report/patient/?${params.toString()}`;
+
+  // Faça a requisição
+  return await axios.get(url, {
+    withCredentials: true,
+    credentials: "include",
   })
     .then((response) => {
       return response.data; 
@@ -323,6 +395,7 @@ module.exports = {
   reportComparison: reportComparison,
   reportActive: reportActive,
   reportDemographic: reportDemographic,
+  reportPatientAppointments:reportPatientAppointments,
   reportMaxMinDate: reportMaxMinDate,
   downloadFile:downloadFile,
   saveDpi:saveDpi

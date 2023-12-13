@@ -22,26 +22,18 @@ function calculateDate(date){
   return `${partes[2]}/${partes[1]}/${partes[0]}`;
 }
 
-const LineChart = () => {
-  const data = [
-    { time: '2023-01-01', acuity: "20/20" },
-    { time: '2023-02-01', acuity: "20/30" },
-    { time: '2023-03-01', acuity: "20/50" },
-    { time: '2023-04-01', acuity: "20/15" },
-    // Adicione mais pontos de dados conforme necessário
-  ]
-
+const LineChart = ({ data }) => {
   const calculatedValues = data?.map(d => fracao(d.acuity));
-
   const data2 = {
     labels: data?.map(d => calculateDate(d.time)),
     datasets: [
       {
-        label: 'Acuidade Visual ao Longo do Tempo',
+        label: 'Acuidade Visual ao Longo do Tempo por Paciente',     
         data: calculatedValues,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+        tension: 0.1,
+        pointRadius: 20,
       }
     ]
   };
@@ -50,10 +42,9 @@ const LineChart = () => {
   data?.forEach((d, i) => {
     valueToFracMap[calculatedValues[i]] = d.acuity;
   });  
-  console.log(valueToFracMap);
 
   const options = {
-    responsive: true,
+    responsive: true,      
     scales: {
       y: {
         beginAtZero: true,
@@ -64,17 +55,31 @@ const LineChart = () => {
             return valueToFracMap[value] || null;
           },
           autoSkip: true,
-          stepSize: 0.1
+          stepSize: 0.1,
+          font:{
+            size:20
+          }
         },
         title: {
           display: true,
-          text: 'Acuidade Visual'
+          text: 'Acuidade Visual',
+          font:{
+            size:20
+          }
         }
       },
       x: {
         title: {
           display: true,
-          text: 'Tempo'
+          text: 'Data',
+          font:{
+            size:20
+          }
+        },
+        ticks:{
+          font:{
+            size:25
+          }
         }
       }
     },
@@ -92,11 +97,24 @@ const LineChart = () => {
               display:true,
               position:"end",
               font:{
-                size:20
+                size:25
               }
             }
           },
-        },
+        },       
+      },
+      datalabels:{
+        font:{
+          size:25
+        }
+      },
+      legend: {
+        labels: {
+          font: {
+            size: 25,
+            weight: "bold"
+          }
+        }
       },
     },
   };
