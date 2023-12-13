@@ -1,16 +1,7 @@
-asgiref==3.7.2
 bcrypt==4.0.1
 Django==4.2.5
 django-cors-headers==4.2.0
 djangorestframework==3.14.0
 psycopg2-binary~=2.9.3
-PyJWT==2.8.0
-python-dateutil==2.8.2
-python-dotenv==1.0.0
-pytz==2023.3.post1
-sqlparse==0.4.4
-typing_extensions==4.8.0
-tzdata==2023.3
-Faker==19.13.0
 PyJWT==2.8.0
 cryptography==41.0.7
