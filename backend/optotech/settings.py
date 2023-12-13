@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-if os.environ.get("HOST") == "localhost":
+if os.environ.get("DB_HOST") == "localhost":
     INSTALLED_APPS.append('sslserver')
 
 MIDDLEWARE = [
