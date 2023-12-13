@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../contexts/AuthContext';
-import styles from '../styles/Dpi.module.scss'
+import styles from '../styles/DPI.module.scss'
 const api = require('../services/api');
 import { useRouter } from 'next/router';
 
