@@ -16,8 +16,7 @@ numpy==1.26.2
 ordered-set==4.1.0
 packaging==23.2
 pefile==2023.2.7
-psycopg2==2.9.9
-psycopg2-binary==2.9.9
+psycopg2-binary~=2.9.3
 py2exe==0.13.0.1
 pycparser==2.21
 pyinstaller==6.2.0
