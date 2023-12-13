@@ -26,7 +26,6 @@ SECRET_KEY = 'django-insecure-ur6#nuk=)2yk57%bh3xbp5^e_76722f%670&=i6m!c=azmrplr
 DEBUG = True
 
 # Application definition
-import os
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,10 +37,8 @@ INSTALLED_APPS = [
     'optotech',
     'rest_framework',
     'corsheaders',
+    'sslserver',
 ]
-
-if os.environ.get("DB_HOST") == "localhost":
-    INSTALLED_APPS.append('sslserver')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,6 +75,7 @@ WSGI_APPLICATION = 'optotech.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
