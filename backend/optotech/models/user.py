@@ -7,6 +7,7 @@ class User(models.Model):
     email = models.CharField(max_length=128, unique=True)
     password = models.CharField(max_length=128)
     dpi = models.IntegerField(null = True)
+    baseFont = models.IntegerField(null = True)
 
     class Meta:
         db_table = 'usuarios'        

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../../styles/Terms.module.scss';
 import NavBar from '../../../components/NavBar';
 import { useRouter } from 'next/router';
@@ -15,13 +15,24 @@ const ResponsibilityComponentDpi = () => {
   const { authData, setAuthData } = useAuth();
 
   const router = useRouter();
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(router?.query?.index || 0);
   const [isArrowFirst, setIsArrowFirst] = useState(true);
-  const [isArrowLast, setIsArrowLast] = useState(false);
+  const [isArrowLast, setIsArrowLast] = useState(router?.query?.index == 2 ? true : false);
+  const [dpi, setDPI] = useState(authData?.user?.baseFont || null)
 
-  const setIsTerm = (increment) => {    
+  const toastConfig = {
+    position: "top-left",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    closeButton: false
+  };
+
+  const setIsTerm = (increment) => {
     const newRow = section + increment;
-    if (newRow >= 0 && newRow < 2) {
+    if (newRow >= 0 && newRow < 3) {
       setSection(newRow);
       setIsArrowFirst(false);
       setIsArrowLast(false);
@@ -29,8 +40,9 @@ const ResponsibilityComponentDpi = () => {
     if (newRow <= 0){
       setIsArrowFirst(true);
     }
-    if (newRow >= 1){
+    if (newRow >= 2){
       setIsArrowLast(true);
+      setBaseFont(authData?.user?.baseFont || letterPx(snellenTometers(20)));
     }
   }
 
@@ -42,20 +54,36 @@ const ResponsibilityComponentDpi = () => {
       router.push("/")
     }
   }
+  
+  const letterPx = (distance) => {
+    return parseInt((5 * distance * Math.tan(Math.PI / 10800) * 1000 * dpi / 25.4 ));
+  }
+  
+  const distanceToRead = (pixel) => {    
+    return ((pixel * 25.4) / (5 * Math.tan(Math.PI / 10800) * 1000 * dpi)).toFixed(1);
+  }
 
-  const toastConfig = {
-    position: "top-left", // Position of the toast
-    autoClose: 3000,       // Auto close duration in milliseconds (set to false to disable auto close)
-    hideProgressBar: false, // Show/hide the progress bar
-    closeOnClick: true,     // Close the toast when clicked
-    pauseOnHover: true,     // Pause auto close on hover
-    draggable: true,        // Allow the toast to be dragged
-    closeButton: false
-  };
+  const snellenTometers = (snellen) => {
+    return snellen * 0.304
+  }
+
+  const handleChooseSize = async() => {
+    await api.saveDpi({
+      baseFont: parseInt(baseFont)
+    }).then((res) => {
+      console.log(res);
+      toast.success("Sucesso ao salvar distância", toastConfig);
+    }).catch((err) => {
+      console.log(err);
+      toast.error(err?.response?.data?.detail || "Erro ao salvar distância.", toastConfig);
+    })
+  }
+
+  const [baseFont, setBaseFont] = useState(authData?.user?.baseFont || letterPx(snellenTometers(20)));
 
   const content = {
     0: {
-      title: "Instruções para Utilização do OptoTech (1 de 2)",
+      title: "Instruções para Utilização do OptoTech (1 de 3)",
       list: [
         "Preparação:",
         [
@@ -73,10 +101,9 @@ const ResponsibilityComponentDpi = () => {
           "Quanto menor for o número após a barra, melhor é a sua acuidade visual. Se você conseguiu ler a linha '20/20', isso indica uma visão considerada normal."
         ]
       ],
-      description: "Se você não conseguir se posicionar a 6 metros de distância da tela do dispositivo, o OptoTech oferece uma opção de personalização. Você pode ajustar o tamanho da fonte para uma distância possível e até mesmo mudar as letras para evitar memorização. Esta personalização permite que você faça o teste de acuidade visual de forma mais conveniente, adequando-o às suas necessidades."
     },
     1: {
-      title: "Instruções para Utilização do OptoTech (2 de 2)",
+      title: "Instruções para Utilização do OptoTech (2 de 3)",
       description: [
         "A precisão do teste OptoTech depende da calibração correta da DPI (dots per inch) do seu monitor. O usuário deve baixar um arquivo executável que irá realizar as medidas de seu monitor e registrará no OptoTech."
       ],
@@ -88,10 +115,49 @@ const ResponsibilityComponentDpi = () => {
       ],
       downloadButton: <DownloadButton />
     },
-   
+    2: {
+      title: "Instruções para Utilização do OptoTech (3 de 3)",
+      description: [
+        "A precisão dos testes no OptoTech é influenciada pela correta calibração da distância entre o usuário e o monitor. Embora o padrão Snellen seja de 6 metros (20 pés), o OptoTech permite a personalização da distância para acomodar diferentes ambientes, com um mínimo de 2 metros e máximo de 10 metros. Siga as instruções abaixo para calibrar a distância de forma adequada"      ],
+      list: [
+        "Digite a distância desejada entre 2 e 10 metros, considerando o espaço físico disponível.",        
+      ],
+      distance:(
+        <>
+          <label style={{"borderBottom":"1px solid black", "fontSize":"20px"}}> Distância recomendada: {
+                distanceToRead(baseFont)
+              }
+              m
+            </label>
+            <div className={styles['font-size-input']}>
+              <label>
+                Tamanho da fonte base (px):
+              </label>
+              <input
+                type="number"
+                name="line"
+                id="line"
+                value={parseInt(baseFont)}
+                onChange={(e) => {
+                  setBaseFont(e.target.value);                                  
+                }}
+                min="27"
+                max="60"
+                step={`1`}
+                className={styles['custom-input']}
+              />
+            </div>
+            <button onClick={() => handleChooseSize()} style={{width:"240px"}}>Gravar distância</button>
+        </>
+      )
+    },   
   };
 
   const currentSectionContent = content[section];
+
+  useEffect(() => {
+    setDPI(authData?.user?.dpi || null);
+  }, [authData])
 
   return (
     <>
@@ -132,16 +198,25 @@ const ResponsibilityComponentDpi = () => {
             {currentSectionContent?.downloadButton ?
               (
                 <div className={styles.formContainer}>
-                  <DpiCalculator/>
-                  {
-                    currentSectionContent.downloadButton
-                  }
+                  <DpiCalculator setDPI={setDPI} />                 
                 </div>
               ) :
               (
                 null
               )
             }
+            {currentSectionContent?.distance ?
+            (
+              <div className={styles.formContainer}>
+                {
+                  currentSectionContent.distance
+                }
+              </div>
+            ) :
+            (
+              null
+            )
+          }
           </>
         )}
         <ChangeArrows changeFunction={setIsTerm} isArrowFirst={isArrowFirst} isArrowLast={isArrowLast} elementId={"top-view"}></ChangeArrows>                                

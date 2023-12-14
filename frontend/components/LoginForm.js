@@ -218,6 +218,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             {isLogin ? 'Criar Conta' : 'Já tem uma conta? Login'}
           </button>
       }
+      <button type="button" onClick={() => {router.push('/meus-dados/dpi/2')}}>Configurar distância</button> 
 
       <button type="button" onClick={goTerms}>Ajuda</button> 
 

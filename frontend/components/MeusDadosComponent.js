@@ -4,7 +4,7 @@ import LoginForm from './LoginForm';
 import Link from 'next/link';
 import Loading from './Loading';
 
-const MeusDadosComponent = ({setCurrent, isOpenForm, setIsOpenForm, user, email,dpi, loading}) => {
+const MeusDadosComponent = ({setCurrent, isOpenForm, setIsOpenForm, user, email, dpi, distance,  loading}) => {
   return (
     <>
       <div className={styles['meus-dados-container']}>
@@ -17,6 +17,7 @@ const MeusDadosComponent = ({setCurrent, isOpenForm, setIsOpenForm, user, email,
           {email && (<p><strong>Email:</strong> {email}</p>)}
           <hr></hr>
           {dpi && !loading && (<p><strong>Dpi:</strong> {dpi}</p>)}
+          {distance && !loading && `Distância configurada: ${distance}m`}
         </div>
         <div className={styles['button-container']}>
           <button className={styles['alterar-button']} onClick={() => setIsOpenForm(!isOpenForm)}>Alterar Dados</button>

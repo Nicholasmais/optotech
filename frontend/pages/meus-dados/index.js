@@ -13,10 +13,15 @@ const api = require('../../services/api');
 
 export default function MeusDados() {
   const { authData, setAuthData } = useAuth();
+  
+  const distanceToRead = (pixel) => {      
+    return ((pixel * 25.4) / (5 * Math.tan(Math.PI / 10800) * 1000 * dpi)).toFixed(1);
+  }
 
   let user = authData?.user?.user || '';
   let email = authData?.user?.email || '';
   let dpi = authData?.user?.dpi || 96;
+  let distance = distanceToRead(authData?.user?.baseFont || 33) || 6.1;
 
   const [appointmentHistory, setAppointmentHistory] = useState([]);
   const [pacientes, setPacientes] = useState([]);
@@ -33,7 +38,7 @@ export default function MeusDados() {
   const [activeUnactive, setActiveUnactive] = useState({
     "patient" : null,
     "appointment" : null    
-  })
+  })  
 
   const [demographic, setDemographic] = useState([])
   const [patientAppointments, setPatientAppointments] = useState([])
@@ -91,6 +96,7 @@ export default function MeusDados() {
     user = authData?.user?.user || '';
     email = authData?.user?.email || '';
     dpi = authData?.user?.dpi || '';
+    distance = authData?.user?.baseFont || '';
   }, [authData])
   
   useEffect(() =>{  
@@ -121,6 +127,7 @@ export default function MeusDados() {
           user={user}
           email={email}
           dpi={dpi}
+          distance={distance}
           setCurrent={setCurrent}
           loading={loading}
           />);
