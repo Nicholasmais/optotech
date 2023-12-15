@@ -21,7 +21,7 @@ export default function MeusDados() {
   let user = authData?.user?.user || '';
   let email = authData?.user?.email || '';
   let dpi = authData?.user?.dpi || 96;
-  let distance = distanceToRead(authData?.user?.baseFont || 33) || 6.1;
+  let distance = authData?.user?.distancia || 6.1;
 
   const [appointmentHistory, setAppointmentHistory] = useState([]);
   const [pacientes, setPacientes] = useState([]);
@@ -96,7 +96,7 @@ export default function MeusDados() {
     user = authData?.user?.user || '';
     email = authData?.user?.email || '';
     dpi = authData?.user?.dpi || '';
-    distance = authData?.user?.baseFont || '';
+    distance = authData?.user?.distancia || '';
   }, [authData])
   
   useEffect(() =>{  

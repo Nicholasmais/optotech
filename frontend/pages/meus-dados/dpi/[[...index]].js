@@ -18,7 +18,7 @@ const ResponsibilityComponentDpi = () => {
   const [section, setSection] = useState(router?.query?.index || 0);
   const [isArrowFirst, setIsArrowFirst] = useState(true);
   const [isArrowLast, setIsArrowLast] = useState(router?.query?.index == 2 ? true : false);
-  const [dpi, setDPI] = useState(authData?.user?.baseFont || null)
+  const [dpi, setDPI] = useState(authData?.user?.distancia || null)
 
   const toastConfig = {
     position: "top-left",
@@ -42,7 +42,6 @@ const ResponsibilityComponentDpi = () => {
     }
     if (newRow >= 2){
       setIsArrowLast(true);
-      setBaseFont(authData?.user?.baseFont || letterPx(snellenTometers(20)));
     }
   }
 
@@ -58,10 +57,6 @@ const ResponsibilityComponentDpi = () => {
   const letterPx = (distance) => {
     return parseInt((5 * distance * Math.tan(Math.PI / 10800) * 1000 * dpi / 25.4 ));
   }
-  
-  const distanceToRead = (pixel) => {    
-    return ((pixel * 25.4) / (5 * Math.tan(Math.PI / 10800) * 1000 * dpi)).toFixed(1);
-  }
 
   const snellenTometers = (snellen) => {
     return snellen * 0.304
@@ -69,7 +64,7 @@ const ResponsibilityComponentDpi = () => {
 
   const handleChooseSize = async() => {
     await api.saveDpi({
-      baseFont: parseInt(baseFont)
+      distancia: distancia
     }).then((res) => {
       console.log(res);
       toast.success("Sucesso ao salvar distância", toastConfig);
@@ -79,7 +74,7 @@ const ResponsibilityComponentDpi = () => {
     })
   }
 
-  const [baseFont, setBaseFont] = useState(authData?.user?.baseFont || letterPx(snellenTometers(20)));
+  const [distancia, setDistancia] = useState(authData?.user?.distancia || 6);
 
   const content = {
     0: {
@@ -124,26 +119,23 @@ const ResponsibilityComponentDpi = () => {
       ],
       distance:(
         <>
-          <label style={{"borderBottom":"1px solid black", "fontSize":"20px"}}> Distância recomendada: {
-                distanceToRead(baseFont)
+          <label style={{"borderBottom":"1px solid black", "fontSize":"20px"}}> Distância configurada: {
+                distancia
               }
               m
             </label>
-            <div className={styles['font-size-input']}>
-              <label>
-                Tamanho da fonte base (px):
-              </label>
+            <div className={styles['font-size-input']}>             
               <input
                 type="number"
                 name="line"
                 id="line"
-                value={parseInt(baseFont)}
+                value={distancia}
                 onChange={(e) => {
-                  setBaseFont(e.target.value);                                  
+                  setDistancia(e.target.value);                                  
                 }}
-                min="27"
-                max="60"
-                step={`1`}
+                min="2"
+                max="10"
+                step={`0.1`}
                 className={styles['custom-input']}
               />
             </div>
@@ -154,6 +146,20 @@ const ResponsibilityComponentDpi = () => {
   };
 
   const currentSectionContent = content[section];
+
+  useEffect(() =>{  
+    const checkUser = async() => {
+      await api.isAuth().then((res) => {
+        setAuthData(res);
+        if (!res.isAuth){
+          router.push("/");
+        }
+      }).catch((err) => {
+        router.push("/");
+      });
+    }        
+    checkUser();    
+  }, []);
 
   useEffect(() => {
     setDPI(authData?.user?.dpi || null);

@@ -30,7 +30,7 @@ const Snellen = () => {
     return snellen * 0.304
   }
 
-  const baseFont = authData?.user?.baseFont || letterPx(snellenTometers(20));
+  const distancia = authData?.user?.distancia || letterPx(snellenTometers(20));
 
   const [customLetters, setCustomLetters] = useState([
     {
@@ -161,9 +161,8 @@ const Snellen = () => {
   }, [])
 
   useEffect(() => {
-    console.log(baseFont);
     const newLetters = customLetters.map((row, index) => {            
-      const newSize = baseFont * row.size / letterPx(snellenTometers(20));    
+      const newSize = letterPx(distancia) * row.size / letterPx(snellenTometers(20));    
       return {
         letters: row.letters,
         size: newSize,
@@ -212,7 +211,7 @@ const Snellen = () => {
           <div className={`${styles["custom-container"]}`}  style={{flex:"1"}}>        
           <label style={{"borderBottom":"1px solid black", "fontSize":"20px"}}> { isSnellen ?
               `Distância recomendada: ${distanceToRead(letterPx(snellenTometers(20))).toFixed(1)}` :
-              `Distância configurada: ${distanceToRead(baseFont).toFixed(1)}`
+              `Distância configurada: ${distancia}`
             }
             m
           </label>        
