@@ -16,7 +16,7 @@ def authentication_required(view_func):
             # Faça algo se o usuário estiver autenticado
             return view_func(self, *args, **kwargs, user_id = user_id)
 
-        return Response({"detail": "Usuário não autenticado"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "Usuário não autenticado", 'more-detail':debug(cookies.get("token"), os.environ.get("PRIVATE_KEY"))}, status=status.HTTP_401_UNAUTHORIZED)
 
     return wrapper
 
@@ -43,3 +43,25 @@ def verify_jwt_token(token, public_key, jwt_algorithm='HS256'):
     except jwt.InvalidTokenError as e:
         print(e)
         return None
+    
+def debug(token, public_key, jwt_algorithm='HS256'):
+    try:
+        # Decodificar o token
+        payload = jwt.decode(token, public_key, algorithms=[jwt_algorithm])
+      
+        # Verificar a expiração
+        current_time = datetime.utcnow()
+        expiration_time = datetime.utcfromtimestamp(payload['exp'])
+        if current_time > expiration_time:
+            print("expired time")
+            return 'expired time'
+
+        # O token é válido, retorne o payload
+        return 'suces'
+
+    except jwt.ExpiredSignatureError as e:
+        print(e)
+        return str(e)
+    except jwt.InvalidTokenError as e:
+        print(e)
+        return str(e)
