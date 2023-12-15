@@ -5,8 +5,9 @@ import { useAuth } from '../contexts/AuthContext';
 import styles from '../styles/DPI.module.scss'
 const api = require('../services/api');
 import { useRouter } from 'next/router';
+import DownloadButton from './DownloadButton';
 
-function DpiCalculator() {
+function DpiCalculator({setDPI}) {
   const { authData, setAuthData } = useAuth();
 
   const [width, setWidth] = useState('');
@@ -38,6 +39,7 @@ function DpiCalculator() {
   };
 
   const saveDpi = async(e) => {
+    setDPI(dpi);
     e.preventDefault();
     await api.saveDpi(
       {
@@ -83,6 +85,9 @@ function DpiCalculator() {
       <div>
         <label>DPI:</label>
         <input type="number" value={dpi} onChange={(e) => setDpi(e.target.value)} />
+      </div>
+      <div>
+        <DownloadButton></DownloadButton>
       </div>
       <button type="submit">Salvar DPI</button>
     </form>

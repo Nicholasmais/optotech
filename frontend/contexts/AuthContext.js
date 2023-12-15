@@ -12,7 +12,8 @@ export const AuthContextProvider = ({ children }) => {
       user: '',
       email: '',
       expirationDate: '',
-      dpi: null
+      dpi: null,
+      baseFont: null
     },
   });
 

@@ -1,7 +1,0 @@
-//Powershell como admi
-
-$cert = New-SelfSignedCertificate -DnsName "certificate" -CertStoreLocation "cert:\LocalMachine\My" -NotAfter (Get-Date).AddYears(5) -KeySpec Signature -KeyUsage DigitalSignature -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3")
-
-Set-AuthenticodeSignature -FilePath .\retrieve_dpi.exe -Certificate $cert
-
-Get-AuthenticodeSignature -FilePath .\retrieve_dpi.exe

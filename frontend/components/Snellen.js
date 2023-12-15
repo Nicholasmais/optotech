@@ -30,7 +30,7 @@ const Snellen = () => {
     return snellen * 0.304
   }
 
-  const [baseFont, setBaseFont] = useState(letterPx(snellenTometers(20)));
+  const distancia = authData?.user?.distancia || letterPx(snellenTometers(20));
 
   const [customLetters, setCustomLetters] = useState([
     {
@@ -156,8 +156,20 @@ const Snellen = () => {
         toast.error(err);
       })
     }
+       
     fetchAllLetters();
   }, [])
+
+  useEffect(() => {
+    const newLetters = customLetters.map((row, index) => {            
+      const newSize = letterPx(distancia) * row.size / letterPx(snellenTometers(20));    
+      return {
+        letters: row.letters,
+        size: newSize,
+      };
+    });
+    setCustomLetters(newLetters);
+  }, [authData])
 
   return (
     <>
@@ -187,7 +199,7 @@ const Snellen = () => {
             ) : (
               <>
                 <div className={styles.row_to_read} style={{ fontSize: `${customLetters[activeCustomRow].size}px` }}>          
-                  <Loading loading={loading}></Loading>    
+                  <Loading loading={loading}></Loading>
                   {customLetters[activeCustomRow].letters.map((letra, letraIndex) => 
                     <MatrixLetter letter={allLettersMatrix[letra]} fontSize={customLetters[activeCustomRow].size} key={`${letraIndex}-matrixLetter`}></MatrixLetter>                  
                   )}    
@@ -197,37 +209,12 @@ const Snellen = () => {
           }
         <div className={styles.base}>          
           <div className={`${styles["custom-container"]}`}  style={{flex:"1"}}>        
-          <label style={{"borderBottom":"1px solid black", "fontSize":"20px"}}> Distância recomendada: { isSnellen ?
-            distanceToRead(letterPx(snellenTometers(20))).toFixed(1) :
-            distanceToRead(baseFont).toFixed(1)}
+          <label style={{"borderBottom":"1px solid black", "fontSize":"20px"}}> { isSnellen ?
+              `Distância recomendada: ${distanceToRead(letterPx(snellenTometers(20))).toFixed(1)}` :
+              `Distância configurada: ${distancia}`
+            }
             m
-          </label>
-          <div className={styles['font-size-input']} style={{visibility: isSnellen ? "hidden" : "visible"}}>
-            <label>
-              Tamanho da fonte base (px):
-            </label>
-            <input
-              type="number"
-              name="line"
-              id="line"
-              value={parseInt(baseFont)}
-              onChange={(e) => {
-                setBaseFont(e.target.value);
-                const newLetters = customLetters.map((row, index) => {            
-                  const newSize = e.target.value * row.size / baseFont;
-                  return {
-                    letters: row.letters,
-                    size: newSize,
-                  };
-                });
-                setCustomLetters(newLetters);
-              }}
-              min="12"
-              max="55"
-              step={`1`}
-              className={styles['custom-input']}
-            />
-          </div>
+          </label>        
           {customLetters.map((row, index) => (
             <div key={index} className={styles['custom-row']} style={{visibility: isSnellen ? "hidden" : "visible"}}>
               <label className={styles['custom-label']}>

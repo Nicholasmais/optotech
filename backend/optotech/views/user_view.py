@@ -92,13 +92,22 @@ class UserViewSet(viewsets.ModelViewSet):
         return CustomAPIException("Erro ao atualizar usuário", 400)
     
     def delete_user(self, request, pk):
-        self.delete_pacientes(request, pk)
-
+        try:
+            if not User.objects.filter(id = pk).exists():
+                raise CustomAPIException("Usuário não encontrado", 404)
+        except:
+            raise CustomAPIException("Usuário não encontrado", 404)
+        
+        self.delete_pacientes(request, pk)        
+        
         user = User.objects.get(id = pk)
         user_serializer = UserSerializer(user)
         user_obj = user_serializer.data
         user.delete()
 
+        user_obj["email"] = self.encryption.uncipher(user_obj["email"])        
+        user_obj["user"] = self.encryption.uncipher(user_obj.get("user"))
+        
         return Response({"user":user_obj})
 
     def delete_pacientes(self, request, pk):

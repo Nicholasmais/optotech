@@ -150,7 +150,8 @@ const ChangeArrows = ({changeFunction, maxInput, isArrowFirst = false, isArrowLa
     api.isAuth().then((res) => {
       setAuthData(res);
     }).catch((err) => {
-      toast.error('Erro ao se conectar com servidor.', toastConfig);
+      console.log(err);
+      // toast.error(err?.response?.data?.detail || 'Erro ao se conectar com servidor.', toastConfig);
     });
 
     calculateLeftAcuity(leftAcuity);
