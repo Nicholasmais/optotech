@@ -51,7 +51,7 @@ const logout = async (body) => {
 };
 
 const isAuth = async() => {
-  return await axios.get(`${baseApiUrl}/isAuth/`, {
+  return await axios.post(`${baseApiUrl}/isAuth/`,{}, {
     withCredentials: true,
     credentials: 'include'
   })
