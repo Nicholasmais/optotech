@@ -63,8 +63,8 @@ def debug(token, public_key, jwt_algorithm='HS256'):
         print(e)
         return {
             "eero":str(e),
-            'token':token,
-            'tokenTtype':type(token),
+            'token':str(token),
+            'tokenTtype':str(type(token)),
             'key':public_key
             }
     except jwt.InvalidTokenError as e:
@@ -72,6 +72,6 @@ def debug(token, public_key, jwt_algorithm='HS256'):
         return {
             "eero":str(e),
             'token':str(token),
-            'tokenTtype':type(token),
+            'tokenTtype':str(type(token)),
             'key':public_key
             }
