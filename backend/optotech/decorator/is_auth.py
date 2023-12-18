@@ -69,4 +69,9 @@ def debug(token, public_key, jwt_algorithm='HS256'):
             }
     except jwt.InvalidTokenError as e:
         print(e)
-        return str(e)
+        return {
+            "eero":str(e),
+            'token':token,
+            'tokenTtype':type(token),
+            'key':public_key
+            }
