@@ -256,6 +256,12 @@ const ResponsibilityComponent = () => {
 
   const currentSectionContent = content[section];
 
+  const checkCookies = async() => {
+    await api.getCookies().then(res => {
+      console.log(res);
+    })
+  }
+
   return (
     <>
       <ToastContainer />
@@ -313,6 +319,8 @@ const ResponsibilityComponent = () => {
                       ))}
                       <button type="submit">Entrar</button>
                       <button onClick={(e) => {setIsCadastro(true);e.preventDefault();}}>Criar uma conta</button>
+                      <button onClick={(e) => {checkCookies()}}>checar cookis</button>
+
                     </>
                   )}
                 </div>

@@ -373,6 +373,19 @@ const saveDpi = async(body) => {
     });
 }
 
+const getCookies = async() => {
+  return await axios.get(`${baseApiUrl}/getCookies/`, {
+    withCredentials: true,
+    credentials: 'include'
+  })
+    .then((response) => {      
+      return response; 
+    })
+    .catch((error) => {
+      throw error; 
+    });
+}
+
 module.exports = {
   getUsers: getUsers,
   login: login,
@@ -398,5 +411,6 @@ module.exports = {
   reportPatientAppointments:reportPatientAppointments,
   reportMaxMinDate: reportMaxMinDate,
   downloadFile:downloadFile,
-  saveDpi:saveDpi
+  saveDpi:saveDpi,
+  getCookies:getCookies
 };
