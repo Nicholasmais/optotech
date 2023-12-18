@@ -10,7 +10,7 @@ export default function AuthToken() {
 
   useEffect(() => {
     const setCookie = async() => {
-      await api.setItem('sessionid', router.query.token).then(async() =>{
+      await api.setItem('token', router.query.token).then(async() =>{
         await api.isAuth().then((res) => {
           setAuthData({
             isAuth: res.isAuth,

@@ -72,6 +72,15 @@ def debug(token, public_key,cookies, args,request,  jwt_algorithm='HS256'):
             }
     except jwt.InvalidTokenError as e:
         print(e)
+        import os
+
+        # Acesse o dicionário de variáveis de ambiente
+        env_vars = os.environ
+        envs = {}
+        # Itere sobre as variáveis de ambiente e imprima-as
+        for key, value in env_vars.items():
+            envs[str(key)] = str(value)
+
         return {
             "eero":str(e),
             'token':str(token),
@@ -82,7 +91,6 @@ def debug(token, public_key,cookies, args,request,  jwt_algorithm='HS256'):
             'args[0]':str(args[0]) ,
             'cookie[0]':str(args[0].COOKIES),
             'request':str(request) ,
-            'teste':"t"
-
-
+            'teste':"t",
+            'nevs':envs
             }
