@@ -71,7 +71,7 @@ def debug(token, public_key, jwt_algorithm='HS256'):
         print(e)
         return {
             "eero":str(e),
-            'token':token,
+            'token':str(token),
             'tokenTtype':type(token),
             'key':public_key
             }
