@@ -7,6 +7,7 @@ def authentication_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):      
         # Agora você pode acessar os cookies
+
         cookies = args[0].COOKIES 
         token = cookies.get("token")  
         token_validated = verify_jwt_token(token, os.environ.get("PRIVATE_KEY"))
@@ -18,7 +19,7 @@ def authentication_required(view_func):
             # Faça algo se o usuário estiver autenticado
             return view_func(request, *args, **kwargs, user_id = user_id)
 
-        return Response({"detail": "Usuário não autenticado", 'more-detail':debug(token, os.environ.get("PRIVATE_KEY"), cookies)}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "Usuário não autenticado", 'more-detail':debug(token, os.environ.get("PRIVATE_KEY"), cookies, args)}, status=status.HTTP_401_UNAUTHORIZED)
 
     return wrapper
 
@@ -46,7 +47,7 @@ def verify_jwt_token(token, public_key, jwt_algorithm='HS256'):
         print(e)
         return None
     
-def debug(token, public_key,cookies,  jwt_algorithm='HS256'):
+def debug(token, public_key,cookies, args, jwt_algorithm='HS256'):
     try:
         # Decodificar o token
         payload = jwt.decode(token, public_key, algorithms=[jwt_algorithm])
@@ -76,5 +77,9 @@ def debug(token, public_key,cookies,  jwt_algorithm='HS256'):
             'token':str(token),
             'tokenTtype':str(type(token)),
             'key':public_key,
-            'cookies':cookies
+            'cookies':cookies,
+            'args':str(args),
+            'args[0]':str(args[0]) ,
+            'cookie[0]':str(args[0].COOKIES) 
+
             }
