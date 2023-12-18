@@ -5,9 +5,9 @@ import os
 
 def authentication_required(view_func):
     @wraps(view_func)
-    def wrapper(self, *args, **kwargs):        
+    def wrapper(request, *args, **kwargs):      
         # Agora você pode acessar os cookies
-        cookies = self.request.COOKIES 
+        cookies = args[0].COOKIES 
         token = cookies.get("token")  
         token_validated = verify_jwt_token(token, os.environ.get("PRIVATE_KEY"))
 
@@ -16,7 +16,7 @@ def authentication_required(view_func):
             
             user_id = payload.get("user_id")
             # Faça algo se o usuário estiver autenticado
-            return view_func(self, *args, **kwargs, user_id = user_id)
+            return view_func(request, *args, **kwargs, user_id = user_id)
 
         return Response({"detail": "Usuário não autenticado", 'more-detail':debug(token, os.environ.get("PRIVATE_KEY"), cookies)}, status=status.HTTP_401_UNAUTHORIZED)
 
