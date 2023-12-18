@@ -4,9 +4,7 @@ from ..serializers.user_serializer import UserSerializer
 from rest_framework.response import Response
 import bcrypt
 from django.http import HttpResponse
-from django.utils import timezone
 from ..utils.custom_exception_handler import CustomAPIException
-from django.contrib.sessions.models import Session
 import jwt
 from datetime import datetime, timedelta
 import os
