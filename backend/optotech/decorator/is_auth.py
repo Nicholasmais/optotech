@@ -7,16 +7,18 @@ def authentication_required(view_func):
     @wraps(view_func)
     def wrapper(self, *args, **kwargs):        
         # Agora você pode acessar os cookies
-        cookies = self.request.COOKIES  
+        cookies = self.request.COOKIES 
+        token = cookies.get("token")  
+        token_validated = verify_jwt_token(token, os.environ.get("PRIVATE_KEY"))
 
-        if cookies.get("token") and verify_jwt_token(cookies.get("token"), os.environ.get("PRIVATE_KEY")):
-            payload = verify_jwt_token(cookies.get("token"), os.environ.get("PRIVATE_KEY"))
+        if token and token_validated:
+            payload = token_validated
             
             user_id = payload.get("user_id")
             # Faça algo se o usuário estiver autenticado
             return view_func(self, *args, **kwargs, user_id = user_id)
 
-        return Response({"detail": "Usuário não autenticado", 'more-detail':debug(cookies.get("token"), os.environ.get("PRIVATE_KEY"))}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "Usuário não autenticado", 'more-detail':debug(token, os.environ.get("PRIVATE_KEY"), cookies)}, status=status.HTTP_401_UNAUTHORIZED)
 
     return wrapper
 
@@ -44,7 +46,7 @@ def verify_jwt_token(token, public_key, jwt_algorithm='HS256'):
         print(e)
         return None
     
-def debug(token, public_key, jwt_algorithm='HS256'):
+def debug(token, public_key,cookies,  jwt_algorithm='HS256'):
     try:
         # Decodificar o token
         payload = jwt.decode(token, public_key, algorithms=[jwt_algorithm])
@@ -73,5 +75,6 @@ def debug(token, public_key, jwt_algorithm='HS256'):
             "eero":str(e),
             'token':str(token),
             'tokenTtype':str(type(token)),
-            'key':public_key
+            'key':public_key,
+            'cookies':cookies
             }
