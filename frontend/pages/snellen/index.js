@@ -48,7 +48,7 @@ export default function Home() {
   useEffect(() => {         
     api.isAuth().then((res) => {
       if (!res.isAuth){
-        api.removeItem("sessionid");
+        api.removeItem("token");
       }
       const isLoggedIn = api.checkSessionCookie();
       setHasLoggedIn(isLoggedIn);

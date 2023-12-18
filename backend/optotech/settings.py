@@ -82,7 +82,7 @@ from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__) + r"\utils", '.env')
 load_dotenv(dotenv_path)
 
-ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1", "optotech-api.vercel.app"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
