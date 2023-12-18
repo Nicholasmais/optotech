@@ -68,12 +68,13 @@ class LoginViewSet(viewsets.ModelViewSet):
     def check_cookie(self, request):
         return Response({"cookies":request.COOKIES})
     
-    @authentication_required
-    def is_authenticated(self, request, user_id):
+    # @authentication_required
+    def is_authenticated(self, request, user_id = None):        
         if not user_id:
             return Response({
                 "isAuth": False,
-                "user": None
+                "user": None,
+                "cookies":request.COOKIES
             })
         
         user = User.objects.get(id = user_id)

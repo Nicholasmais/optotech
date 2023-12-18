@@ -1,4 +1,6 @@
 const axios = require('axios');
+axios.default.withCredentials = true
+
 import Cookies from 'js-cookie'
 
 const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'http://localhost:8000';
