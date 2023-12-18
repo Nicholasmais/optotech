@@ -1,7 +1,7 @@
 const axios = require('axios');
 import Cookies from 'js-cookie'
 
-const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'https://localhost:8000';
+const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'http://localhost:8000';
 
 const getUsers = async() => {
   return await axios.get(`${baseApiUrl}/users/`)

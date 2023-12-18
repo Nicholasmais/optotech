@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "node server.js",
+    "dev": "next dev",
+    "dev-local": "node server.js",
     "start": "next start"
   },
   "dependencies": {
