@@ -71,11 +71,32 @@ class LoginViewSet(viewsets.ModelViewSet):
     # @authentication_required
     def is_authenticated(self, request, user_id = None):        
         if not user_id:
+            print("Request Information:")
+            print("Method:", request.method)
+            print("Headers:", request.headers)
+            print("Domain:", request.META.get('HTTP_HOST'))
+            print("Path:", request.path)
+            print("GET Parameters:", request.GET)
+            print("POST Parameters:", request.data)
+            print("Cookies:", request.COOKIES)
+            print("Is Secure Connection:", request.is_secure())
+            print("User Agent:", request.META.get('HTTP_USER_AGENT'))
             return Response({
                 "isAuth": False,
                 "user": None,
                 "cookies":request.COOKIES,
-                "request2":str(request)
+                "request2":str(request),
+                   "request_info": {
+                    "method": request.method,
+                    "headers": dict(request.headers),
+                    "domain": request.META.get('HTTP_HOST'),
+                    "path": request.path,
+                    "get_parameters": dict(request.GET),
+                    "post_parameters": dict(request.data),
+                    "is_secure_connection": request.is_secure(),
+                    "user_agent": request.META.get('HTTP_USER_AGENT'),
+                    # Adicione mais informações conforme necessário
+                }
             })
         
         user = User.objects.get(id = user_id)
