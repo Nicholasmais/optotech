@@ -75,7 +75,7 @@ class LoginViewSet(viewsets.ModelViewSet):
                 "isAuth": False,
                 "user": None,
                 "cookies":request.COOKIES,
-                "request":request
+                "request":str(request)
             })
         
         user = User.objects.get(id = user_id)
