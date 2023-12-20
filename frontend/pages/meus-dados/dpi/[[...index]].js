@@ -66,7 +66,6 @@ const ResponsibilityComponentDpi = () => {
     await api.saveDpi({
       distancia: distancia
     }).then((res) => {
-      console.log(res);
       toast.success("Sucesso ao salvar distância", toastConfig);
     }).catch((err) => {
       console.log(err);

@@ -6,9 +6,13 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavBar from '../../components/NavBar.js';
 import Snellen from '../../components/Snellen.js';
+import { useRouter } from 'next/router';
+
 const api = require('../../services/api.js');
 
 export default function Home() {
+  const router = useRouter();
+
   const { authData, setAuthData } = useAuth();
   const [hasLoggedIn, setHasLoggedIn] = useState(false);
   const [hasTriedToLogIn, setHasTriedToLogIn] = useState(false);
@@ -50,11 +54,12 @@ export default function Home() {
       if (!res.isAuth){
         api.removeItem("token");
       }
-      const isLoggedIn = api.checkSessionCookie();
+      const isLoggedIn = authData?.isAuth;
       setHasLoggedIn(isLoggedIn);
       setAuthData(res);
     }).catch((err) => {
-      toast.error("Erro ao se conectar com servidor.", toastConfig)
+      toast.error(err.response?.data?.detail || "Erro ao ao se conectar com servidor.", toastConfig);
+      router.push("/");
     })
   }, []);
   

@@ -107,7 +107,7 @@ export default function MeusDados() {
           router.push("/");
         }
       }).catch((err) => {
-        toast.error('Erro ao se conectar com servidor.', toastConfig);
+        toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
       });
     }    
 

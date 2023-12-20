@@ -254,14 +254,14 @@ class ReportMaxMinDate(APIView):
             (select * from atendimentos a
                 inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id
                 inner join pacientes p on p.id = pu.paciente_id
-                where p.ativo is true) ;
+                where p.ativo is true) AS subconsulta;
             """)
         least_recent_date = self.__raw_query__("""
             select MIN(data_atendimento) from
             (select * from atendimentos a
                 inner join pacientes_usuarios pu on pu.id = a.paciente_usuario_id
                 inner join pacientes p on p.id = pu.paciente_id
-                where p.ativo is true) ;
+                where p.ativo is true) AS subconsulta;
             """)
         default_most_recent = datetime(1970, 1, 1)
         default_least_recent = datetime.now()

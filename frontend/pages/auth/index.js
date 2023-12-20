@@ -10,17 +10,15 @@ export default function AuthToken() {
 
   useEffect(() => {
     const setCookie = async() => {
-      await api.setItem('token', router.query.token).then(async() =>{
-        await api.isAuth().then((res) => {
-          setAuthData({
-            isAuth: res.isAuth,
-            user: res.user
-          });
-          res.user?.dpi ? 
-          router.push("/meus-dados") : 
-          router.push("/meus-dados/dpi");
-        });        
-      } );
+      await api.isAuth().then((res) => {
+        setAuthData({
+          isAuth: res.isAuth,
+          user: res.user
+        });
+        res.user?.dpi ? 
+        router.push("/meus-dados") : 
+        router.push("/meus-dados/dpi");
+      });        
     }
     setCookie();
   }, [router.query]);

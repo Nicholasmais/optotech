@@ -83,7 +83,7 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
         try {
           await api.login(body).then((res) => {
             setShowAuthMessage(true);
-            router.push('auth/' + res.token.split(' ')[1]);
+            router.push('auth/');
           }).catch((err) => {
             toast.error(err.response?.data?.detail, toastConfig);  
           });

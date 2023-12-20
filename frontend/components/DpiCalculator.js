@@ -49,7 +49,7 @@ function DpiCalculator({setDPI}) {
 
       }).catch((e)=>{
         console.log(e);
-        toast.error('Erro ao salvar DPI.', toastConfig);
+        toast.error(err.response?.data?.detail || 'Erro ao ao salvar DPI.', toastConfig);
       });
     await api.isAuth().then((res) => {
       setAuthData(res);
@@ -58,7 +58,7 @@ function DpiCalculator({setDPI}) {
       }
     }).catch((err) => {
       console.log(err);
-      toast.error('Erro ao se conectar com servidor.', toastConfig);
+      toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
       router.push("/");
     });  
   }

@@ -68,31 +68,18 @@ const isAuth = async() => {
 const setItem = async (key, value) => {
   const expirationDate = new Date();
   expirationDate.setHours(expirationDate.getHours() + 1); // Adiciona 1 hora à data atual
-  Cookies.set(key, value, { expires: expirationDate });
+
+  Cookies.set(key, value, {
+    expires: expirationDate,
+    secure: true,
+    sameSite: 'none',  
+  });
+  
 }
 
 const removeItem = async (key) =>{
   Cookies.remove(key);
 } 
-
-function checkCookie(name) {
-  const cookies = document.cookie.split('; ');
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].split('=');
-    if (cookie[0] === name) {
-      return cookie[1];
-    }
-  }
-  return null;
-}
-
-function checkSessionCookie() {
-  const sessionCookie = checkCookie('token');
-  const csrfToken = checkCookie('csrftoken');
-  const isSession = sessionCookie !== null && sessionCookie !== '';
-  const isCsrf = csrfToken !== null && csrfToken !== ''
-  return isSession || isCsrf;
-}
 
 function clearCookie() {
   document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
@@ -394,7 +381,6 @@ module.exports = {
   logout: logout,
   signup: signup,
   isAuth: isAuth,
-  checkSessionCookie: checkSessionCookie,
   clearCookie: clearCookie,
   appointment: appointment,
   createAppointment: createAppointment,

@@ -144,7 +144,7 @@ const ChangeArrows = ({changeFunction, maxInput, isArrowFirst = false, isArrowLa
   }
     
   useEffect(() => {
-    const isLoggedIn = api.checkSessionCookie();
+    const isLoggedIn = authData?.isAuth;
     setHasLoggedIn(isLoggedIn);
 
     api.isAuth().then((res) => {
@@ -164,7 +164,7 @@ const ChangeArrows = ({changeFunction, maxInput, isArrowFirst = false, isArrowLa
         await api.paciente(id).then((res) => {        
           setPaciente(res);        
         }).catch((err) => {
-          toast.error('Erro ao se conectar com servidor.', toastConfig);
+          toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
         });
     }
     fetchPaciente(pacienteId);

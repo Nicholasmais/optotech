@@ -10,16 +10,26 @@ def authentication_required(view_func):
 
         cookies = args[0].COOKIES 
         token = cookies.get("token")  
+
+        if not token:
+            response = Response({"detail": "No token provided", 'more-detail':debug(token, os.environ.get("PRIVATE_KEY"), cookies, args, request)}, status=status.HTTP_401_UNAUTHORIZED)
+            response.delete_cookie("token")
+            
+            return response
+
         token_validated = verify_jwt_token(token, os.environ.get("PRIVATE_KEY"))
 
-        if token and token_validated:
+        if token and token_validated and not isinstance(token_validated, str):
             payload = token_validated
             
             user_id = payload.get("user_id")
             # Faça algo se o usuário estiver autenticado
             return view_func(request, *args, **kwargs, user_id = user_id)
-
-        return Response({"detail": "Usuário não autenticado", 'more-detail':debug(token, os.environ.get("PRIVATE_KEY"), cookies, args, request)}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        response = Response({"detail": token_validated})
+        response.delete_cookie("token")
+        
+        return response
 
     return wrapper
 
@@ -34,18 +44,18 @@ def verify_jwt_token(token, public_key, jwt_algorithm='HS256'):
         current_time = datetime.utcnow()
         expiration_time = datetime.utcfromtimestamp(payload['exp'])
         if current_time > expiration_time:
-            print("expired time")
-            return None
+            print("Expired time")
+            return "Expired time"
 
         # O token é válido, retorne o payload
         return payload
 
     except jwt.ExpiredSignatureError as e:
         print(e)
-        return None
+        return str(e)
     except jwt.InvalidTokenError as e:
         print(e)
-        return None
+        return str(e)
     
 def debug(token, public_key,cookies, args,request,  jwt_algorithm='HS256'):
     try:
@@ -94,3 +104,4 @@ def debug(token, public_key,cookies, args,request,  jwt_algorithm='HS256'):
             'teste':"t",
             'nevs':envs
             }
+    

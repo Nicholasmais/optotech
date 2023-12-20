@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import ChangeArrows from '../components/ChangeArrows';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../contexts/AuthContext';
 
 const api = require('../services/api');
 
@@ -27,7 +28,8 @@ const ResponsibilityComponent = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [isLoginEmailValid, setIsLoginEmailValid] = useState(true);
   const [isLoginPasswordValid, setIsLoginPasswordValid] = useState(true);
-  
+  const { authData } = useAuth();
+
   const setIsTerm = (increment) => {    
     const newRow = section + increment;
     if (newRow >= 0 && newRow < 3) {
@@ -42,12 +44,15 @@ const ResponsibilityComponent = () => {
       setIsArrowLast(true);
     }
   }
-
-  const goBack = async() => {    
+  
+  const goBack = async() => {
+    if (authData?.isAuth){
+      router.push('meus-dados/');
+    }
     if (Object.keys(bodyLogin).length > 0){
       try {
         await api.login(bodyLogin).then((res) => {
-          router.push('auth/' + res.token.split(' ')[1]);
+          router.push('auth/');
         }
         ).catch((err) => {
           console.error(err);
@@ -115,13 +120,11 @@ const ResponsibilityComponent = () => {
           email: email,
           password: password
         });
-      }).catch((error) => {
+        }).catch((error) => {
         console.error(error);  
         toast.error(error.response?.data?.detail || "Erro", toastConfig);  
-      });
-          
-    }
-    
+      });          
+    }    
   }
 
   const handleLoginSubmit = async (e) => {
@@ -141,7 +144,7 @@ const ResponsibilityComponent = () => {
         };   
         try {
           await api.login(body).then((res) => {
-            router.push('auth/' + res.token.split(' ')[1]);
+            router.push('auth/');
           }).catch((err) => {
             toast.error(err.response?.data?.detail, toastConfig);  
           });

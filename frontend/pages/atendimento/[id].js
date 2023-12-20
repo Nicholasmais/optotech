@@ -39,7 +39,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    const isLoggedIn = api.checkSessionCookie();
+    const isLoggedIn = authData?.isAuth;
     setHasLoggedIn(isLoggedIn);
 
     if (!isLoggedIn) {
@@ -49,7 +49,7 @@ export default function Home() {
     api.isAuth().then((res) => {
       setAuthData(res);
     }).catch((err) => {
-      toast.error('Erro ao se conectar com servidor.', toastConfig);
+      toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
     });
 
   }, []);
@@ -60,7 +60,7 @@ export default function Home() {
       await api.paciente(id).then((res) => {        
         setPaciente(res);        
       }).catch((err) => {
-        toast.error('Erro ao se conectar com servidor.', toastConfig);
+        toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
       });
     }
     fetchPaciente(pacienteId);
