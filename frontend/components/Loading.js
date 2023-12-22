@@ -5,7 +5,6 @@ const Loading = ({ loading }) => {
   if (!loading) {
     return null;
   }
-
   return (
     <div className={styles["loading-spinner-container"]}>
       <div className={styles["loading-spinner"]}></div>

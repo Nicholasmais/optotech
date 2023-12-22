@@ -9,7 +9,7 @@ import DpiCalculator from './DpiCalculator';
 import DownloadButton from './DownloadButton';
 const api = require('../services/api'); 
 
-function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj, setIsOpenForm, isOpenForm}) {
+function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, setHasTriedToLogIn, isMeusDados, userObj, setIsOpenForm, isOpenForm, dpi, setDPI}) {
   const { setAuthData } = useAuth(); 
   const [isLogin, setIsLogin] = useState(isMeusDados ? !isMeusDados : true);
   const [user, setUser] = useState(userObj ? userObj.user : '');
@@ -201,13 +201,13 @@ function LoginForm({setIsLoginFormOpen, setHasLoggedIn, setIsLoggedFormOpen, set
             </form> 
           </>
         ) : 
-        <DpiCalculator></DpiCalculator>
+        <DpiCalculator/>
       }      
 
       {
         isMeusDados ?
           !isDpi ? 
-          <button type="button" onClick={()=>setIsDpi(!isDpi)}>Calibrar Dpi</button>
+          <button type="button" onClick={(e)=>{e.preventDefault();setIsDpi(!isDpi)}}>Calibrar Dpi</button>
           :
           <DownloadButton/>
           :

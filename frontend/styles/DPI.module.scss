@@ -1,7 +1,7 @@
 .form{
   display: flex;
   flex-direction: column;
-  div{
+  div .divFlex{
     position: relative;
     width: 100%;
     display: flex !important;

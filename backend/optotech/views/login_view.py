@@ -73,24 +73,26 @@ class LoginViewSet(viewsets.ModelViewSet):
     @authentication_required
     def is_authenticated(self, request, user_id = None):        
         if not user_id:
-            print("Request Information:")
-            print("Method:", request.method)
-            print("Headers:", request.headers)
-            print("Domain:", request.META.get('HTTP_HOST'))
-            print("Path:", request.path)
-            print("GET Parameters:", request.GET)
-            print("POST Parameters:", request.data)
-            print("Cookies:", request.COOKIES)
-            print("Is Secure Connection:", request.is_secure())
-            print("User Agent:", request.META.get('HTTP_USER_AGENT'))
+            # print("Request Information:")
+            # print("Method:", request.method)
+            # print("Headers:", request.headers)
+            # print("Domain:", request.META.get('HTTP_HOST'))
+            # print("Path:", request.path)
+            # print("GET Parameters:", request.GET)
+            # print("POST Parameters:", request.data)
+            # print("Cookies:", request.COOKIES)
+            # print("Is Secure Connection:", request.is_secure())
+            # print("User Agent:", request.META.get('HTTP_USER_AGENT'))
             return Response({
                 "isAuth": False,
                 "user": None,               
             })
         
         user = User.objects.get(id = user_id)
-        user_seriailizer = UserSerializer(user)
+        user_seriailizer = UserSerializer(user)    
+
         data = user_seriailizer.data
+        del data["password"]
 
         email = data.get("email")
         decrypted_email = self.encryption.uncipher(email)

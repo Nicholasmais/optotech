@@ -1,9 +1,19 @@
-const axios = require('axios');
-axios.default.withCredentials = true
-
 import Cookies from 'js-cookie'
 
-const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || 'http://localhost:8000';
+const axios = require('axios');
+const dotenv = require('dotenv');
+
+// Configura o caminho do arquivo .env com base no diretório atual
+const path = require('path');
+const envPath = path.resolve(__dirname, '../.env.local');
+
+// Carrega as variáveis de ambiente do arquivo .env
+dotenv.config({ path: envPath });
+
+axios.default.withCredentials = true
+
+const localBaseAPI = process.env.NEXT_PUBLIC_LOCAL_SSL || "http://localhost:8000";
+const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || localBaseAPI;
 
 const getUsers = async() => {
   return await axios.get(`${baseApiUrl}/users/`)
@@ -52,7 +62,7 @@ const logout = async (body) => {
   }
 };
 
-const isAuth = async() => {
+const isAuth = async() => {  
   return await axios.get(`${baseApiUrl}/isAuth/`, {
     withCredentials: true,
     credentials: 'include'

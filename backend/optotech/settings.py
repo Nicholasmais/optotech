@@ -84,6 +84,7 @@ ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1", "optotech.vercel.app",
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://localhost:3000",
     os.environ.get("BASE_API")
 ]
 CORS_ALLOW_CREDENTIALS = True

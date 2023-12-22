@@ -53,14 +53,6 @@ const ResponsibilityComponentDpi = () => {
       router.push("/")
     }
   }
-  
-  const letterPx = (distance) => {
-    return parseInt((5 * distance * Math.tan(Math.PI / 10800) * 1000 * dpi / 25.4 ));
-  }
-
-  const snellenTometers = (snellen) => {
-    return snellen * 0.304
-  }
 
   const handleChooseSize = async() => {
     await api.saveDpi({
@@ -203,7 +195,7 @@ const ResponsibilityComponentDpi = () => {
             {currentSectionContent?.downloadButton ?
               (
                 <div className={styles.formContainer}>
-                  <DpiCalculator setDPI={setDPI} />                 
+                  <DpiCalculator/>
                 </div>
               ) :
               (

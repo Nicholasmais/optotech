@@ -49,24 +49,26 @@ const ResponsibilityComponent = () => {
     if (authData?.isAuth){
       router.push('meus-dados/');
     }
-    if (Object.keys(bodyLogin).length > 0){
-      try {
-        await api.login(bodyLogin).then((res) => {
-          router.push('auth/');
-        }
-        ).catch((err) => {
-          console.error(err);
-          toast.error(err.response?.data?.detail || "Erro", toastConfig);  
-        });
-      } 
-      catch (error) {
-        console.error(error);
-        toast.error(error.response?.data?.detail || "Erro", toastConfig);  
-      }
-    }
     else{
-      router.push("/")
-    }
+      if (Object.keys(bodyLogin).length > 0){
+        try {
+          await api.login(bodyLogin).then((res) => {
+            router.push('auth/');
+          }
+          ).catch((err) => {
+            console.error(err);
+            toast.error(err.response?.data?.detail || "Erro", toastConfig);  
+          });
+        } 
+        catch (error) {
+          console.error(error);
+          toast.error(error.response?.data?.detail || "Erro", toastConfig);  
+        }
+      }
+      else{
+        router.push("/")
+      }
+    }   
   }
 
   const validateUser = (user) => {

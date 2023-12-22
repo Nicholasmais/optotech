@@ -10,7 +10,6 @@ import PatientInfo from './PatientInfo';
 const NavBar = ({toggleLoginForm, style, goBack, patientInfo}) => {
   return (
     <div className={styles.navbar} style={style} id='top-view'>
-      <ToastContainer />
       <div className={styles.logoContainer}>
         <img src={logo.src} alt="Logo" className={styles.logo} />
       </div>

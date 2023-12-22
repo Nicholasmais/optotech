@@ -157,7 +157,6 @@ export default function MeusDados() {
   return (
       <>
       <NavBar style={{marginTop: "1rem"}}></NavBar>
-      <ToastContainer />      
       {
        renderSwitch(current)
       }      
