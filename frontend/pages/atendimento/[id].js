@@ -49,6 +49,7 @@ export default function Home() {
     api.isAuth().then((res) => {
       setAuthData(res);
     }).catch((err) => {
+      console.log(err);
       toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
     });
 
@@ -60,6 +61,7 @@ export default function Home() {
       await api.paciente(id).then((res) => {        
         setPaciente(res);        
       }).catch((err) => {
+        console.log(err);
         toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
       });
     }

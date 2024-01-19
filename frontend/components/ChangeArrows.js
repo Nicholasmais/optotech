@@ -148,8 +148,12 @@ const ChangeArrows = ({changeFunction, maxInput, isArrowFirst = false, isArrowLa
     setHasLoggedIn(isLoggedIn);
 
     api.isAuth().then((res) => {
+      if (!res.isAuth){
+        router.push("/");
+      }
       setAuthData(res);
     }).catch((err) => {
+      router.push("/");
       console.log(err);
       // toast.error(err?.response?.data?.detail || 'Erro ao se conectar com servidor.', toastConfig);
     });
@@ -164,6 +168,7 @@ const ChangeArrows = ({changeFunction, maxInput, isArrowFirst = false, isArrowLa
         await api.paciente(id).then((res) => {        
           setPaciente(res);        
         }).catch((err) => {
+          console.log(err);
           toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
         });
     }

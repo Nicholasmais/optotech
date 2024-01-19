@@ -58,6 +58,7 @@ export default function Home() {
       setHasLoggedIn(isLoggedIn);
       setAuthData(res);
     }).catch((err) => {
+      console.log(err);
       toast.error(err.response?.data?.detail || "Erro ao ao se conectar com servidor.", toastConfig);
       router.push("/");
     })

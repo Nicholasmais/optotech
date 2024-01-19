@@ -5,7 +5,7 @@
   position: absolute;
   z-index: 1;
   text-align: center;
-  padding: 20px;
+  padding: 1.2rem;
   background-color: #f4f4f4;
   border-radius: 8px;
   width: 300px;
@@ -15,8 +15,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
   h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 1.5rem;
     color: #333;
   }
 
@@ -28,14 +27,12 @@
       display: flex;
       flex-direction: column;
       label {
-        margin-bottom: 5px;
         color: #333;
       }
       input {
-        padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        font-size: 16px;
+        font-size: 1rem;
         &:focus {
           outline: none;
           border-color: #007bff;
@@ -46,13 +43,11 @@
       }
       .error {
         color: #dc3545;
-        font-size: 14px;
-        margin-top: 5px;
+        font-size: 0.8rem;
       }
     }
   } 
   p.success {
     color: #28a745;
-    margin-top: 10px;
   }
 }

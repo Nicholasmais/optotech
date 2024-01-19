@@ -10,11 +10,13 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from ..decorator.is_auth import authentication_required
 from .encryption import EncryptionTools
+from .mongo import MongoView
 
 class PacienteViewSet(viewsets.ModelViewSet):
     queryset = Paciente.objects.all()
     serializer_class = PacienteSerializer
     encryption = EncryptionTools()
+    mongo = MongoView()
 
     def retrieve(self, request, pk):        
         paciente_user = Paciente.objects.get(id = pk)
@@ -22,6 +24,8 @@ class PacienteViewSet(viewsets.ModelViewSet):
         paciente_user = paciente_user.data
         paciente_user["idade"] = self.__calculate_idade__(paciente_user.get("data_nascimento"))
         paciente_user["nome"] = self.encryption.uncipher(paciente_user["nome"])
+        paciente_user["data_nascimento"] = datetime.strptime(paciente_user["data_nascimento"][:10], '%Y-%m-%d').strftime("%d/%m/%Y")
+        paciente_user["aditional_info"] = self.mongo.get({}, patient_id=paciente_user["id"]).data
         return Response(paciente_user)
     
     @authentication_required
@@ -50,6 +54,14 @@ class PacienteViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(data = body)
         if serializer.is_valid():
             instance = serializer.save()
+
+            for aditional_info_row in body["aditional_info"]:
+                self.mongo.post(body = {
+                    **aditional_info_row,
+                    "patient_id" : str(instance.id)
+                    }
+                )
+            
         else:
             print(serializer.errors)
             raise CustomAPIException(serializer.errors, 400)

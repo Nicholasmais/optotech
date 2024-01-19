@@ -4,7 +4,7 @@ $altura-minima-switch: 20vh;
 $altura-minima-snellen: 70vh;
 $altura-margin-top-switch: calc(100vh - (#{$altura-minima-switch} + #{$altura-minima-snellen}));
 $border: 5px;
-$font-size: 30px;
+$font-size: 20px;
 $letter-spacing: 10px;
 $user-icon-size: 40px;
 $icon-scale: 0.2;
@@ -37,7 +37,7 @@ $icon-scale: 0.2;
     gap: 1rem;
     flex-wrap: wrap;
     .alterar-button {
-      width: 10rem;
+      width: 13rem;
       background-color: #007bff; /* Azul */
     }
     .iniciar-button {
@@ -141,17 +141,21 @@ $icon-scale: 0.2;
   }
   .form-row{
     display: flex;
-    flex-direction: row;
-  
+    flex-direction: row;  
+    img:hover{
+      cursor: pointer;
+    }
     .form-column{
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;    
       .buttons{
+        width: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center !important;
+        justify-content: space-evenly;
         flex-wrap: wrap;
         button{
           width: 10rem;
@@ -173,7 +177,7 @@ $icon-scale: 0.2;
   width: 100%;
   border-collapse: collapse;
   overflow-x:auto;
-
+  font-size: 1.5rem;
   th, td {
     padding: 10px;
     border: 1px solid #333;
@@ -182,15 +186,16 @@ $icon-scale: 0.2;
 
   th {
     background-color: $cor-de-fundo-bege;
-    font-weight: bold;
+    font-weight: bold;    
   }
 
   tr:nth-child(even) {
     background-color: $cor-de-fundo-azure;
   }
 
-  tr:hover {
+  tbody tr:not(first-of-type):hover td:not(:last-child):hover {
     background-color: #e0e0e0;
+    cursor: pointer;
   }
 
   .row{

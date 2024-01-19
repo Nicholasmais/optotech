@@ -13,10 +13,6 @@ const api = require('../../services/api');
 
 export default function MeusDados() {
   const { authData, setAuthData } = useAuth();
-  
-  const distanceToRead = (pixel) => {      
-    return ((pixel * 25.4) / (5 * Math.tan(Math.PI / 10800) * 1000 * dpi)).toFixed(1);
-  }
 
   let user = authData?.user?.user || '';
   let email = authData?.user?.email || '';
@@ -75,6 +71,8 @@ export default function MeusDados() {
   }
   
   const fetchReport = async(body) => {
+    await checkUser();
+
     await api.reportComparison(body).then((res) => {
       setVisualAcuityComparison(res);
     });
@@ -92,6 +90,19 @@ export default function MeusDados() {
     });
   }  
 
+  const checkUser = async() => {
+    await api.isAuth().then((res) => {
+      setAuthData(res);
+      if (!res.isAuth){
+        router.push("/");
+      }
+    }).catch((err) => {
+      console.log(err);
+      router.push("/");
+      toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
+    });
+  }    
+
   useEffect(() => {
     user = authData?.user?.user || '';
     email = authData?.user?.email || '';
@@ -99,23 +110,11 @@ export default function MeusDados() {
     distance = authData?.user?.distancia || '';
   }, [authData])
   
-  useEffect(() =>{  
-    const checkUser = async() => {
-      await api.isAuth().then((res) => {
-        setAuthData(res);
-        if (!res.isAuth){
-          router.push("/");
-        }
-      }).catch((err) => {
-        toast.error(err.response?.data?.detail || 'Erro ao ao se conectar com servidor.', toastConfig);
-      });
-    }    
-
+  useEffect(() =>{   
     fetchReport({});    
     checkUser();
     getPacientes();
     getUserAppointment();
-
   }, []);
 
   const renderSwitch = (current) => {
