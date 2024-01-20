@@ -36,7 +36,6 @@ const Pacientes = () => {
     setLoading(true);
     await api.paciente(patientId).then((res) => {      
       setPacientes(res);
-      console.log(res);
     }).catch((err) => {
       toast.error(err.response?.data?.detail, toastConfig);  
     })

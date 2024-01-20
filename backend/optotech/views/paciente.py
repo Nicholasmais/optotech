@@ -25,7 +25,7 @@ class PacienteViewSet(viewsets.ModelViewSet):
         paciente_user["idade"] = self.__calculate_idade__(paciente_user.get("data_nascimento"))
         paciente_user["nome"] = self.encryption.uncipher(paciente_user["nome"])
         paciente_user["data_nascimento"] = datetime.strptime(paciente_user["data_nascimento"][:10], '%Y-%m-%d').strftime("%d/%m/%Y")
-        paciente_user["aditional_info"] = self.mongo.get({}, patient_id=paciente_user["id"]).data
+        paciente_user["aditional_info"] = self.mongo.list({}, patient_id=paciente_user["id"]).data
         return Response(paciente_user)
     
     @authentication_required
