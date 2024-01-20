@@ -27,7 +27,7 @@ class MongoView(APIView):
         if patient_id:
             patient_id_filter["patient_id"] = patient_id
 
-        return Response(self.serializer(self.db_collection.find(patient_id_filter)))
+        return Response(self.serializer_list(self.db_collection.find(patient_id_filter)))
    
     def post(self, request = None, body = None):
         if not body:
