@@ -8,7 +8,7 @@ from ..models.user_pacientes import UserPacientes
 from ..models.paciente import Paciente
 from ..models.appointment import Appointment
 from ..decorator.is_auth import authentication_required
-from .encryption import EncryptionTools
+from ..utils.encryption import EncryptionTools
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

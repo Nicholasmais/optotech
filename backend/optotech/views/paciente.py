@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from ..decorator.is_auth import authentication_required
-from .encryption import EncryptionTools
+from ..utils.encryption import EncryptionTools
 from .mongo import MongoView
 
 class PacienteViewSet(viewsets.ModelViewSet):

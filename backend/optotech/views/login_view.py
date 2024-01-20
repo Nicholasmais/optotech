@@ -8,7 +8,7 @@ from ..utils.custom_exception_handler import CustomAPIException
 import jwt
 from datetime import datetime, timedelta
 import os
-from .encryption import EncryptionTools
+from ..utils.encryption import EncryptionTools
 from ..decorator.is_auth import authentication_required
 
 class LoginViewSet(viewsets.ModelViewSet):

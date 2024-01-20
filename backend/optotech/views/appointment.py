@@ -8,7 +8,7 @@ from ..serializers.paciente_serializer import PacienteSerializer
 from ..models.user_pacientes import UserPacientes
 import datetime
 from ..decorator.is_auth import authentication_required
-from .encryption import EncryptionTools
+from ..utils.encryption import EncryptionTools
 
 class AppointmentView(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()

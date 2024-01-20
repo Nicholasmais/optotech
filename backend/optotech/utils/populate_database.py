@@ -32,11 +32,13 @@ acuidades = [
 ]
 pesos = [0.01, 0.01, 0.02, 0.02, 0.2, 0.25, 0.26, 0.20, 0.01, 0.01, 0.01]
 
+from encryption import EncryptionTools
+encryption = EncryptionTools()
 
 # Criar e inserir usuários
 for _ in range(num_users):
-    username = fake.user_name()
-    user_email = fake.email()
+    username = encryption.cipher(fake.user_name()).decode('utf-8')
+    user_email = encryption.cipher(fake.email()).decode('utf-8')
     user_password = fake.password()
     dpi = random.randint(80, 200)
     sql_user = '''
@@ -61,7 +63,7 @@ def random_date():
 
 for _ in range(num_patients):
     id_usuario_aleatorio = random.choice(id_usuarios)
-    nome_paciente = fake.first_name() + " " + fake.last_name()
+    nome_paciente = encryption.cipher(fake.first_name() + " " + fake.last_name()).decode('utf-8')
     ano = random.randint(1950, 2010)
     mes = random.randint(1, 12)
     dia = random.randint(1, 28)
