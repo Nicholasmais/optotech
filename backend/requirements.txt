@@ -1,4 +1,4 @@
-﻿asgiref==3.7.2
+asgiref==3.7.2
 bcrypt==4.0.1
 cffi==1.16.0
 cryptography==41.0.7
@@ -9,6 +9,7 @@ djangorestframework==3.14.0
 psycopg2-binary==2.9.9
 pycparser==2.21
 PyJWT==2.8.0
+pymongo==4.6.1
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 pytz==2023.3.post1
