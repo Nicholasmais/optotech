@@ -93,8 +93,8 @@ const Pacientes = () => {
           <table className={styles['appointment-table']}>            
             <tbody>
               <tr>
-                <td><b>Nome</b></td>
-                <td>{pacientes.nome}</td>                 
+                <td colspan="1"><b>Nome</b></td>
+                <td colspan="1">{pacientes.nome}</td>                 
               </tr>
               <tr>
                 <td><b>Data de nascimento</b></td>
@@ -102,7 +102,10 @@ const Pacientes = () => {
               </tr>
               <tr>
                 <td><b>Código</b></td>
-                <td>{pacientes.codigo}</td>                 
+                <td>{pacientes.codigo}</td>
+              </tr>
+              <tr>
+                <td colspan="2"><b>Informações Adicionais</b></td>
               </tr>
               {pacientes?.aditional_info?.map((aditional_info, index) => (
                 <tr key={index}>
