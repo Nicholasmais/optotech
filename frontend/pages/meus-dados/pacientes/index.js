@@ -115,10 +115,10 @@ const Pacientes = () => {
             </thead>
             <tbody>
               {pacientes.map((paciente, index) => (
-                <tr key={index} onClick={() => {router.push(`/meus-dados/pacientes/${paciente.id}`)}}>
-                  <td>{paciente.nome}</td>
-                  <td>{paciente.idade}</td>
-                  <td>{paciente.codigo}</td>
+                <tr key={index} >
+                  <td onClick={() => {router.push(`/meus-dados/pacientes/${paciente.id}`)}}>{paciente.nome}</td>
+                  <td onClick={() => {router.push(`/meus-dados/pacientes/${paciente.id}`)}}>{paciente.idade}</td>
+                  <td onClick={() => {router.push(`/meus-dados/pacientes/${paciente.id}`)}}>{paciente.codigo}</td>
                   <td>
                   <div className={styles['row']}>
                     <Link href={`/atendimento/${paciente.id}`}>
