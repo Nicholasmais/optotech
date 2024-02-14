@@ -1,14 +1,14 @@
 import Cookies from 'js-cookie'
 
 const axios = require('axios');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 
-// Configura o caminho do arquivo .env com base no diretório atual
-const path = require('path');
-const envPath = path.resolve(__dirname, '../.env.local');
+// // Configura o caminho do arquivo .env com base no diretório atual
+// const path = require('path');
+// const envPath = path.resolve(__dirname, '../.env.local');
 
-// Carrega as variáveis de ambiente do arquivo .env
-dotenv.config({ path: envPath });
+// // Carrega as variáveis de ambiente do arquivo .env
+// dotenv.config({ path: envPath });
 
 axios.default.withCredentials = true
 
