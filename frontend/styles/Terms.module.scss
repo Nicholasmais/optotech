@@ -1,0 +1,80 @@
+.responsibilityContainer {
+  background-color: #f5f5f5;
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 3%;
+  padding-bottom: 100px;
+
+  .formContainer {    
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }  
+  
+}
+
+.title {
+  font-size: 1.8rem; /* Aumentando o valor do rem */
+  font-weight: bold;
+  margin-bottom: 0.6rem;
+}
+
+.description {
+  font-size: 1.5rem; /* Aumentando o valor do rem */
+  margin-bottom: 1.2rem;
+}
+
+.list {
+  list-style-type: disc;
+  margin-left: 1.2rem;
+  font-size: 1.5rem; /* Aumentando o valor do rem */
+}
+
+.note {
+  font-size: 1rem; /* Aumentando o valor do rem */
+  margin-top: 1.2rem;
+}
+
+/* styles.module.css */
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form div {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form label {
+  margin-bottom: 5px;
+}
+
+.form input {
+  padding: 5px;
+}
+
+.error {
+  color: red;
+}
+@media (max-width: 700px) {
+  ol.list{
+    margin: 0;
+    padding: 0;
+  }
+
+}

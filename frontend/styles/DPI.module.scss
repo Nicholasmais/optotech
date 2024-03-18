@@ -1,0 +1,16 @@
+.form{
+  display: flex;
+  flex-direction: column;
+  div .divFlex{
+    position: relative;
+    width: 100%;
+    display: flex !important;
+    flex-direction: row;
+    label{
+      width: 40%;
+    }
+    input{
+      flex-grow:1;
+    }
+  }
+}

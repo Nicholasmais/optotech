@@ -1,0 +1,24 @@
+.patientInfo {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  background-color: #f4f4f4;
+  width: 350px;
+  position: absolute;
+  z-index: 1;
+  right: 80px; /* Posicionar à direita da tela */
+  top: 4px; /* Ajustar a posição vertical como desejado */  
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0px;
+  }
+
+  .infoItem {
+    margin-bottom: 5px;
+
+    strong {
+      margin-right: 5px;
+    }
+  }
+}

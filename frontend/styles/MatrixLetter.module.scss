@@ -1,0 +1,15 @@
+.row-to-read{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  .container{
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    .row{
+      display: flex;
+      flex-direction: row;    
+    }  
+  }
+}

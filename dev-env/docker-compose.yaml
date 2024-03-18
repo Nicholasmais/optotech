@@ -1,0 +1,31 @@
+version: "3"
+services: 
+  frontend:
+    image: optotech-frontend
+    container_name: frontend
+    ports: 
+        - "3000:3000"
+    restart: always
+  backend:
+    image: optotech-backend
+    container_name: backend
+    ports: 
+        - "8000:8000"
+    depends_on: 
+        -  postgres
+    env_file:
+        - ../backend/optotech/utils/.env
+    restart: always
+  postgres: 
+    image: postgres
+    container_name: postgres
+    ports: 
+        - "5432:5432"
+    environment:
+        DB_USER: "postgres"
+        DB_PASSWORD: "648297315"
+        DB_NAME: "postgres"
+        POSTGRES_PASSWORD: "648297315"
+    restart: always
+    volumes:
+        - ./postgres:/var/lib/postgres/data

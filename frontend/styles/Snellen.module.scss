@@ -1,0 +1,136 @@
+$cor-de-fundo-bege: beige;
+$cor-de-fundo-azure: azure;
+
+$altura-minima-switch: 20vh;
+$altura-minima-snellen: 70vh;
+
+$altura-margin-top-switch: calc(100vh - ($altura-minima-switch + $altura-minima-snellen));
+
+$border: 5px;
+$font-size: 20px;
+$letter-spacing: 10px;
+
+$user-icon-size: 40px;
+$icon-scale: 0.2;
+
+.switch{
+  display: flex;
+  flex-direction: row;  
+  justify-content: center;
+
+  .chart, .personalize{
+    min-height: $altura-minima-switch;
+    width: $altura-minima-switch;  
+    background-color: white;
+    margin-top: calc(-0.8*$altura-margin-top-switch);
+    display: flex;
+    align-items: center;
+    padding-top: 5vh;
+    font-size: $font-size;
+    border-bottom: $border/2 solid black;
+    transition: transform 0.3s ease;
+    &:hover{
+      transform: scale(1.25);
+      cursor: pointer;
+    }
+  }
+
+  .chart{
+    border-radius: 100% 0 0 0;    
+    justify-content: end;
+    padding-right: 1vw;
+    border-right: $border/2 solid black;
+  }
+
+  .personalize{
+    border-radius: 0 100% 0 0;
+    justify-content: start;
+    padding-left: 1vw;
+    border-left: $border/2 solid black;    
+  }  
+}
+
+.snellen {
+  position: relative;
+  min-height:$altura-minima-snellen;
+  width: 90%;
+  margin: 0 auto;
+  background-color: white;
+  border: $border solid black;
+
+  .row_to_read{
+    padding: calc(5*$letter-spacing);
+    width: 100%;
+    min-height: 150px;    
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around !important;
+    gap: calc(10*$letter-spacing);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .base{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    .custom-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+    }
+    
+    /* Estilização para as etiquetas "Linha X" */
+    .custom-label {
+      font-weight: bold;      
+    }
+
+    /* Estilização para as entradas de letras personalizadas */
+    .custom-input {      
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px; /* Ajuste conforme necessário */
+    }  
+
+    .all_letters {
+      width: clamp(200px, 25%, 400px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      float: right; 
+      .eye{
+        width: 40px;
+        height: 40px;
+        filter:none !important;
+        & :hover{
+          cursor: pointer;
+        }
+      }
+    }          
+  }
+  
+  @media (max-width: 700px) {
+    .base{
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .all_letters{
+      position: relative;
+      float: none;
+      margin: 0 auto;
+      margin-top: 60px;
+    }
+    .preview{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .change_active_row{
+        position: relative;
+      }              
+    }
+  }  
+}

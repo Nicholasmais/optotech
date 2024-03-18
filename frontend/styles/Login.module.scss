@@ -1,0 +1,53 @@
+/* styles/LoginForm.module.scss */
+
+/* Estilos para o formulário de login/cadastro */
+.formContainer {
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  padding: 1.2rem;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  width: 300px;
+  margin: 0 auto;
+  top: 1rem;
+  right: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+  h2 {
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      label {
+        color: #333;
+      }
+      input {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+        &.invalid {
+          border-color: #dc3545;
+        }
+      }
+      .error {
+        color: #dc3545;
+        font-size: 0.8rem;
+      }
+    }
+  } 
+  p.success {
+    color: #28a745;
+  }
+}

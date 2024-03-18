@@ -1,0 +1,77 @@
+.filters {
+  padding: 20px;
+  padding-top: 0px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+  }
+
+  .filter-row {
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
+
+
+.button-container {
+  width: 10rem; /* Ajuste a largura conforme necessário */
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 colunas com largura igual
+  grid-template-rows: repeat(2, 1fr);    // 2 linhas com altura igual
+  width: 90vw;                           // Largura de 80% da largura do contêiner pai
+  gap: 10px;                             // Espaçamento entre os quadrantes
+  margin: 0 auto;                     // Aumente a margem para criar um espaço ao redor
+  padding-bottom: 50px;
+}
+
+
+.grid-item {
+  border: 1px solid #000; // Adicione uma borda ou estilize como desejar
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
