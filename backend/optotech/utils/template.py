@@ -19,7 +19,7 @@ def http_request(root, user_id, dpi, result_label):
     root.after(0, lambda: update_gui_with_result(result_label, "Carregando informações DPI para o sistema OptoTech...", "#ffff00")) 
     try:
         body = {"dpi": round(dpi)}
-        response = requests.patch(f"http://localhost:8000/users/{user_id}/", data=body)
+        response = requests.patch(f"http://backend:8000/users/{user_id}/", data=body)
         if response.status_code == 200:
             helper_dict = {"user": "Usuário", "email": "E-mail", "dpi": "DPI"}
             text_body = response.json()

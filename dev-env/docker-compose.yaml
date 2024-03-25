@@ -1,31 +1,54 @@
 version: "3"
 services: 
   frontend:
-    image: optotech-frontend
+    image: frontend
+    build:
+      context: ../
+      dockerfile: ./dev-env/frontend.dockerfile
     container_name: frontend
     ports: 
         - "3000:3000"
     restart: always
+    volumes:
+      - ../frontend/:/src/
+
   backend:
-    image: optotech-backend
-    container_name: backend
+    image: backend
+    build:
+      context: ../
+      dockerfile: ./dev-env/backend.dockerfile
+    container_name: backend    
     ports: 
         - "8000:8000"
-    depends_on: 
-        -  postgres
     env_file:
-        - ../backend/optotech/utils/.env
+        - .env
+    depends_on: 
+        - postgres
     restart: always
-  postgres: 
+    volumes:
+      - ../backend/:/src/
+
+  postgres:     
     image: postgres
     container_name: postgres
     ports: 
-        - "5432:5432"
+        - "5433:5432"
     environment:
-        DB_USER: "postgres"
-        DB_PASSWORD: "648297315"
-        DB_NAME: "postgres"
-        POSTGRES_PASSWORD: "648297315"
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}    
     restart: always
     volumes:
         - ./postgres:/var/lib/postgres/data
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./mongo:/data/db

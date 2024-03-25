@@ -75,36 +75,35 @@ WSGI_APPLICATION = 'optotech.wsgi.application'
 
 import os
 from os.path import join, dirname
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-dotenv_path = join(dirname(__file__) + r"\utils", '.env')
-load_dotenv(dotenv_path)
+# dotenv_path = join(dirname(__file__) + r"\utils", '.env')
+# load_dotenv(dotenv_path)
 
-ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1", "optotech.vercel.app", "optotech-api.vercel.app"]
+ALLOWED_HOSTS = [".vercel.app", "frontend", "127.0.0.1", "optotech.vercel.app", "optotech-api.vercel.app"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://localhost:3000",
+    "http://frontend:3000",
+    "https://frontend:3000",
     os.environ.get("BASE_API")
 ]
 CORS_ALLOW_CREDENTIALS = True
-
 
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql",
         'HOST': os.environ.get("DB_HOST"),
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'NAME': os.environ.get("POSTGRES_DB"),
+        'USER': os.environ.get("POSTGRES_USER"),
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
         'PORT': os.environ.get("DB_PORT"),
     }
 }
 
 SESSION_COOKIE_AGE = 1 * 60 * 60
 
-SESSION_COOKIE_DOMAIN = os.environ.get("DOMAIN", ".localhost")
-CSRF_COOKIE_DOMAIN = os.environ.get("DOMAIN", ".localhost")
+SESSION_COOKIE_DOMAIN = os.environ.get("DOMAIN", ".frontend")
+CSRF_COOKIE_DOMAIN = os.environ.get("DOMAIN", ".frontend")
 
 CSRF_USE_SESSIONS = False
 SESSION_COOKIE_SECURE = False

@@ -69,3 +69,6 @@ venv/
 /venv/
 .vscode/
 .vscode/launch.json
+
+mongo/
+postgres/

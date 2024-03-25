@@ -12,7 +12,7 @@ const axios = require('axios');
 
 axios.default.withCredentials = true
 
-const localBaseAPI = process.env.NEXT_PUBLIC_LOCAL_SSL || "http://localhost:8000";
+const localBaseAPI = process.env.NEXT_PUBLIC_LOCAL_SSL || "http://backend:8000";
 const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API || localBaseAPI;
 
 const getUsers = async() => {

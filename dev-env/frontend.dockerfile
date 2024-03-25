@@ -1,8 +1,8 @@
 FROM node:21-alpine
 
-COPY /frontend /src/
+WORKDIR /src/
 
-WORKDIR /src
+COPY ./frontend /src
 
 RUN npm install
 

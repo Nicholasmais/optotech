@@ -13,9 +13,9 @@ load_dotenv(dotenv_path)
 
 # Conexão com o banco de dados
 conn = psycopg2.connect(
-    dbname=os.environ.get("DB_NAME"), 
-    user=os.environ.get("DB_USER"), 
-    password=os.environ.get("DB_PASSWORD"), 
+    dbname=os.environ.get("POSTGRES_DB"), 
+    user=os.environ.get("POSTGRES_USER"), 
+    password=os.environ.get("POSTGRES_PASSWORD"), 
     host=os.environ.get("DB_HOST")
 )
 conn.autocommit = True

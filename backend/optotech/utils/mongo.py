@@ -1,8 +1,4 @@
 import os
-from dotenv import load_dotenv
-
-dotenv_path = '.env'
-load_dotenv(dotenv_path)
 
 from pymongo import MongoClient
 

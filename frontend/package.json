@@ -4,7 +4,7 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "dev-local": "set NEXT_PUBLIC_LOCAL_SSL=https://localhost:8000&&node server.js"
+    "dev-local": "set NEXT_PUBLIC_LOCAL_SSL=https://backend:8000&&node server.js"
   },
   "dependencies": {
     "axios": "^1.6.7",

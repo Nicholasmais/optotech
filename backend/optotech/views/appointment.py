@@ -17,7 +17,7 @@ class AppointmentView(viewsets.ModelViewSet):
 
     @authentication_required
     def user_appointments(self, request, user_id = None):
-        # Altere a consulta para usar a nova coluna paciente_usuario_id
+        # Altere a consulta para usar a nova coluna paciente_usuario_id 2323
         user_patient_list = UserPacientes.objects.filter(user_id=user_id)
         appointments_list = []
 
@@ -29,7 +29,6 @@ class AppointmentView(viewsets.ModelViewSet):
             for atendimento in atendimentos:
                 appointment_dict = AppointmentSerializer(atendimento).data
 
-                # Agora, o paciente está diretamente ligado ao appointment, então você pode obter os dados do paciente diretamente
                 paciente_model = Paciente.objects.get(id=str(user_patient.paciente_id))
                 paciente_dict = PacienteSerializer(paciente_model).data                
                 paciente_dict["nome"] = self.encryption.uncipher(paciente_dict["nome"])

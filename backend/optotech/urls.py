@@ -52,5 +52,6 @@ urlpatterns = [
     path('generate-dpi-script/', DPIExecutable.as_view(), name='generate-dpi-script'),    
     path('check-mongo/', MongoView.as_view(), name='check-mongo'),
     path('check-mongo/<str:id>', MongoView.as_view(), name='check-mongo'),
+    path('blacklist/', MongoView.as_view(), name='blacklist'),
     path('', include(router.urls)),
 ]
