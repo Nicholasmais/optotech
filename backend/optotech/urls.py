@@ -26,6 +26,7 @@ from .views.paciente import PacienteViewSet
 from .views.report import ReportComparison, ReportActive, ReportDemographic, ReportMaxMinDate, ReportPatientAppointments
 from .views.dpi_executable import DPIExecutable
 from .views.mongo import MongoView
+from .views.redis import RedisView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -52,6 +53,6 @@ urlpatterns = [
     path('generate-dpi-script/', DPIExecutable.as_view(), name='generate-dpi-script'),    
     path('check-mongo/', MongoView.as_view(), name='check-mongo'),
     path('check-mongo/<str:id>', MongoView.as_view(), name='check-mongo'),
-    path('blacklist/', MongoView.as_view(), name='blacklist'),
+    path('blacklist/', RedisView.as_view(), name='blacklist'),
     path('', include(router.urls)),
 ]

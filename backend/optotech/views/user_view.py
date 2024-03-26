@@ -14,8 +14,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     encryption = EncryptionTools()
-    
-    def list(self, request):
+
+    @authentication_required
+    def list(self, request,  user_id = None):
         all_users = self.queryset
         all_users_serializer = self.serializer_class(all_users, many = True)
 

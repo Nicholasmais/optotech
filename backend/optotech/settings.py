@@ -80,11 +80,11 @@ from os.path import join, dirname
 # dotenv_path = join(dirname(__file__) + r"\utils", '.env')
 # load_dotenv(dotenv_path)
 
-ALLOWED_HOSTS = [".vercel.app", "frontend", "127.0.0.1", "optotech.vercel.app", "optotech-api.vercel.app"]
+ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1", "optotech.vercel.app", "optotech-api.vercel.app"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://frontend:3000",
-    "https://frontend:3000",
+    "http://localhost:3000",
+    "https://localhost:3000",
     os.environ.get("BASE_API")
 ]
 CORS_ALLOW_CREDENTIALS = True

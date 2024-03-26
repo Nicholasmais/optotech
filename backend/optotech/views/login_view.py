@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import os
 from ..utils.encryption import EncryptionTools
 from ..decorator.is_auth import authentication_required
+from ..views.redis import RedisView
 
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -61,9 +62,13 @@ class LoginViewSet(viewsets.ModelViewSet):
     def logout(self, request):
         request.session.flush()
         response = HttpResponse("Sessão apagada e cookies limpos.")
-        
+    
+        token = request.COOKIES.get("token", None)      
+        redis_client = RedisView()   
+        redis_client.insert_token_to_blackist(token)       
+    
         for cookie in request.COOKIES:
-            response.delete_cookie(cookie)
+            response.delete_cookie(cookie)        
         
         return response
        

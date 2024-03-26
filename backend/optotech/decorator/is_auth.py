@@ -1,6 +1,8 @@
 from functools import wraps
 from rest_framework.response import Response
 from rest_framework import status
+from ..views.redis import RedisView
+
 import os
 
 def authentication_required(view_func):
@@ -45,16 +47,19 @@ def verify_jwt_token(token, public_key, jwt_algorithm='HS256'):
         current_time = datetime.utcnow()
         expiration_time = datetime.utcfromtimestamp(payload['exp'])
         if current_time > expiration_time:
-            print("Expired time")
             return "Expired time"
+        
+        redis_instance = RedisView()
+                
+        if redis_instance.is_token_in_blacklist(payload):
+            return "Token invalidatd by the server"
 
         # O token é válido, retorne o payload
         return payload
 
     except jwt.ExpiredSignatureError as e:
-        print(e)
         return str(e)
+    
     except jwt.InvalidTokenError as e:
-        print(e)
         return str(e)
     
