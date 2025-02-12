@@ -8,7 +8,7 @@ import os
 
 class RedisView(APIView):
     def __init__(self):
-        self.r = redis.Redis(host='172.18.30.159', port=6379, decode_responses=True)
+        self.r = redis.Redis(host='redis', port=6379, decode_responses=True)
         self.secret_key = os.environ.get("PRIVATE_KEY")
 
     def is_token_in_blacklist(self, payload):        

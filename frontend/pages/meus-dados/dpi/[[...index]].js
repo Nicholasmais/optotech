@@ -196,6 +196,7 @@ const ResponsibilityComponentDpi = () => {
               (
                 <div className={styles.formContainer}>
                   <DpiCalculator/>
+                  {currentSectionContent?.downloadButton}
                 </div>
               ) :
               (
