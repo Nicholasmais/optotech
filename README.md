@@ -4,8 +4,8 @@ Projeto para realização de testes de acuidade visual utilizando o optotipo Sne
 
 ## 📌 Funcionalidades
 - Teste de leitura de letras personalizáveis.
-- Fidelidade do tamanho real do pixel baseado no PPI do usuário.
-- Executável em Python (Tkinter) para calcular PPI caso o usuário não saiba [https://github.com/rr-/screeninfo].
+- Fidelidade do tamanho real do pixel baseado no DPI do usuário.
+- Executável em Python (Tkinter) para calcular DPI caso o usuário não saiba [https://github.com/rr-/screeninfo].
 - Cadastro de pacientes e histórico de atendimentos.
 - Tela de estatísticas com gráficos e relatórios.
 
